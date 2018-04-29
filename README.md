@@ -1,13 +1,12 @@
-# CS359B Project (ADD NAME HERE)
+# CS359B Project: Tapioca
 
-(short description here)
+Tapioca is a question-answer platform where askers can set bounties and rules of bounty distribution for quality answers.
 
 ## Technologies used
 
-(Add only the specific technologies you need to use until Midterm)
+solidity, node, mysql
 
-* (e.g. solidity, react, node, mysql)
 
-## Istallation intructions
+## Installation intructions
 
-(add simple instructions on how to run the code here)
+Currently, just open index.html to view current front-end progress.
