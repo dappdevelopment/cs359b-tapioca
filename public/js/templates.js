@@ -31,7 +31,7 @@
           tag('p', {}, post.content),
           tag('br', {}, ''),
           tag('h3', {}, "bounty: " + post.bounty),
-          tag('textarea', {placeholder: "Describe yourself here...", rows: "4", cols: "50"}, ''), 
+          tag('textarea', {placeholder: "Post Your Answer Here...", rows: "4", cols: "50"}, ''), 
           tag('br', {}, ''), 
           tag('input', {type: "submit", value: "Submit"}), 
           tag('h2', {}, 'Answers: '),
