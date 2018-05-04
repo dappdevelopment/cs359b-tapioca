@@ -7,6 +7,7 @@
     // TODO
     values = [
       {
+        id: "f02j90r3i0k023jr",
         title: "Max is Cool",
         content: "I have a question please answer",
         bounty: 60,
@@ -26,6 +27,7 @@
         ]
       },
       {
+        id: "f02j90r3i0k023jr",
         title: "Peter is Cool",
         content: "Hi hi hi hi",
         bounty: 50,
@@ -49,7 +51,6 @@
     values.forEach(function(value) {
         NewsfeedView.renderPost($newsfeed, value, false) 
     })
-    
   };
 
   /* Given post information, renders a post element into $newsfeed. */

@@ -101,65 +101,22 @@ header h1 i.fa {
   padding-right: 7px;
 }
 
-.error {
-  text-align: center;
-  color: #c0392b;
-  padding: 10px 0;
+.meta {
+  color: #000;
 }
 
-#newsfeed {
-  width: 90%;
-  min-width: 960px;
-  max-width: 1500px;
-  margin: 30px auto;
-  color: #444;
+#questions_list {
+  list-style-type: none;
 }
 
-.post {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  overflow: hidden;
-
+.left_title {
   display: inline-block;
-  margin-bottom: 13px;
-  padding: 0 10px;
-
-  font: 14px/1.2 "Cabin", "Helvetica Neue", Helvetica, Arial, Sans-serif;
-  color: #666;
+  padding: 5px;
+  margin: 10px 20px;
 }
 
-.question {
-  margin-bottom: 13px;
-  font: 14px/1.2 "Cabin", "Helvetica Neue", Helvetica, Arial, Sans-serif;
-  color: #666;
-}
-
-.post .meta {
-  overflow: hidden;
-  padding-bottom: 3px;
-}
-
-.post h2 {
-  float: left;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font: 14px/1.2 "Cabin", "Helvetica Neue", Helvetica, Arial, Sans-serif;
-}
-
-.post a {
-  color: #527EC9;
-  text-decoration: none;
-}
-
-.post img {
-  width: 100%;
-}
-
-.post .actions {
-  float: right;
-}
-
-.post .separator {
-  padding: 0 3px;
+.right_title {
+  display: inline-block;
+  padding: 5px;
+  margin: 10px 20px;
 }
