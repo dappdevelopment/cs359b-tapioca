@@ -13,14 +13,6 @@
    *   upvotes: the number of upvotes
    */
   Templates.renderPost = function(post) {
-    // answer_tags = [];
-    // for (answer of post.answers) {
-    //   answer_tags.push(tag('h3', {class: 'left_block'}, answer.upvotes));
-    //   answer_tags.push(tag('p', {class: 'left_block'}, answer.user_id));
-    //   answer_tags.push(tag('p', {class: 'right_block'}, 'posted by ' + answer.text));
-    //   answer_tags.push(tag('p', {}, 'upvotes: ' + answer.upvotes));
-    //   answer_tags.push(tag('br', {}, ''));
-    // }
     return tag('li', {display: "inline-block", class: "question"}, [
       tag('div', {class: 'meta'}, [
         tag('div', {class: 'left_title'}, [
@@ -37,6 +29,14 @@
   };
 
   Templates.renderQuestion = function(post) {
+    console.log("renderingQuestion")
+    answer_tags = [];
+    for (answer of post.answers) {
+      answer_tags.push(tag('h3', {class: 'left_answer'}, answer.upvotes + '^'));
+      answer_tags.push(tag('p', {class: 'left_answer'}, answer.user_id));
+      answer_tags.push(tag('p', {class: 'right_answer'}, answer.text));
+      answer_tags.push(tag('br', {}, ''))
+    }
     return tag('li', {display: "inline-block", class: "question"}, [
       tag('div', {class: 'meta'}, [
         tag('div', {class: 'left_title'}, [
@@ -48,7 +48,9 @@
             tag('h3', {}, post.content),
             tag('a', {href: 'question_view.html?qid=' + post.id}, 'See answers >')
           ]),
+        tag('div', {}, answer_tags)
       ]),
+
     ]);
   }
 

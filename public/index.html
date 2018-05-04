@@ -1,14 +1,16 @@
-<head>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
     <meta charset="utf-8">
     <title>Sprinkle's Q&A Blockchain Site</title>
 
     <link rel="stylesheet" href="./css/normalize.css">
     <link rel="stylesheet" href="./css/font-awesome.min.css">
     <link rel="stylesheet" href="./css/style.css">
-</head>
+  </head>
 
-<body>
-	<header>
+  <body>
+    <header>
       <div class="container">
         <h1>
           Sprinkle's Q&A Blockchain Site
@@ -27,6 +29,7 @@
         </form>
       </div>
     </header>
+
     <div class="error"></div>
     <div id="newsfeed">
       <ul id="questions_list"> 
@@ -46,10 +49,11 @@
     <script src="./js/templates.js"></script>
 
     <!-- Views -->
-    <script src="./js/main-view.js"></script>
+    <script src="./js/QuestionDetailView.js"></script>
     <script src="./js/search-view.js"></script>
-    <script src="./js/question-view.js"></script>
+    <script src="./js/newsfeed-view.js"></script>
 
     <!-- Main -->
     <script src="./js/main.js"></script>
-</body>
+  </body>
+</html>

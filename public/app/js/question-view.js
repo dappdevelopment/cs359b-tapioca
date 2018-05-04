@@ -26,17 +26,15 @@
           }, 
         ]
       }
-    console.log("rendering")
-    values.forEach(function(value) {
-        QuestionView.renderPost($newsfeed, value, false) 
-    })
+    console.log("rendering");
+    QuestionView.renderQuestion($newsfeed, value, false);
   };
 
   /* Given post information, renders a post element into $newsfeed. */
-  QuestionView.renderPost = function($newsfeed, post) {
-    var postHtml = Templates.renderPost(post)
+  QuestionView.renderQuestion = function($newsfeed, post) {
+  	console.log("redepiefioweroiwe");
+    var postHtml = Templates.renderQuestion(post);
     $newsfeed.append(postHtml);
-   
   };
 
   window.QuestionView = QuestionView;
