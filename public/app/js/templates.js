@@ -13,43 +13,25 @@
    *   upvotes: the number of upvotes
    */
   Templates.renderPost = function(post) {
-    answer_tags = [];
-    for (answer of post.answers) {
-      answer_tags.push(tag('p', {}, answer.text));
-      answer_tags.push(tag('p', {}, 'posted by ' + answer.user_id));
-      answer_tags.push(tag('p', {}, 'upvotes: ' + answer.upvotes));
-      answer_tags.push(tag('br', {}, ''));
-    }
-    console.log(answer_tags);
+    // answer_tags = [];
+    // for (answer of post.answers) {
+    //   answer_tags.push(tag('h3', {class: 'left_block'}, answer.upvotes));
+    //   answer_tags.push(tag('p', {class: 'left_block'}, answer.user_id));
+    //   answer_tags.push(tag('p', {class: 'right_block'}, 'posted by ' + answer.text));
+    //   answer_tags.push(tag('p', {}, 'upvotes: ' + answer.upvotes));
+    //   answer_tags.push(tag('br', {}, ''));
+    // }
     return tag('li', {display: "inline-block", class: "question"}, [
       tag('div', {class: 'meta'}, [
-        tag('h1', {}, post.title),
-        tag('br', {}, ''),
-        tag('h3', {}, "by " + post.user_id),
-        tag('br', {}, ''),
-        tag('p', {}, post.content),
-        tag('br', {}, ''),
-        tag('h3', {}, "bounty: " + post.bounty),
-        tag('br', {}, ''),
-        tag('h2', {}, 'Answers: '),
-        tag('br', {}, ''),
-        tag('div',{}, answer_tags),
-        tag('div', {class: 'actions'}, [
-          tag('a', {
-            href: '#',
-            class: 'upvote'
-          }, [
-            tag('i', {class: 'fa fa-chevron-up'}, []),
-            tag('span', {class: 'upvote-count'}, post.upvotes)
+        tag('div', {class: 'left_title'}, [
+            tag('h1', {}, '$' + post.bounty),
+            tag('h2', {}, post.user_id)
+            ]),
+        tag('div', {class: 'right_title'}, [
+            tag('h1', {}, post.title),
+            tag('h3', {}, post.content),
+            tag('a', {href: 'question_view.html/?qid=' + post.id}, 'See answers >')
           ]),
-          tag('span', {class: 'separator'}, ' • '),
-          tag('a', {
-            href: '#',
-            class: 'remove'
-          }, [
-            tag('i', {class: 'fa fa-trash'}, [])
-          ])
-        ])
       ]),
     ]);
   };
