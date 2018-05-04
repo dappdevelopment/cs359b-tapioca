@@ -20,36 +20,40 @@
       answer_tags.push(tag('p', {}, 'upvotes: ' + answer.upvotes));
       answer_tags.push(tag('br', {}, ''));
     }
-    console.log(answer_tags);
+    console.log("is this being updated? ");
     return tag('li', {display: "inline-block", class: "question"}, [
       tag('div', {class: 'meta'}, [
-        tag('h1', {}, post.title),
-        tag('br', {}, ''),
-        tag('h3', {}, "by " + post.user_id),
-        tag('br', {}, ''),
-        tag('p', {}, post.content),
-        tag('br', {}, ''),
-        tag('h3', {}, "bounty: " + post.bounty),
-        tag('br', {}, ''),
-        tag('h2', {}, 'Answers: '),
-        tag('br', {}, ''),
-        tag('div',{}, answer_tags),
-        tag('div', {class: 'actions'}, [
-          tag('a', {
-            href: '#',
-            class: 'upvote'
-          }, [
-            tag('i', {class: 'fa fa-chevron-up'}, []),
-            tag('span', {class: 'upvote-count'}, post.upvotes)
-          ]),
-          tag('span', {class: 'separator'}, ' • '),
-          tag('a', {
-            href: '#',
-            class: 'remove'
-          }, [
-            tag('i', {class: 'fa fa-trash'}, [])
+
+          tag('h1', {}, post.title),
+          tag('br', {}, ''),
+          tag('h3', {}, "by " + post.user_id),
+          tag('br', {}, ''),
+          tag('p', {}, post.content),
+          tag('br', {}, ''),
+          tag('h3', {}, "bounty: " + post.bounty),
+          tag('textarea', {placeholder: "Post Your Answer Here...", rows: "4", cols: "50"}, ''), 
+          tag('br', {}, ''), 
+          tag('input', {type: "submit", value: "Submit"}), 
+          tag('h2', {}, 'Answers: '),
+          tag('br', {}, ''),
+          tag('div',{}, answer_tags),
+          tag('div', {class: 'actions'}, [
+            tag('a', {
+              href: '#',
+              class: 'upvote'
+            }, [
+              tag('i', {class: 'fa fa-chevron-up'}, []),
+              tag('span', {class: 'upvote-count'}, post.upvotes)
+            ]),
+            tag('span', {class: 'separator'}, ' • '),
+            tag('a', {
+              href: '#',
+              class: 'remove'
+            }, [
+              tag('i', {class: 'fa fa-trash'}, [])
+            ])
           ])
-        ])
+
       ]),
     ]);
   };
