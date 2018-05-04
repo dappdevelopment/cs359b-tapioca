@@ -30,11 +30,27 @@
         tag('div', {class: 'right_title'}, [
             tag('h1', {}, post.title),
             tag('h3', {}, post.content),
-            tag('a', {href: 'question_view.html/?qid=' + post.id}, 'See answers >')
+            tag('a', {href: 'question_view.html?qid=' + post.id}, 'See answers >')
           ]),
       ]),
     ]);
   };
+
+  Templates.renderQuestion = function(post) {
+    return tag('li', {display: "inline-block", class: "question"}, [
+      tag('div', {class: 'meta'}, [
+        tag('div', {class: 'left_title'}, [
+            tag('h1', {}, '$' + post.bounty),
+            tag('h2', {}, post.user_id)
+            ]),
+        tag('div', {class: 'right_title'}, [
+            tag('h1', {}, post.title),
+            tag('h3', {}, post.content),
+            tag('a', {href: 'question_view.html?qid=' + post.id}, 'See answers >')
+          ]),
+      ]),
+    ]);
+  }
 
   /* Creates an HTMLElement to display search results.
    *

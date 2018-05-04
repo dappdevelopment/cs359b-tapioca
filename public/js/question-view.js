@@ -1,11 +1,11 @@
 // anonymous, self-invoking function to limit scope
 (function() {
-  var NewsfeedView = {};
+  var QuestionView = {};
 
   /* Renders the newsfeed into the given $newsfeed element. */
-  NewsfeedView.render = function($newsfeed) {
+  QuestionView.render = function($newsfeed) {
     // TODO: replace with database call.
-    values = [
+    value =
       {
         id: "f02j90r3i0k023jr",
         title: "Max is Cool",
@@ -25,40 +25,19 @@
             upvotes: 2
           }, 
         ]
-      },
-      {
-        id: "f02j90r3i0k023jr",
-        title: "Peter is Cool",
-        content: "Hi hi hi hi",
-        bounty: 50,
-        user_id: "varun",
-        upvotes: 1000,
-        answers: [
-          {
-            text: "Chickens",
-            user_id: "alex_lee",
-            upvotes: 4
-          },
-          {
-            text: "Cats",
-            user_id: "maddie_wang",
-            upvotes: 8
-          }, 
-        ]
       }
-    ]
     console.log("rendering")
     values.forEach(function(value) {
-        NewsfeedView.renderPost($newsfeed, value, false) 
+        QuestionView.renderPost($newsfeed, value, false) 
     })
   };
 
   /* Given post information, renders a post element into $newsfeed. */
-  NewsfeedView.renderPost = function($newsfeed, post) {
+  QuestionView.renderPost = function($newsfeed, post) {
     var postHtml = Templates.renderPost(post)
     $newsfeed.append(postHtml);
    
   };
 
-  window.NewsfeedView = NewsfeedView;
+  window.QuestionView = QuestionView;
 })();
