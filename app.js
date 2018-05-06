@@ -116,4 +116,4 @@ app.get('/question_detail', function(request, response)  {
 app.listen(3000);
 console.log('Listening at 127.0.0.1:' + 3000);
 
-model.saveUser("mchang4",[], [], "0xwiofjeojo023kr03", []);
+// model.saveUser("mchang4",[{"hi":"sample"}], [{"h":"e", "qw":"fweokfoe"}, {"ew":"Qw", "as": "pwqeo"}], "0xwiofjeojo023kr03", [{"ewwer": "ewrwqqw"}]);

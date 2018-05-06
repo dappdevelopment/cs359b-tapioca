@@ -2,16 +2,16 @@ var mongoose = require('mongoose');
 
 var UserSchema = new mongoose.Schema({
     username: {type: String, required: true},
-    questions: [{type: Object}],
-    answers: [{type: Object}],
+    questions: [{type: mongoose.Schema.ObjectId}],
+    answers: [{type: mongoose.Schema.ObjectId}],
     address: {type: String},
-    upvotes: [{type: Object}]
+    upvotes: [{type: mongoose.Schema.ObjectId}]
 });
 
 var QuestionSchema = new mongoose.Schema({
-    answers: [{type: Object}],
+    answers: [{type: mongoose.Schema.ObjectId}],
     bounty: {type: Number},
-    upvotes: [{type: Object}],
+    upvotes: [{type: mongoose.Schema.ObjectId}],
     questionHash: {type: String},
    	topAnswerHash: {type: String},
     timeExp: {type: Date},
@@ -22,7 +22,7 @@ var QuestionSchema = new mongoose.Schema({
 var AnswerSchema = new mongoose.Schema({
     answererId: {type: String, required: true},
     votes: {type: Number},
-    voters: [{type: Object}]
+    voters: [{type: mongoose.Schema.ObjectId}]
 });
 
 
