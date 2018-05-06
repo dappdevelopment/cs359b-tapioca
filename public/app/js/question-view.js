@@ -15,8 +15,7 @@
       }
     })
 
-    var q_id = getWindowQuestionID()
-    xmlQuestionDetail.open("GET", remoteHost + 'question_detail?q_id=' + q_id, true)
+    xmlQuestionDetail.open("GET", remoteHost + 'question_detail', true)
     xmlQuestionDetail.send(null)
   }
 
@@ -28,27 +27,6 @@
     $newsfeed.append(postHtml);
   };
 
-  window.QuestionView = QuestionView;
 
-  function getWindowQuestionID() { 
-    var url_string = window.location.href
-    var url = new URL(url_string);
-    var q_id = url.searchParams.get("q_id");
-    return q_id
-  }
-
-  function GetURLParameter(sParam)
-  {
-      var sPageURL = window.location.search.substring(1);
-      var sURLVariables = sPageURL.split('&');
-      for (var i = 0; i < sURLVariables.length; i++) 
-      {
-          var sParameterName = sURLVariables[i].split('=');
-          if (sParameterName[0] == sParam) 
-          {
-              return sParameterName[1];
-          }
-      }
-  }​
-
+  window.QuestionView = QuestionView; 
 })();
