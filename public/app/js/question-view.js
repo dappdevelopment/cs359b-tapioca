@@ -4,16 +4,12 @@
 
   var remoteHost = "http://127.0.0.1:3000/"
 
-
-
   QuestionView.render = function($newsfeed) { 
     // TODO: replace with database call.
     var xmlQuestionDetail = new XMLHttpRequest(); 
 
     xmlQuestionDetail.addEventListener('load', function() {
       if (xmlQuestionDetail.status === 200) {
-        console.log("Hi Peter")
-        console.log("lol: " + xmlQuestionDetail.responseText)
         var question_detail = JSON.parse(xmlQuestionDetail.responseText)
         QuestionView.renderQuestion($newsfeed, question_detail)
       }

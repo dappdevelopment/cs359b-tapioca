@@ -16,14 +16,11 @@ app.use(bodyParser.json());
 // serve all files out of public folder
 app.use(express.static('public'));
 
-
-
 var path = require("path");
 
 app.get('/', function(request, response) { 
   response.sendFile(path.join(__dirname + '/public/app/index.html'));
 })
-
 
 app.get('/question_feed', function(request, response) {
   console.log("/GET question_feed")
@@ -110,7 +107,6 @@ app.get('/question_detail', function(request, response)  {
   response.set('Content-type', 'application/json')
   response.status(STATUS_OK) 
   response.send(JSON.stringify(data))
-
 })
 
 
