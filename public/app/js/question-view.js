@@ -2,37 +2,27 @@
 (function() {
   var QuestionView = {};
 
-  /* Renders the newsfeed into the given $newsfeed element. */
-  QuestionView.render = function($newsfeed) {
+  var remoteHost = "http://127.0.0.1:3000/"
+
+  QuestionView.render = function($newsfeed) { 
     // TODO: replace with database call.
-    value =
-      {
-        id: "f02j90r3i0k023jr",
-        title: "Max is Cool",
-        content: "I have a question please answer",
-        bounty: 60,
-        user_id: "max",
-        upvotes: 100,
-        answers: [
-          {
-            text: "Hello world",
-            user_id: "max_imaginary_gf",
-            upvotes: 5
-          },
-          {
-            text: "Hello max",
-            user_id: "claire",
-            upvotes: 2
-          }, 
-        ]
+    var xmlQuestionDetail = new XMLHttpRequest(); 
+
+    xmlQuestionDetail.addEventListener('load', function() {
+      if (xmlQuestionDetail.status === 200) {
+        var question_detail = JSON.parse(xmlQuestionDetail.responseText)
+        QuestionView.renderQuestion($newsfeed, question_detail)
       }
-    console.log("rendering");
-    QuestionView.renderQuestion($newsfeed, value, false);
-  };
+    })
+
+    xmlQuestionDetail.open("GET", remoteHost + 'question_detail', true)
+    xmlQuestionDetail.send(null)
+  }
+
 
   /* Given post information, renders a post element into $newsfeed. */
   QuestionView.renderQuestion = function($newsfeed, post) {
-  	console.log("redepiefioweroiwe");
+  	var post = post.q_data
     var postHtml = Templates.renderQuestion(post);
     $newsfeed.append(postHtml);
   };

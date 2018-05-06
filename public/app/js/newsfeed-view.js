@@ -1,6 +1,5 @@
 // anonymous, self-invoking function to limit scope
 (function() {
-  //var remoteHost = 'http://localhost:3000/'
   var remoteHost = "http://127.0.0.1:3000/"
 
   var NewsfeedView = {};
@@ -9,12 +8,6 @@
   NewsfeedView.render = function($newsfeed) {
     // TODO: replace with database call.
     var xmlQuestions = new XMLHttpRequest(); 
-    xmlQuestions.onreadystatechange = function($newsfeed) { 
-      console.log("on ready state change")
-      if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
-
-      }
-    }
 
     xmlQuestions.addEventListener('load', function() {
       if (xmlQuestions.status === 200) {
@@ -35,8 +28,6 @@
   };
 
   NewsfeedView.renderFeed = function($newsfeed, response) { 
-    console.log("rendering feed ... ")
-    console.log("http response" + response)
     values = response.questions
 
     values.forEach(function(value) {
