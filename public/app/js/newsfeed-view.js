@@ -4,7 +4,7 @@
 
   /* Renders the newsfeed into the given $newsfeed element. */
   NewsfeedView.render = function($newsfeed) {
-    // TODO
+    // TODO: replace with database call.
     values = [
       {
         id: "f02j90r3i0k023jr",
@@ -54,36 +54,9 @@
   };
 
   /* Given post information, renders a post element into $newsfeed. */
-  NewsfeedView.renderPost = function($newsfeed, post, updateMasonry) {
+  NewsfeedView.renderPost = function($newsfeed, post) {
     var postHtml = Templates.renderPost(post)
     $newsfeed.append(postHtml);
-    /*
-    $wrappedPost.find('.remove').bind('click', function(e) {
-      PostModel.remove(post._id, function(error) {
-        if (error) { $('.error').text(error) }
-        else {
-          $newsfeed.masonry('remove', $wrappedPost);
-          $newsfeed.masonry();
-        }
-      })
-    })
-
-    $wrappedPost.find('.upvote').bind('click', function(e) {
-      PostModel.upvote(post._id, function(error, updatedPost) {
-        if (error) { $('.error').text(error) }
-        else {
-          $wrappedPost.find('.upvote-count').text(updatedPost.upvotes)
-        }
-      })
-    })
-    $newsfeed.prepend($wrappedPost)
-    
-
-    if (updateMasonry) {
-      $newsfeed.imagesLoaded(function() {
-        $newsfeed.masonry('prepended', $wrappedPost);
-      });
-    }*/
    
   };
 
