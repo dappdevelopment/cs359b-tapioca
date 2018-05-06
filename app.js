@@ -9,16 +9,19 @@ var NUM_QUERIES = 3
 //mongoose.connect('mongodb://localhost:27017/callback-newsfeed-db');
 
 var app = express();
-// serve all files out of public folder
-app.use(express.static('public'));
 
 // parse json bodies in post requests
 app.use(bodyParser.json());
 
+// serve all files out of public folder
+app.use(express.static('public'));
+
+
+
 var path = require("path");
 
 app.get('/', function(request, response) { 
-    response.sendFile(path.join(__dirname + '/public/app/index.html'));
+  response.sendFile(path.join(__dirname + '/public/app/index.html'));
 })
 
 
@@ -74,6 +77,40 @@ app.get('/question_feed', function(request, response) {
 	response.set('Content-type', 'application/json')
 	response.status(STATUS_OK) 
 	response.send(JSON.stringify(data))
+})
+
+app.get('/question_detail', function(request, response)  {
+  var q_id = request.query.q_id 
+  console.log("GET /questions_detail " + q_id) 
+
+  var data = {
+    q_data: 
+    {
+        id: "f02j90r3i0k023jr",
+        title: "Max is Cool",
+        content: "I have a question please answer",
+        bounty: 60,
+        user_id: "max",
+        upvotes: 100,
+        answers: [
+          {
+            text: "Hello world",
+            user_id: "max_imaginary_gf",
+            upvotes: 5
+          },
+          {
+            text: "Hello max",
+            user_id: "claire",
+            upvotes: 2
+          }, 
+        ]
+    }
+  }
+
+  response.set('Content-type', 'application/json')
+  response.status(STATUS_OK) 
+  response.send(JSON.stringify(data))
+
 })
 
 

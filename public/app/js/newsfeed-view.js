@@ -9,12 +9,6 @@
   NewsfeedView.render = function($newsfeed) {
     // TODO: replace with database call.
     var xmlQuestions = new XMLHttpRequest(); 
-    xmlQuestions.onreadystatechange = function($newsfeed) { 
-      console.log("on ready state change")
-      if (this.readyState == XMLHttpRequest.DONE && this.status == 200) {
-
-      }
-    }
 
     xmlQuestions.addEventListener('load', function() {
       if (xmlQuestions.status === 200) {
