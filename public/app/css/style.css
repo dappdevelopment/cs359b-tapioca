@@ -109,6 +109,10 @@ header h1 i.fa {
   list-style-type: none;
 }
 
+#answers_list{
+  color: black;
+}
+
 .left_title {
   display: inline-block;
   padding: 5px;
