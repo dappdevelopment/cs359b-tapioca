@@ -27,5 +27,6 @@
     $newsfeed.append(postHtml);
   };
 
-  window.QuestionView = QuestionView;
+
+  window.QuestionView = QuestionView; 
 })();
