@@ -12,6 +12,8 @@ var app = express();
 // serve all files out of public folder
 app.use(express.static('public'));
 
+var model = require('./public/app/js/model');
+
 // parse json bodies in post requests
 app.use(bodyParser.json());
 
@@ -80,3 +82,5 @@ app.get('/question_feed', function(request, response) {
 
 app.listen(3000);
 console.log('Listening at 127.0.0.1:' + 3000);
+
+model.saveUser("mchang4",[], [], "0xwiofjeojo023kr03", []);
