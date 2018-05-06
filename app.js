@@ -9,11 +9,14 @@ var NUM_QUERIES = 3
 //mongoose.connect('mongodb://localhost:27017/callback-newsfeed-db');
 
 var app = express();
-// serve all files out of public folder
-app.use(express.static('public'));
 
 // parse json bodies in post requests
 app.use(bodyParser.json());
+
+// serve all files out of public folder
+app.use(express.static('public'));
+
+
 
 var path = require("path");
 
