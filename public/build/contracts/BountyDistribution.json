@@ -6,13 +6,25 @@
       "inputs": [
         {
           "name": "",
-          "type": "address"
+          "type": "uint256"
         }
       ],
-      "name": "balances",
+      "name": "questions",
       "outputs": [
         {
-          "name": "",
+          "name": "hash",
+          "type": "uint256"
+        },
+        {
+          "name": "bounty",
+          "type": "uint256"
+        },
+        {
+          "name": "askerAddr",
+          "type": "address"
+        },
+        {
+          "name": "answerHash",
           "type": "uint256"
         }
       ],
@@ -30,59 +42,75 @@
       "constant": false,
       "inputs": [
         {
-          "name": "_to",
+          "name": "_answerer",
           "type": "address"
         },
         {
-          "name": "_value",
+          "name": "_aHash",
+          "type": "uint256"
+        },
+        {
+          "name": "_qHash",
           "type": "uint256"
         }
       ],
-      "name": "payBounty",
-      "outputs": [
-        {
-          "name": "success",
-          "type": "bool"
-        }
-      ],
+      "name": "distributeBounty",
+      "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
       "type": "function"
     },
     {
-      "constant": true,
+      "constant": false,
       "inputs": [
         {
-          "name": "_owner",
-          "type": "address"
-        }
-      ],
-      "name": "balanceOf",
-      "outputs": [
-        {
-          "name": "balance",
+          "name": "_qHash",
           "type": "uint256"
         }
       ],
+      "name": "refundBounty",
+      "outputs": [],
       "payable": false,
-      "stateMutability": "view",
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_asker",
+          "type": "address"
+        },
+        {
+          "name": "_qHash",
+          "type": "uint256"
+        },
+        {
+          "name": "_bounty",
+          "type": "uint256"
+        }
+      ],
+      "name": "collectBounty",
+      "outputs": [],
+      "payable": true,
+      "stateMutability": "payable",
       "type": "function"
     }
   ],
-  "bytecode": "0x608060405234801561001057600080fd5b5033600160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550610203806100616000396000f300608060405260043610610057576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806327e235e31461005c57806370a08231146100b3578063c09c7e041461010a575b600080fd5b34801561006857600080fd5b5061009d600480360381019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919050505061016f565b6040518082815260200191505060405180910390f35b3480156100bf57600080fd5b506100f4600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610187565b6040518082815260200191505060405180910390f35b34801561011657600080fd5b50610155600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001909291905050506101cf565b604051808215151515815260200191505060405180910390f35b60006020528060005260406000206000915090505481565b60008060008373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020549050919050565b6000929150505600a165627a7a7230582019f664c62efb34e866706bf3288790f34375020d0211135d8bec64c02088aab40029",
-  "deployedBytecode": "0x608060405260043610610057576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806327e235e31461005c57806370a08231146100b3578063c09c7e041461010a575b600080fd5b34801561006857600080fd5b5061009d600480360381019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919050505061016f565b6040518082815260200191505060405180910390f35b3480156100bf57600080fd5b506100f4600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050610187565b6040518082815260200191505060405180910390f35b34801561011657600080fd5b50610155600480360381019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001909291905050506101cf565b604051808215151515815260200191505060405180910390f35b60006020528060005260406000206000915090505481565b60008060008373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020549050919050565b6000929150505600a165627a7a7230582019f664c62efb34e866706bf3288790f34375020d0211135d8bec64c02088aab40029",
-  "sourceMap": "26:376:0:-;;;132:73;8:9:-1;5:2;;;30:1;27;20:12;5:2;132:73:0;191:10;173:15;;:28;;;;;;;;;;;;;;;;;;26:376;;;;;;",
-  "deployedSourceMap": "26:376:0:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;57:44;;8:9:-1;5:2;;;30:1;27;20:12;5:2;57:44:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;296:104;;8:9:-1;5:2;;;30:1;27;20:12;5:2;296:104:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;208:85;;8:9:-1;5:2;;;30:1;27;20:12;5:2;208:85:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;57:44;;;;;;;;;;;;;;;;;:::o;296:104::-;352:15;380:8;:16;389:6;380:16;;;;;;;;;;;;;;;;373:23;;296:104;;;:::o;208:85::-;272:12;208:85;;;;:::o",
-  "source": "pragma solidity ^0.4.21;\n\ncontract BountyDistribution {\n\tmapping (address => uint256) public balances;\n\taddress contractCreator; \n\n\tfunction BountyDistribution() public {\n\t\tcontractCreator = msg.sender;\n\t}\n\n\tfunction payBounty(address _to, uint256 _value) public returns (bool success) {\n\t\t\n\t}\n\n\tfunction balanceOf(address _owner) public view returns (uint256 balance) {\n\t\treturn balances[_owner];\n\t}\n}\n",
+  "bytecode": "0x608060405234801561001057600080fd5b5033600160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506103f3806100616000396000f300608060405260043610610062576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680630f88f1a51461006757806331b1b978146100b1578063409ff7a61461013357806358b1f29c1461018a575b600080fd5b6100af600480360381019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190803590602001909291905050506101b7565b005b3480156100bd57600080fd5b506100dc6004803603810190808035906020019092919050505061027e565b604051808581526020018481526020018373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200194505050505060405180910390f35b34801561013f57600080fd5b50610188600480360381019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190803590602001909291905050506102ce565b005b34801561019657600080fd5b506101b56004803603810190808035906020019092919050505061033e565b005b8034101515156101c657600080fd5b6080604051908101604052808381526020018281526020018473ffffffffffffffffffffffffffffffffffffffff1681526020016000815250600080848152602001908152602001600020600082015181600001556020820151816001015560408201518160020160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060608201518160030155905050505050565b60006020528060005260406000206000915090508060000154908060010154908060020160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16908060030154905084565b600080600083815260200190815260200160002090508373ffffffffffffffffffffffffffffffffffffffff166108fc82600101549081150290604051600060405180830381858888f1935050505015801561032e573d6000803e3d6000fd5b5082816003018190555050505050565b600080600083815260200190815260200160002090508060020160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166108fc82600101549081150290604051600060405180830381858888f193505050501580156103c2573d6000803e3d6000fd5b5050505600a165627a7a723058200f8959c0d093129aee13ba3c58d6fd9679ca3d31af719008fcd780508bef90ab0029",
+  "deployedBytecode": "0x608060405260043610610062576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680630f88f1a51461006757806331b1b978146100b1578063409ff7a61461013357806358b1f29c1461018a575b600080fd5b6100af600480360381019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190803590602001909291905050506101b7565b005b3480156100bd57600080fd5b506100dc6004803603810190808035906020019092919050505061027e565b604051808581526020018481526020018373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200182815260200194505050505060405180910390f35b34801561013f57600080fd5b50610188600480360381019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190803590602001909291905050506102ce565b005b34801561019657600080fd5b506101b56004803603810190808035906020019092919050505061033e565b005b8034101515156101c657600080fd5b6080604051908101604052808381526020018281526020018473ffffffffffffffffffffffffffffffffffffffff1681526020016000815250600080848152602001908152602001600020600082015181600001556020820151816001015560408201518160020160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060608201518160030155905050505050565b60006020528060005260406000206000915090508060000154908060010154908060020160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16908060030154905084565b600080600083815260200190815260200160002090508373ffffffffffffffffffffffffffffffffffffffff166108fc82600101549081150290604051600060405180830381858888f1935050505015801561032e573d6000803e3d6000fd5b5082816003018190555050505050565b600080600083815260200190815260200160002090508060020160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166108fc82600101549081150290604051600060405180830381858888f193505050501580156103c2573d6000803e3d6000fd5b5050505600a165627a7a723058200f8959c0d093129aee13ba3c58d6fd9679ca3d31af719008fcd780508bef90ab0029",
+  "sourceMap": "26:1301:0:-;;;272:97;8:9:-1;5:2;;;30:1;27;20:12;5:2;272:97:0;352:10;334:15;;:28;;;;;;;;;;;;;;;;;;26:1301;;;;;;",
+  "deployedSourceMap": "26:1301:0:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;785:358;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;190:46;;8:9:-1;5:2;;;30:1;27;20:12;5:2;190:46:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;375:208;;8:9:-1;5:2;;;30:1;27;20:12;5:2;375:208:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;589:190;;8:9:-1;5:2;;;30:1;27;20:12;5:2;589:190:0;;;;;;;;;;;;;;;;;;;;;;;;;;785:358;1004:7;991:9;:20;;983:29;;;;;;;;1042:75;;;;;;;;;1058:6;1042:75;;;;1074:7;1042:75;;;;1094:6;1042:75;;;;;;1114:1;1042:75;;;1022:9;:17;1032:6;1022:17;;;;;;;;;;;:95;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;785:358;;;:::o;190:46::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;375:208::-;469:18;490:9;:17;500:6;490:17;;;;;;;;;;;469:38;;517:9;:18;;:28;536:1;:8;;;517:28;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;517:28:0;570:6;555:1;:12;;:21;;;;375:208;;;;:::o;589:190::-;644:18;665:9;:17;675:6;665:17;;;;;;;;;;;644:38;;692:1;:11;;;;;;;;;;;;:20;;:30;713:1;:8;;;692:30;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;692:30:0;589:190;;:::o",
+  "source": "pragma solidity ^0.4.21;\n\ncontract BountyDistribution {\n    struct Question {\n        uint256 hash;\n        uint256 bounty;\n        address askerAddr;\n        uint256 answerHash;\n    }\n\n    mapping (uint256 => Question) public questions;\n    address contractCreator;\n\n    function BountyDistribution() public { // constructor\n        contractCreator = msg.sender;\n    }\n\n    function distributeBounty(address _answerer, uint256 _aHash, uint256 _qHash) public {\n        Question storage q = questions[_qHash];\n        _answerer.transfer(q.bounty);\n        q.answerHash = _aHash;\n    }\n\n    function refundBounty(uint256 _qHash) public {\n        Question storage q = questions[_qHash];\n        q.askerAddr.transfer(q.bounty);\n        // should we set answerHash to something?\n    }\n\n    function collectBounty(address _asker, uint256 _qHash, uint256 _bounty) public payable {\n        // can also use msg.sender and msg.value\n        // who controls whether bounty == msg.value\n        require(msg.value >= _bounty);\n        questions[_qHash] = Question({hash: _qHash, bounty: _bounty, askerAddr: _asker, answerHash: 0}); // there's no null\n    }\n\n    // kill function?\n    // fallback function?\n    // msg.value --> how much ether was spent in making this call\n    // error handling with whether or not questions[_qHash] exists\n}\n",
   "sourcePath": "/Users/claireshu/Documents/Spring 2018/CS359B/cs359b-tapioca/public/contracts/BountyDistribution.sol",
   "ast": {
     "absolutePath": "/Users/claireshu/Documents/Spring 2018/CS359B/cs359b-tapioca/public/contracts/BountyDistribution.sol",
     "exportedSymbols": {
       "BountyDistribution": [
-        39
+        104
       ]
     },
-    "id": 40,
+    "id": 105,
     "nodeType": "SourceUnit",
     "nodes": [
       {
@@ -102,52 +130,169 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 39,
+        "id": 104,
         "linearizedBaseContracts": [
-          39
+          104
         ],
         "name": "BountyDistribution",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
-            "constant": false,
-            "id": 5,
-            "name": "balances",
-            "nodeType": "VariableDeclaration",
-            "scope": 39,
-            "src": "57:44:0",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
-              "typeString": "mapping(address => uint256)"
-            },
-            "typeName": {
-              "id": 4,
-              "keyType": {
-                "id": 2,
-                "name": "address",
-                "nodeType": "ElementaryTypeName",
-                "src": "66:7:0",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_address",
-                  "typeString": "address"
-                }
-              },
-              "nodeType": "Mapping",
-              "src": "57:28:0",
-              "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
-                "typeString": "mapping(address => uint256)"
-              },
-              "valueType": {
+            "canonicalName": "BountyDistribution.Question",
+            "id": 10,
+            "members": [
+              {
+                "constant": false,
                 "id": 3,
-                "name": "uint256",
-                "nodeType": "ElementaryTypeName",
-                "src": "77:7:0",
+                "name": "hash",
+                "nodeType": "VariableDeclaration",
+                "scope": 10,
+                "src": "86:12:0",
+                "stateVariable": false,
+                "storageLocation": "default",
                 "typeDescriptions": {
                   "typeIdentifier": "t_uint256",
                   "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 2,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "86:7:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 5,
+                "name": "bounty",
+                "nodeType": "VariableDeclaration",
+                "scope": 10,
+                "src": "108:14:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 4,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "108:7:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 7,
+                "name": "askerAddr",
+                "nodeType": "VariableDeclaration",
+                "scope": 10,
+                "src": "132:17:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 6,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "132:7:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 9,
+                "name": "answerHash",
+                "nodeType": "VariableDeclaration",
+                "scope": 10,
+                "src": "159:18:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 8,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "159:7:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "Question",
+            "nodeType": "StructDefinition",
+            "scope": 104,
+            "src": "60:124:0",
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 14,
+            "name": "questions",
+            "nodeType": "VariableDeclaration",
+            "scope": 104,
+            "src": "190:46:0",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Question_$10_storage_$",
+              "typeString": "mapping(uint256 => struct BountyDistribution.Question)"
+            },
+            "typeName": {
+              "id": 13,
+              "keyType": {
+                "id": 11,
+                "name": "uint256",
+                "nodeType": "ElementaryTypeName",
+                "src": "199:7:0",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "190:29:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Question_$10_storage_$",
+                "typeString": "mapping(uint256 => struct BountyDistribution.Question)"
+              },
+              "valueType": {
+                "contractScope": null,
+                "id": 12,
+                "name": "Question",
+                "nodeType": "UserDefinedTypeName",
+                "referencedDeclaration": 10,
+                "src": "210:8:0",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_struct$_Question_$10_storage_ptr",
+                  "typeString": "struct BountyDistribution.Question"
                 }
               }
             },
@@ -156,11 +301,11 @@
           },
           {
             "constant": false,
-            "id": 7,
+            "id": 16,
             "name": "contractCreator",
             "nodeType": "VariableDeclaration",
-            "scope": 39,
-            "src": "104:23:0",
+            "scope": 104,
+            "src": "242:23:0",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -168,10 +313,10 @@
               "typeString": "address"
             },
             "typeName": {
-              "id": 6,
+              "id": 15,
               "name": "address",
               "nodeType": "ElementaryTypeName",
-              "src": "104:7:0",
+              "src": "242:7:0",
               "typeDescriptions": {
                 "typeIdentifier": "t_address",
                 "typeString": "address"
@@ -182,26 +327,26 @@
           },
           {
             "body": {
-              "id": 15,
+              "id": 24,
               "nodeType": "Block",
-              "src": "169:36:0",
+              "src": "309:60:0",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 13,
+                    "id": 22,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 10,
+                      "id": 19,
                       "name": "contractCreator",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 7,
-                      "src": "173:15:0",
+                      "referencedDeclaration": 16,
+                      "src": "334:15:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
@@ -213,18 +358,18 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 11,
+                        "id": 20,
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 111,
-                        "src": "191:3:0",
+                        "referencedDeclaration": 176,
+                        "src": "352:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
                           "typeString": "msg"
                         }
                       },
-                      "id": 12,
+                      "id": 21,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -232,26 +377,26 @@
                       "memberName": "sender",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "191:10:0",
+                      "src": "352:10:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
                       }
                     },
-                    "src": "173:28:0",
+                    "src": "334:28:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
                     }
                   },
-                  "id": 14,
+                  "id": 23,
                   "nodeType": "ExpressionStatement",
-                  "src": "173:28:0"
+                  "src": "334:28:0"
                 }
               ]
             },
             "documentation": null,
-            "id": 16,
+            "id": 25,
             "implemented": true,
             "isConstructor": true,
             "isDeclaredConst": false,
@@ -259,50 +404,277 @@
             "name": "BountyDistribution",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 8,
+              "id": 17,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "159:2:0"
+              "src": "299:2:0"
             },
             "payable": false,
             "returnParameters": {
-              "id": 9,
+              "id": 18,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "169:0:0"
+              "src": "309:0:0"
             },
-            "scope": 39,
-            "src": "132:73:0",
+            "scope": 104,
+            "src": "272:97:0",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 25,
+              "id": 53,
               "nodeType": "Block",
-              "src": "286:7:0",
-              "statements": []
+              "src": "459:124:0",
+              "statements": [
+                {
+                  "assignments": [
+                    35
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 35,
+                      "name": "q",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 54,
+                      "src": "469:18:0",
+                      "stateVariable": false,
+                      "storageLocation": "storage",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Question_$10_storage_ptr",
+                        "typeString": "struct BountyDistribution.Question"
+                      },
+                      "typeName": {
+                        "contractScope": null,
+                        "id": 34,
+                        "name": "Question",
+                        "nodeType": "UserDefinedTypeName",
+                        "referencedDeclaration": 10,
+                        "src": "469:8:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Question_$10_storage_ptr",
+                          "typeString": "struct BountyDistribution.Question"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 39,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "baseExpression": {
+                      "argumentTypes": null,
+                      "id": 36,
+                      "name": "questions",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 14,
+                      "src": "490:9:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Question_$10_storage_$",
+                        "typeString": "mapping(uint256 => struct BountyDistribution.Question storage ref)"
+                      }
+                    },
+                    "id": 38,
+                    "indexExpression": {
+                      "argumentTypes": null,
+                      "id": 37,
+                      "name": "_qHash",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 31,
+                      "src": "500:6:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "nodeType": "IndexAccess",
+                    "src": "490:17:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Question_$10_storage",
+                      "typeString": "struct BountyDistribution.Question storage ref"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "469:38:0"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 43,
+                          "name": "q",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 35,
+                          "src": "536:1:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_Question_$10_storage_ptr",
+                            "typeString": "struct BountyDistribution.Question storage pointer"
+                          }
+                        },
+                        "id": 44,
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "bounty",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 5,
+                        "src": "536:8:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 40,
+                        "name": "_answerer",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 27,
+                        "src": "517:9:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      "id": 42,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "transfer",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": null,
+                      "src": "517:18:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_transfer_nonpayable$_t_uint256_$returns$__$",
+                        "typeString": "function (uint256)"
+                      }
+                    },
+                    "id": 45,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "517:28:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 46,
+                  "nodeType": "ExpressionStatement",
+                  "src": "517:28:0"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 51,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 47,
+                        "name": "q",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 35,
+                        "src": "555:1:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Question_$10_storage_ptr",
+                          "typeString": "struct BountyDistribution.Question storage pointer"
+                        }
+                      },
+                      "id": 49,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "answerHash",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 9,
+                      "src": "555:12:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 50,
+                      "name": "_aHash",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 29,
+                      "src": "570:6:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "555:21:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 52,
+                  "nodeType": "ExpressionStatement",
+                  "src": "555:21:0"
+                }
+              ]
             },
             "documentation": null,
-            "id": 26,
+            "id": 54,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
             "modifiers": [],
-            "name": "payBounty",
+            "name": "distributeBounty",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 21,
+              "id": 32,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 18,
-                  "name": "_to",
+                  "id": 27,
+                  "name": "_answerer",
                   "nodeType": "VariableDeclaration",
-                  "scope": 26,
-                  "src": "227:11:0",
+                  "scope": 54,
+                  "src": "401:17:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -310,10 +682,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 17,
+                    "id": 26,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "227:7:0",
+                    "src": "401:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -324,11 +696,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 20,
-                  "name": "_value",
+                  "id": 29,
+                  "name": "_aHash",
                   "nodeType": "VariableDeclaration",
-                  "scope": 26,
-                  "src": "240:14:0",
+                  "scope": 54,
+                  "src": "420:14:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -336,10 +708,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 19,
+                    "id": 28,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "240:7:0",
+                    "src": "420:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -347,157 +719,14 @@
                   },
                   "value": null,
                   "visibility": "internal"
-                }
-              ],
-              "src": "226:29:0"
-            },
-            "payable": false,
-            "returnParameters": {
-              "id": 24,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 23,
-                  "name": "success",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 26,
-                  "src": "272:12:0",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_bool",
-                    "typeString": "bool"
-                  },
-                  "typeName": {
-                    "id": 22,
-                    "name": "bool",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "272:4:0",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_bool",
-                      "typeString": "bool"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "271:14:0"
-            },
-            "scope": 39,
-            "src": "208:85:0",
-            "stateMutability": "nonpayable",
-            "superFunction": null,
-            "visibility": "public"
-          },
-          {
-            "body": {
-              "id": 37,
-              "nodeType": "Block",
-              "src": "369:31:0",
-              "statements": [
-                {
-                  "expression": {
-                    "argumentTypes": null,
-                    "baseExpression": {
-                      "argumentTypes": null,
-                      "id": 33,
-                      "name": "balances",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [],
-                      "referencedDeclaration": 5,
-                      "src": "380:8:0",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
-                        "typeString": "mapping(address => uint256)"
-                      }
-                    },
-                    "id": 35,
-                    "indexExpression": {
-                      "argumentTypes": null,
-                      "id": 34,
-                      "name": "_owner",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [],
-                      "referencedDeclaration": 28,
-                      "src": "389:6:0",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_address",
-                        "typeString": "address"
-                      }
-                    },
-                    "isConstant": false,
-                    "isLValue": true,
-                    "isPure": false,
-                    "lValueRequested": false,
-                    "nodeType": "IndexAccess",
-                    "src": "380:16:0",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "functionReturnParameters": 32,
-                  "id": 36,
-                  "nodeType": "Return",
-                  "src": "373:23:0"
-                }
-              ]
-            },
-            "documentation": null,
-            "id": 38,
-            "implemented": true,
-            "isConstructor": false,
-            "isDeclaredConst": true,
-            "modifiers": [],
-            "name": "balanceOf",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 29,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 28,
-                  "name": "_owner",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 38,
-                  "src": "315:14:0",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_address",
-                    "typeString": "address"
-                  },
-                  "typeName": {
-                    "id": 27,
-                    "name": "address",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "315:7:0",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_address",
-                      "typeString": "address"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "314:16:0"
-            },
-            "payable": false,
-            "returnParameters": {
-              "id": 32,
-              "nodeType": "ParameterList",
-              "parameters": [
+                },
                 {
                   "constant": false,
                   "id": 31,
-                  "name": "balance",
+                  "name": "_qHash",
                   "nodeType": "VariableDeclaration",
-                  "scope": 38,
-                  "src": "352:15:0",
+                  "scope": 54,
+                  "src": "436:14:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -508,7 +737,7 @@
                     "id": 30,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "352:7:0",
+                    "src": "436:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -518,29 +747,650 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "351:17:0"
+              "src": "400:51:0"
             },
-            "scope": 39,
-            "src": "296:104:0",
-            "stateMutability": "view",
+            "payable": false,
+            "returnParameters": {
+              "id": 33,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "459:0:0"
+            },
+            "scope": 104,
+            "src": "375:208:0",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 74,
+              "nodeType": "Block",
+              "src": "634:145:0",
+              "statements": [
+                {
+                  "assignments": [
+                    60
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 60,
+                      "name": "q",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 75,
+                      "src": "644:18:0",
+                      "stateVariable": false,
+                      "storageLocation": "storage",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Question_$10_storage_ptr",
+                        "typeString": "struct BountyDistribution.Question"
+                      },
+                      "typeName": {
+                        "contractScope": null,
+                        "id": 59,
+                        "name": "Question",
+                        "nodeType": "UserDefinedTypeName",
+                        "referencedDeclaration": 10,
+                        "src": "644:8:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Question_$10_storage_ptr",
+                          "typeString": "struct BountyDistribution.Question"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 64,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "baseExpression": {
+                      "argumentTypes": null,
+                      "id": 61,
+                      "name": "questions",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 14,
+                      "src": "665:9:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Question_$10_storage_$",
+                        "typeString": "mapping(uint256 => struct BountyDistribution.Question storage ref)"
+                      }
+                    },
+                    "id": 63,
+                    "indexExpression": {
+                      "argumentTypes": null,
+                      "id": 62,
+                      "name": "_qHash",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 56,
+                      "src": "675:6:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "nodeType": "IndexAccess",
+                    "src": "665:17:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Question_$10_storage",
+                      "typeString": "struct BountyDistribution.Question storage ref"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "644:38:0"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 70,
+                          "name": "q",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 60,
+                          "src": "713:1:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_Question_$10_storage_ptr",
+                            "typeString": "struct BountyDistribution.Question storage pointer"
+                          }
+                        },
+                        "id": 71,
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "bounty",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 5,
+                        "src": "713:8:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 65,
+                          "name": "q",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 60,
+                          "src": "692:1:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_Question_$10_storage_ptr",
+                            "typeString": "struct BountyDistribution.Question storage pointer"
+                          }
+                        },
+                        "id": 68,
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "askerAddr",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 7,
+                        "src": "692:11:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      "id": 69,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "transfer",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": null,
+                      "src": "692:20:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_transfer_nonpayable$_t_uint256_$returns$__$",
+                        "typeString": "function (uint256)"
+                      }
+                    },
+                    "id": 72,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "692:30:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 73,
+                  "nodeType": "ExpressionStatement",
+                  "src": "692:30:0"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 75,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "refundBounty",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 57,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 56,
+                  "name": "_qHash",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 75,
+                  "src": "611:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 55,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "611:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "610:16:0"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 58,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "634:0:0"
+            },
+            "scope": 104,
+            "src": "589:190:0",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 102,
+              "nodeType": "Block",
+              "src": "872:271:0",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        "id": 88,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 85,
+                            "name": "msg",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 176,
+                            "src": "991:3:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_magic_message",
+                              "typeString": "msg"
+                            }
+                          },
+                          "id": 86,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "value",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": null,
+                          "src": "991:9:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": ">=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "id": 87,
+                          "name": "_bounty",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 81,
+                          "src": "1004:7:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "src": "991:20:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      ],
+                      "id": 84,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        179,
+                        180
+                      ],
+                      "referencedDeclaration": 179,
+                      "src": "983:7:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                        "typeString": "function (bool) pure"
+                      }
+                    },
+                    "id": 89,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "983:29:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 90,
+                  "nodeType": "ExpressionStatement",
+                  "src": "983:29:0"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 100,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "baseExpression": {
+                        "argumentTypes": null,
+                        "id": 91,
+                        "name": "questions",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 14,
+                        "src": "1022:9:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Question_$10_storage_$",
+                          "typeString": "mapping(uint256 => struct BountyDistribution.Question storage ref)"
+                        }
+                      },
+                      "id": 93,
+                      "indexExpression": {
+                        "argumentTypes": null,
+                        "id": 92,
+                        "name": "_qHash",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 79,
+                        "src": "1032:6:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "nodeType": "IndexAccess",
+                      "src": "1022:17:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Question_$10_storage",
+                        "typeString": "struct BountyDistribution.Question storage ref"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "arguments": [
+                        {
+                          "argumentTypes": null,
+                          "id": 95,
+                          "name": "_qHash",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 79,
+                          "src": "1058:6:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        {
+                          "argumentTypes": null,
+                          "id": 96,
+                          "name": "_bounty",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 81,
+                          "src": "1074:7:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        {
+                          "argumentTypes": null,
+                          "id": 97,
+                          "name": "_asker",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 77,
+                          "src": "1094:6:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        {
+                          "argumentTypes": null,
+                          "hexValue": "30",
+                          "id": 98,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "number",
+                          "lValueRequested": false,
+                          "nodeType": "Literal",
+                          "src": "1114:1:0",
+                          "subdenomination": null,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_rational_0_by_1",
+                            "typeString": "int_const 0"
+                          },
+                          "value": "0"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 94,
+                        "name": "Question",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 10,
+                        "src": "1042:8:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_type$_t_struct$_Question_$10_storage_ptr_$",
+                          "typeString": "type(struct BountyDistribution.Question storage pointer)"
+                        }
+                      },
+                      "id": 99,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "structConstructorCall",
+                      "lValueRequested": false,
+                      "names": [
+                        "hash",
+                        "bounty",
+                        "askerAddr",
+                        "answerHash"
+                      ],
+                      "nodeType": "FunctionCall",
+                      "src": "1042:75:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Question_$10_memory",
+                        "typeString": "struct BountyDistribution.Question memory"
+                      }
+                    },
+                    "src": "1022:95:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Question_$10_storage",
+                      "typeString": "struct BountyDistribution.Question storage ref"
+                    }
+                  },
+                  "id": 101,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1022:95:0"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 103,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "collectBounty",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 82,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 77,
+                  "name": "_asker",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 103,
+                  "src": "808:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 76,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "808:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 79,
+                  "name": "_qHash",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 103,
+                  "src": "824:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 78,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "824:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 81,
+                  "name": "_bounty",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 103,
+                  "src": "840:15:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 80,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "840:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "807:49:0"
+            },
+            "payable": true,
+            "returnParameters": {
+              "id": 83,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "872:0:0"
+            },
+            "scope": 104,
+            "src": "785:358:0",
+            "stateMutability": "payable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 40,
-        "src": "26:376:0"
+        "scope": 105,
+        "src": "26:1301:0"
       }
     ],
-    "src": "0:403:0"
+    "src": "0:1328:0"
   },
   "legacyAST": {
     "absolutePath": "/Users/claireshu/Documents/Spring 2018/CS359B/cs359b-tapioca/public/contracts/BountyDistribution.sol",
     "exportedSymbols": {
       "BountyDistribution": [
-        39
+        104
       ]
     },
-    "id": 40,
+    "id": 105,
     "nodeType": "SourceUnit",
     "nodes": [
       {
@@ -560,52 +1410,169 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 39,
+        "id": 104,
         "linearizedBaseContracts": [
-          39
+          104
         ],
         "name": "BountyDistribution",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
-            "constant": false,
-            "id": 5,
-            "name": "balances",
-            "nodeType": "VariableDeclaration",
-            "scope": 39,
-            "src": "57:44:0",
-            "stateVariable": true,
-            "storageLocation": "default",
-            "typeDescriptions": {
-              "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
-              "typeString": "mapping(address => uint256)"
-            },
-            "typeName": {
-              "id": 4,
-              "keyType": {
-                "id": 2,
-                "name": "address",
-                "nodeType": "ElementaryTypeName",
-                "src": "66:7:0",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_address",
-                  "typeString": "address"
-                }
-              },
-              "nodeType": "Mapping",
-              "src": "57:28:0",
-              "typeDescriptions": {
-                "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
-                "typeString": "mapping(address => uint256)"
-              },
-              "valueType": {
+            "canonicalName": "BountyDistribution.Question",
+            "id": 10,
+            "members": [
+              {
+                "constant": false,
                 "id": 3,
-                "name": "uint256",
-                "nodeType": "ElementaryTypeName",
-                "src": "77:7:0",
+                "name": "hash",
+                "nodeType": "VariableDeclaration",
+                "scope": 10,
+                "src": "86:12:0",
+                "stateVariable": false,
+                "storageLocation": "default",
                 "typeDescriptions": {
                   "typeIdentifier": "t_uint256",
                   "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 2,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "86:7:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 5,
+                "name": "bounty",
+                "nodeType": "VariableDeclaration",
+                "scope": 10,
+                "src": "108:14:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 4,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "108:7:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 7,
+                "name": "askerAddr",
+                "nodeType": "VariableDeclaration",
+                "scope": 10,
+                "src": "132:17:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 6,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "132:7:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 9,
+                "name": "answerHash",
+                "nodeType": "VariableDeclaration",
+                "scope": 10,
+                "src": "159:18:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 8,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "159:7:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "Question",
+            "nodeType": "StructDefinition",
+            "scope": 104,
+            "src": "60:124:0",
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 14,
+            "name": "questions",
+            "nodeType": "VariableDeclaration",
+            "scope": 104,
+            "src": "190:46:0",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Question_$10_storage_$",
+              "typeString": "mapping(uint256 => struct BountyDistribution.Question)"
+            },
+            "typeName": {
+              "id": 13,
+              "keyType": {
+                "id": 11,
+                "name": "uint256",
+                "nodeType": "ElementaryTypeName",
+                "src": "199:7:0",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "190:29:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Question_$10_storage_$",
+                "typeString": "mapping(uint256 => struct BountyDistribution.Question)"
+              },
+              "valueType": {
+                "contractScope": null,
+                "id": 12,
+                "name": "Question",
+                "nodeType": "UserDefinedTypeName",
+                "referencedDeclaration": 10,
+                "src": "210:8:0",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_struct$_Question_$10_storage_ptr",
+                  "typeString": "struct BountyDistribution.Question"
                 }
               }
             },
@@ -614,11 +1581,11 @@
           },
           {
             "constant": false,
-            "id": 7,
+            "id": 16,
             "name": "contractCreator",
             "nodeType": "VariableDeclaration",
-            "scope": 39,
-            "src": "104:23:0",
+            "scope": 104,
+            "src": "242:23:0",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
@@ -626,10 +1593,10 @@
               "typeString": "address"
             },
             "typeName": {
-              "id": 6,
+              "id": 15,
               "name": "address",
               "nodeType": "ElementaryTypeName",
-              "src": "104:7:0",
+              "src": "242:7:0",
               "typeDescriptions": {
                 "typeIdentifier": "t_address",
                 "typeString": "address"
@@ -640,26 +1607,26 @@
           },
           {
             "body": {
-              "id": 15,
+              "id": 24,
               "nodeType": "Block",
-              "src": "169:36:0",
+              "src": "309:60:0",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 13,
+                    "id": 22,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 10,
+                      "id": 19,
                       "name": "contractCreator",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 7,
-                      "src": "173:15:0",
+                      "referencedDeclaration": 16,
+                      "src": "334:15:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
@@ -671,18 +1638,18 @@
                       "argumentTypes": null,
                       "expression": {
                         "argumentTypes": null,
-                        "id": 11,
+                        "id": 20,
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 111,
-                        "src": "191:3:0",
+                        "referencedDeclaration": 176,
+                        "src": "352:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
                           "typeString": "msg"
                         }
                       },
-                      "id": 12,
+                      "id": 21,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -690,26 +1657,26 @@
                       "memberName": "sender",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "191:10:0",
+                      "src": "352:10:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
                       }
                     },
-                    "src": "173:28:0",
+                    "src": "334:28:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
                     }
                   },
-                  "id": 14,
+                  "id": 23,
                   "nodeType": "ExpressionStatement",
-                  "src": "173:28:0"
+                  "src": "334:28:0"
                 }
               ]
             },
             "documentation": null,
-            "id": 16,
+            "id": 25,
             "implemented": true,
             "isConstructor": true,
             "isDeclaredConst": false,
@@ -717,50 +1684,277 @@
             "name": "BountyDistribution",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 8,
+              "id": 17,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "159:2:0"
+              "src": "299:2:0"
             },
             "payable": false,
             "returnParameters": {
-              "id": 9,
+              "id": 18,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "169:0:0"
+              "src": "309:0:0"
             },
-            "scope": 39,
-            "src": "132:73:0",
+            "scope": 104,
+            "src": "272:97:0",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 25,
+              "id": 53,
               "nodeType": "Block",
-              "src": "286:7:0",
-              "statements": []
+              "src": "459:124:0",
+              "statements": [
+                {
+                  "assignments": [
+                    35
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 35,
+                      "name": "q",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 54,
+                      "src": "469:18:0",
+                      "stateVariable": false,
+                      "storageLocation": "storage",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Question_$10_storage_ptr",
+                        "typeString": "struct BountyDistribution.Question"
+                      },
+                      "typeName": {
+                        "contractScope": null,
+                        "id": 34,
+                        "name": "Question",
+                        "nodeType": "UserDefinedTypeName",
+                        "referencedDeclaration": 10,
+                        "src": "469:8:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Question_$10_storage_ptr",
+                          "typeString": "struct BountyDistribution.Question"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 39,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "baseExpression": {
+                      "argumentTypes": null,
+                      "id": 36,
+                      "name": "questions",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 14,
+                      "src": "490:9:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Question_$10_storage_$",
+                        "typeString": "mapping(uint256 => struct BountyDistribution.Question storage ref)"
+                      }
+                    },
+                    "id": 38,
+                    "indexExpression": {
+                      "argumentTypes": null,
+                      "id": 37,
+                      "name": "_qHash",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 31,
+                      "src": "500:6:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "nodeType": "IndexAccess",
+                    "src": "490:17:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Question_$10_storage",
+                      "typeString": "struct BountyDistribution.Question storage ref"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "469:38:0"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 43,
+                          "name": "q",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 35,
+                          "src": "536:1:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_Question_$10_storage_ptr",
+                            "typeString": "struct BountyDistribution.Question storage pointer"
+                          }
+                        },
+                        "id": 44,
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "bounty",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 5,
+                        "src": "536:8:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 40,
+                        "name": "_answerer",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 27,
+                        "src": "517:9:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      "id": 42,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "transfer",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": null,
+                      "src": "517:18:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_transfer_nonpayable$_t_uint256_$returns$__$",
+                        "typeString": "function (uint256)"
+                      }
+                    },
+                    "id": 45,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "517:28:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 46,
+                  "nodeType": "ExpressionStatement",
+                  "src": "517:28:0"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 51,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 47,
+                        "name": "q",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 35,
+                        "src": "555:1:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Question_$10_storage_ptr",
+                          "typeString": "struct BountyDistribution.Question storage pointer"
+                        }
+                      },
+                      "id": 49,
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "memberName": "answerHash",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": 9,
+                      "src": "555:12:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "id": 50,
+                      "name": "_aHash",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 29,
+                      "src": "570:6:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "555:21:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "id": 52,
+                  "nodeType": "ExpressionStatement",
+                  "src": "555:21:0"
+                }
+              ]
             },
             "documentation": null,
-            "id": 26,
+            "id": 54,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
             "modifiers": [],
-            "name": "payBounty",
+            "name": "distributeBounty",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 21,
+              "id": 32,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 18,
-                  "name": "_to",
+                  "id": 27,
+                  "name": "_answerer",
                   "nodeType": "VariableDeclaration",
-                  "scope": 26,
-                  "src": "227:11:0",
+                  "scope": 54,
+                  "src": "401:17:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -768,10 +1962,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 17,
+                    "id": 26,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "227:7:0",
+                    "src": "401:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -782,11 +1976,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 20,
-                  "name": "_value",
+                  "id": 29,
+                  "name": "_aHash",
                   "nodeType": "VariableDeclaration",
-                  "scope": 26,
-                  "src": "240:14:0",
+                  "scope": 54,
+                  "src": "420:14:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -794,10 +1988,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 19,
+                    "id": 28,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "240:7:0",
+                    "src": "420:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -805,157 +1999,14 @@
                   },
                   "value": null,
                   "visibility": "internal"
-                }
-              ],
-              "src": "226:29:0"
-            },
-            "payable": false,
-            "returnParameters": {
-              "id": 24,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 23,
-                  "name": "success",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 26,
-                  "src": "272:12:0",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_bool",
-                    "typeString": "bool"
-                  },
-                  "typeName": {
-                    "id": 22,
-                    "name": "bool",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "272:4:0",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_bool",
-                      "typeString": "bool"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "271:14:0"
-            },
-            "scope": 39,
-            "src": "208:85:0",
-            "stateMutability": "nonpayable",
-            "superFunction": null,
-            "visibility": "public"
-          },
-          {
-            "body": {
-              "id": 37,
-              "nodeType": "Block",
-              "src": "369:31:0",
-              "statements": [
-                {
-                  "expression": {
-                    "argumentTypes": null,
-                    "baseExpression": {
-                      "argumentTypes": null,
-                      "id": 33,
-                      "name": "balances",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [],
-                      "referencedDeclaration": 5,
-                      "src": "380:8:0",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_mapping$_t_address_$_t_uint256_$",
-                        "typeString": "mapping(address => uint256)"
-                      }
-                    },
-                    "id": 35,
-                    "indexExpression": {
-                      "argumentTypes": null,
-                      "id": 34,
-                      "name": "_owner",
-                      "nodeType": "Identifier",
-                      "overloadedDeclarations": [],
-                      "referencedDeclaration": 28,
-                      "src": "389:6:0",
-                      "typeDescriptions": {
-                        "typeIdentifier": "t_address",
-                        "typeString": "address"
-                      }
-                    },
-                    "isConstant": false,
-                    "isLValue": true,
-                    "isPure": false,
-                    "lValueRequested": false,
-                    "nodeType": "IndexAccess",
-                    "src": "380:16:0",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_uint256",
-                      "typeString": "uint256"
-                    }
-                  },
-                  "functionReturnParameters": 32,
-                  "id": 36,
-                  "nodeType": "Return",
-                  "src": "373:23:0"
-                }
-              ]
-            },
-            "documentation": null,
-            "id": 38,
-            "implemented": true,
-            "isConstructor": false,
-            "isDeclaredConst": true,
-            "modifiers": [],
-            "name": "balanceOf",
-            "nodeType": "FunctionDefinition",
-            "parameters": {
-              "id": 29,
-              "nodeType": "ParameterList",
-              "parameters": [
-                {
-                  "constant": false,
-                  "id": 28,
-                  "name": "_owner",
-                  "nodeType": "VariableDeclaration",
-                  "scope": 38,
-                  "src": "315:14:0",
-                  "stateVariable": false,
-                  "storageLocation": "default",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_address",
-                    "typeString": "address"
-                  },
-                  "typeName": {
-                    "id": 27,
-                    "name": "address",
-                    "nodeType": "ElementaryTypeName",
-                    "src": "315:7:0",
-                    "typeDescriptions": {
-                      "typeIdentifier": "t_address",
-                      "typeString": "address"
-                    }
-                  },
-                  "value": null,
-                  "visibility": "internal"
-                }
-              ],
-              "src": "314:16:0"
-            },
-            "payable": false,
-            "returnParameters": {
-              "id": 32,
-              "nodeType": "ParameterList",
-              "parameters": [
+                },
                 {
                   "constant": false,
                   "id": 31,
-                  "name": "balance",
+                  "name": "_qHash",
                   "nodeType": "VariableDeclaration",
-                  "scope": 38,
-                  "src": "352:15:0",
+                  "scope": 54,
+                  "src": "436:14:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -966,7 +2017,7 @@
                     "id": 30,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "352:7:0",
+                    "src": "436:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -976,20 +2027,641 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "351:17:0"
+              "src": "400:51:0"
             },
-            "scope": 39,
-            "src": "296:104:0",
-            "stateMutability": "view",
+            "payable": false,
+            "returnParameters": {
+              "id": 33,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "459:0:0"
+            },
+            "scope": 104,
+            "src": "375:208:0",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 74,
+              "nodeType": "Block",
+              "src": "634:145:0",
+              "statements": [
+                {
+                  "assignments": [
+                    60
+                  ],
+                  "declarations": [
+                    {
+                      "constant": false,
+                      "id": 60,
+                      "name": "q",
+                      "nodeType": "VariableDeclaration",
+                      "scope": 75,
+                      "src": "644:18:0",
+                      "stateVariable": false,
+                      "storageLocation": "storage",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Question_$10_storage_ptr",
+                        "typeString": "struct BountyDistribution.Question"
+                      },
+                      "typeName": {
+                        "contractScope": null,
+                        "id": 59,
+                        "name": "Question",
+                        "nodeType": "UserDefinedTypeName",
+                        "referencedDeclaration": 10,
+                        "src": "644:8:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_struct$_Question_$10_storage_ptr",
+                          "typeString": "struct BountyDistribution.Question"
+                        }
+                      },
+                      "value": null,
+                      "visibility": "internal"
+                    }
+                  ],
+                  "id": 64,
+                  "initialValue": {
+                    "argumentTypes": null,
+                    "baseExpression": {
+                      "argumentTypes": null,
+                      "id": 61,
+                      "name": "questions",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 14,
+                      "src": "665:9:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Question_$10_storage_$",
+                        "typeString": "mapping(uint256 => struct BountyDistribution.Question storage ref)"
+                      }
+                    },
+                    "id": 63,
+                    "indexExpression": {
+                      "argumentTypes": null,
+                      "id": 62,
+                      "name": "_qHash",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 56,
+                      "src": "675:6:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "isConstant": false,
+                    "isLValue": true,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "nodeType": "IndexAccess",
+                    "src": "665:17:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Question_$10_storage",
+                      "typeString": "struct BountyDistribution.Question storage ref"
+                    }
+                  },
+                  "nodeType": "VariableDeclarationStatement",
+                  "src": "644:38:0"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 70,
+                          "name": "q",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 60,
+                          "src": "713:1:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_Question_$10_storage_ptr",
+                            "typeString": "struct BountyDistribution.Question storage pointer"
+                          }
+                        },
+                        "id": 71,
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "bounty",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 5,
+                        "src": "713:8:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "expression": {
+                          "argumentTypes": null,
+                          "id": 65,
+                          "name": "q",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 60,
+                          "src": "692:1:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_struct$_Question_$10_storage_ptr",
+                            "typeString": "struct BountyDistribution.Question storage pointer"
+                          }
+                        },
+                        "id": 68,
+                        "isConstant": false,
+                        "isLValue": true,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "memberName": "askerAddr",
+                        "nodeType": "MemberAccess",
+                        "referencedDeclaration": 7,
+                        "src": "692:11:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_address",
+                          "typeString": "address"
+                        }
+                      },
+                      "id": 69,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "lValueRequested": false,
+                      "memberName": "transfer",
+                      "nodeType": "MemberAccess",
+                      "referencedDeclaration": null,
+                      "src": "692:20:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_transfer_nonpayable$_t_uint256_$returns$__$",
+                        "typeString": "function (uint256)"
+                      }
+                    },
+                    "id": 72,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "692:30:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 73,
+                  "nodeType": "ExpressionStatement",
+                  "src": "692:30:0"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 75,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "refundBounty",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 57,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 56,
+                  "name": "_qHash",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 75,
+                  "src": "611:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 55,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "611:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "610:16:0"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 58,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "634:0:0"
+            },
+            "scope": 104,
+            "src": "589:190:0",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 102,
+              "nodeType": "Block",
+              "src": "872:271:0",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        "id": 88,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "expression": {
+                            "argumentTypes": null,
+                            "id": 85,
+                            "name": "msg",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 176,
+                            "src": "991:3:0",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_magic_message",
+                              "typeString": "msg"
+                            }
+                          },
+                          "id": 86,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "memberName": "value",
+                          "nodeType": "MemberAccess",
+                          "referencedDeclaration": null,
+                          "src": "991:9:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": ">=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "id": 87,
+                          "name": "_bounty",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 81,
+                          "src": "1004:7:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "src": "991:20:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      ],
+                      "id": 84,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        179,
+                        180
+                      ],
+                      "referencedDeclaration": 179,
+                      "src": "983:7:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
+                        "typeString": "function (bool) pure"
+                      }
+                    },
+                    "id": 89,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "983:29:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 90,
+                  "nodeType": "ExpressionStatement",
+                  "src": "983:29:0"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 100,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftHandSide": {
+                      "argumentTypes": null,
+                      "baseExpression": {
+                        "argumentTypes": null,
+                        "id": 91,
+                        "name": "questions",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 14,
+                        "src": "1022:9:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_mapping$_t_uint256_$_t_struct$_Question_$10_storage_$",
+                          "typeString": "mapping(uint256 => struct BountyDistribution.Question storage ref)"
+                        }
+                      },
+                      "id": 93,
+                      "indexExpression": {
+                        "argumentTypes": null,
+                        "id": 92,
+                        "name": "_qHash",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 79,
+                        "src": "1032:6:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        }
+                      },
+                      "isConstant": false,
+                      "isLValue": true,
+                      "isPure": false,
+                      "lValueRequested": true,
+                      "nodeType": "IndexAccess",
+                      "src": "1022:17:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Question_$10_storage",
+                        "typeString": "struct BountyDistribution.Question storage ref"
+                      }
+                    },
+                    "nodeType": "Assignment",
+                    "operator": "=",
+                    "rightHandSide": {
+                      "argumentTypes": null,
+                      "arguments": [
+                        {
+                          "argumentTypes": null,
+                          "id": 95,
+                          "name": "_qHash",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 79,
+                          "src": "1058:6:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        {
+                          "argumentTypes": null,
+                          "id": 96,
+                          "name": "_bounty",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 81,
+                          "src": "1074:7:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        {
+                          "argumentTypes": null,
+                          "id": 97,
+                          "name": "_asker",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 77,
+                          "src": "1094:6:0",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_address",
+                            "typeString": "address"
+                          }
+                        },
+                        {
+                          "argumentTypes": null,
+                          "hexValue": "30",
+                          "id": 98,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "number",
+                          "lValueRequested": false,
+                          "nodeType": "Literal",
+                          "src": "1114:1:0",
+                          "subdenomination": null,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_rational_0_by_1",
+                            "typeString": "int_const 0"
+                          },
+                          "value": "0"
+                        }
+                      ],
+                      "expression": {
+                        "argumentTypes": null,
+                        "id": 94,
+                        "name": "Question",
+                        "nodeType": "Identifier",
+                        "overloadedDeclarations": [],
+                        "referencedDeclaration": 10,
+                        "src": "1042:8:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_type$_t_struct$_Question_$10_storage_ptr_$",
+                          "typeString": "type(struct BountyDistribution.Question storage pointer)"
+                        }
+                      },
+                      "id": 99,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": false,
+                      "kind": "structConstructorCall",
+                      "lValueRequested": false,
+                      "names": [
+                        "hash",
+                        "bounty",
+                        "askerAddr",
+                        "answerHash"
+                      ],
+                      "nodeType": "FunctionCall",
+                      "src": "1042:75:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_Question_$10_memory",
+                        "typeString": "struct BountyDistribution.Question memory"
+                      }
+                    },
+                    "src": "1022:95:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Question_$10_storage",
+                      "typeString": "struct BountyDistribution.Question storage ref"
+                    }
+                  },
+                  "id": 101,
+                  "nodeType": "ExpressionStatement",
+                  "src": "1022:95:0"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 103,
+            "implemented": true,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "collectBounty",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 82,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 77,
+                  "name": "_asker",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 103,
+                  "src": "808:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 76,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "808:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 79,
+                  "name": "_qHash",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 103,
+                  "src": "824:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 78,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "824:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 81,
+                  "name": "_bounty",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 103,
+                  "src": "840:15:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 80,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "840:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "807:49:0"
+            },
+            "payable": true,
+            "returnParameters": {
+              "id": 83,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "872:0:0"
+            },
+            "scope": 104,
+            "src": "785:358:0",
+            "stateMutability": "payable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 40,
-        "src": "26:376:0"
+        "scope": 105,
+        "src": "26:1301:0"
       }
     ],
-    "src": "0:403:0"
+    "src": "0:1328:0"
   },
   "compiler": {
     "name": "solc",
@@ -1001,8 +2673,14 @@
       "links": {},
       "address": "0x70bc6d2f40be1d3da6e6a9df660326d5a976911d",
       "transactionHash": "0x988852e1833dba34a133b5bb2b4f4e6ea93b7cf99652e83b4de2a98448313efc"
+    },
+    "5779": {
+      "events": {},
+      "links": {},
+      "address": "0x70bc6d2f40be1d3da6e6a9df660326d5a976911d",
+      "transactionHash": "0x0225b697ff6e255fef4a2398fcc015cb9346454817cb51b149c9cbef08c2e194"
     }
   },
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-05-04T05:11:54.504Z"
+  "updatedAt": "2018-05-06T04:58:34.102Z"
 }

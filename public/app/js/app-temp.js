@@ -19,9 +19,7 @@ function app() {
             var networkId = results[1];     // resolved value of networkIdPromise
             var accounts = results[2];      // resolved value of accountsPromise
             userAccount = accounts[0];
-
-            debugger
-  
+            
             // Make sure the contract is deployed on the connected network
             if (!(networkId in contractData.networks)) {
                 throw new Error("Contract not found in selected Ethereum network on MetaMask.");
