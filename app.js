@@ -116,4 +116,13 @@ app.get('/question_detail', function(request, response)  {
 app.listen(3000);
 console.log('Listening at 127.0.0.1:' + 3000);
 
-// model.saveUser("mchang4",[{"hi":"sample"}], [{"h":"e", "qw":"fweokfoe"}, {"ew":"Qw", "as": "pwqeo"}], "0xwiofjeojo023kr03", [{"ewwer": "ewrwqqw"}]);
+function test() {
+  var askerId = model.createUser("mchang4",[], [], "0xwiofjeojo023kr03", []);
+  var answererId = model.createUser("peterlu6", [], [], "0x29040g3hfej322ri", []);
+  var questionId = model.createQuestion(50, "hash goes here", new Date("2016-12-12"), "title", "body", askerId);
+  console.log("questionId: " + questionId);
+  model.createAnswer(answererId, 0, [], questionId);
+}
+
+test();
+

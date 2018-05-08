@@ -12,58 +12,94 @@ mongoose.connect(uristring, function (err, res) {
     }
 });
 
-var saveUser = function(username, questions, answers, address, upvotes) {
+var createUser = function(username, address) {
+	var createdUserId = mongoose.Types.ObjectId();
 	var newUser = new schema.User ({
 		username: username,
-		questions: questions,
-		answers: answers,
+		questions: [],
+		answers: [],
 		address: address,
-		upvotes: upvotes
+		upvotes: [],
+		_id: createdUserId
 	});
-	newUser.save(function (err) {
+	newUser.save(function (err, user) {
         if (err) {
         	console.log(err);
         } else {
-        	console.log("saved user successfully");
+        	console.log("saved user successfully. id: " + user.id);
         }
     });
+    return createdUserId;
 }
 
-var saveQuestion = function(answers, bounty, upvotes, questionHash, topAnswerHash, timeExp, title, body) {
+var createQuestion = function(bounty, questionHash, timeExp, title, body, askerId) {
+	var createdQuestionId = mongoose.Types.ObjectId();
 	var newQuestion = new schema.Question ({
-		answers: answers,
+		answers: [],
 		bounty: bounty,
-		upvotes: upvotes,
+		upvotes: [],
 		questionHash: questionHash,
-		topAnswerHash: topAnswerHash,
+		topAnswerHash: "",
 		timeExp: timeExp,
 		title: title,
-		body: body
+		body: body,
+		askerId: askerId,
+		_id: createdQuestionId
 	});
-	newQuestion.save(function (err) {
+	newQuestion.save(function (err, question) {
         if (err) {
         	console.log(err);
         } else {
-        	console.log("saved user successfully");
+        	console.log("saved question successfully");
+        	console.log(question.id);
+        	schema.User.findOneAndUpdate({_id: askerId}, {$push: {questions: question.id}}, {upsert: true}, function (err, doc) {
+        		if (err) { console.log(err); }
+        		else {
+        			console.log("associated question with existing user successfully");
+        		}
+        	});
         }
     });
+    return createdQuestionId;
+    
 }
 
-var saveAnswer = function(answererId, votes, voters) {
+var createAnswer = function(answererId, votes, voters, questionId) {
+	var createdAnswerId = mongoose.Types.ObjectId();
+	console.log(votes);
+	console.log(voters);
+	console.log(questionId);
 	var newAnswer = new schema.Answer ({
 		answererId: answererId,
 		votes: votes,
-		voters: voters
+		voters: voters,
+		questionId: questionId,
+		_id: createdAnswerId
 	});
-	newAnswer.save(function (err) {
+	newAnswer.save(function (err, answer) {
         if (err) {
         	console.log(err);
         } else {
-        	console.log("saved user successfully");
+        	console.log("saved answer successfully");
+        	console.log(answer.id);
+        	schema.Question.findOneAndUpdate({_id: questionId}, {$push: {answers: answer.id}}, {upsert: true}, function (err, doc) {
+        		if (err) { console.log(err); }
+        		else {
+        			console.log("associated answer with existing question successfully");
+        		}
+        	});
+        	schema.User.findOneAndUpdate({_id: answererId}, {$push: {answers: answer.id}}, {upsert: true}, function (err, doc) {
+        		if (err) { console.log(err); }
+        		else {
+        			console.log("associated answer with existing user successfully");
+        		}
+        	});
+        	return answer.id;
         }
     });
+    return createdAnswerId;
 }
 
-module.exports.saveUser = saveUser;
-module.exports.saveQuestion = saveQuestion;
-module.exports.saveAnswer = saveAnswer;
+module.exports.createUser = createUser;
+module.exports.createQuestion = createQuestion;
+module.exports.createAnswer = createAnswer;
