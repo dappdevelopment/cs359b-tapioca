@@ -22,9 +22,9 @@ var QuestionSchema = new mongoose.Schema({
 
 var AnswerSchema = new mongoose.Schema({
     answererId: {type: String, required: true},
-    votes: {type: Number},
     voters: [{type: mongoose.Schema.ObjectId}],
-    questionId: {type: String}
+    questionId: {type: String},
+    body: {type: String}
 });
 
 

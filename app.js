@@ -109,20 +109,29 @@ app.get('/question_detail', function(request, response)  {
   response.set('Content-type', 'application/json')
   response.status(STATUS_OK) 
   response.send(JSON.stringify(data))
-})
+});
 
 
 
 app.listen(3000);
 console.log('Listening at 127.0.0.1:' + 3000);
 
-function test() {
-  var askerId = model.createUser("mchang4",[], [], "0xwiofjeojo023kr03", []);
-  var answererId = model.createUser("peterlu6", [], [], "0x29040g3hfej322ri", []);
-  var questionId = model.createQuestion(50, "hash goes here", new Date("2016-12-12"), "title", "body", askerId);
-  console.log("questionId: " + questionId);
-  model.createAnswer(answererId, 0, [], questionId);
+async function test() {
+  await model.resetDB();
+  let askerId = await model.createUser("mchang4", "0xwiofjeojo023kr03");
+  let answererId = await model.createUser("peterlu6", "0x29040g3hfej322ri");
+  let user3 = await model.createUser("sclaire", "0x0932r09j24023r");
+  let questionId = await model.createQuestion(50, "hash goes here", new Date("2016-12-12"), "title", "body", askerId);
+  let answerId = await model.createAnswer(answererId, questionId);
+  let retrievedQuestion = await model.findQuestion(questionId);
+  let retrievedAnswer = await model.findAnswer(answerId);
+  let retrievedUser = await model.findUser(askerId);
+  console.log(retrievedQuestion);
+  console.log(retrievedAnswer);
+  console.log(retrievedUser);
+  await model.upvoteAnswer(answerId, user3);
 }
+
 
 test();
 

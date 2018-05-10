@@ -12,29 +12,26 @@ mongoose.connect(uristring, function (err, res) {
     }
 });
 
-var createUser = function(username, address) {
-	var createdUserId = mongoose.Types.ObjectId();
-	var newUser = new schema.User ({
+var createUser = async function(username, address) {
+	let newUser = new schema.User ({
 		username: username,
 		questions: [],
 		answers: [],
 		address: address,
-		upvotes: [],
-		_id: createdUserId
+		upvotes: []
 	});
-	newUser.save(function (err, user) {
-        if (err) {
-        	console.log(err);
-        } else {
-        	console.log("saved user successfully. id: " + user.id);
-        }
-    });
-    return createdUserId;
+	try {
+		let savedUser = await newUser.save();
+		console.log("saved user successfully");
+		return savedUser.id;
+	} catch (err) {
+		console.log("err in createUser");
+		console.log(err);
+	}
 }
 
-var createQuestion = function(bounty, questionHash, timeExp, title, body, askerId) {
-	var createdQuestionId = mongoose.Types.ObjectId();
-	var newQuestion = new schema.Question ({
+var createQuestion = async function(bounty, questionHash, timeExp, title, body, askerId) {
+	let newQuestion = new schema.Question ({
 		answers: [],
 		bounty: bounty,
 		upvotes: [],
@@ -43,63 +40,92 @@ var createQuestion = function(bounty, questionHash, timeExp, title, body, askerI
 		timeExp: timeExp,
 		title: title,
 		body: body,
-		askerId: askerId,
-		_id: createdQuestionId
+		askerId: askerId
 	});
-	newQuestion.save(function (err, question) {
-        if (err) {
-        	console.log(err);
-        } else {
-        	console.log("saved question successfully");
-        	console.log(question.id);
-        	schema.User.findOneAndUpdate({_id: askerId}, {$push: {questions: question.id}}, {upsert: true}, function (err, doc) {
-        		if (err) { console.log(err); }
-        		else {
-        			console.log("associated question with existing user successfully");
-        		}
-        	});
-        }
-    });
-    return createdQuestionId;
-    
+	try {
+		let savedQuestion = await newQuestion.save();
+		schema.User.findOneAndUpdate({_id: askerId}, {$push: {questions: savedQuestion.id}}, {upsert: true});
+		return savedQuestion.id;
+	} catch (err) {
+		console.log("error in create question!");
+		console.log(err);
+	}
 }
 
-var createAnswer = function(answererId, votes, voters, questionId) {
-	var createdAnswerId = mongoose.Types.ObjectId();
-	console.log(votes);
-	console.log(voters);
-	console.log(questionId);
-	var newAnswer = new schema.Answer ({
+var createAnswer = async function(answererId, questionId) {
+	let newAnswer = new schema.Answer ({
 		answererId: answererId,
-		votes: votes,
-		voters: voters,
+		voters: [],
 		questionId: questionId,
-		_id: createdAnswerId
 	});
-	newAnswer.save(function (err, answer) {
-        if (err) {
-        	console.log(err);
-        } else {
-        	console.log("saved answer successfully");
-        	console.log(answer.id);
-        	schema.Question.findOneAndUpdate({_id: questionId}, {$push: {answers: answer.id}}, {upsert: true}, function (err, doc) {
-        		if (err) { console.log(err); }
-        		else {
-        			console.log("associated answer with existing question successfully");
-        		}
-        	});
-        	schema.User.findOneAndUpdate({_id: answererId}, {$push: {answers: answer.id}}, {upsert: true}, function (err, doc) {
-        		if (err) { console.log(err); }
-        		else {
-        			console.log("associated answer with existing user successfully");
-        		}
-        	});
-        	return answer.id;
-        }
-    });
-    return createdAnswerId;
+	try {
+		let savedAnswer = await newAnswer.save();
+		let updatedQuestion = await schema.Question.findOneAndUpdate({_id: questionId}, {$push: {answers: savedAnswer.id}}, {upsert: true});
+		let udpatedUser = await schema.User.findOneAndUpdate({_id: answererId}, {$push: {answers: savedAnswer.id}}, {upsert: true});
+		return savedAnswer.id;
+	} catch (err) {
+		console.log("error in createanswer");
+		console.log(err);
+	}
 }
+
+var upvoteAnswer = async function(answerId, voterId) {
+	try {
+		let updatedAnswer = await schema.Answer.findOneAndUpdate({_id: answerId}, {$push: {voters: voterId}}, {upsert: true});
+		let updatedUser = await schema.User.findOneAndUpdate({_id: voterId}, {$push: {answers: answerId}}, {upsert: true});
+		console.log("updated answer successfully");
+	} catch (err) {
+		console.log("error in upvote answer");
+		console.log(err);
+	}
+}
+
+var resetDB = async function() {
+	try {
+		await schema.Answer.remove({});
+		await schema.Question.remove({});
+		await schema.User.remove({});
+		console.log("successful deletion");
+	} catch (err) {
+		console.log("error during removal");
+		console.log(err);
+	}
+}
+
+var findQuestion = async function(questionId) {
+	try {
+		let foundQuestion = await schema.Question.find({_id: questionId});
+		return foundQuestion;
+	} catch (err) {
+		console.log("error in getQuestion");
+		console.log(err);
+	}
+}
+var findAnswer = async function(answerId) {
+	try {
+		let foundAnswer = await schema.Answer.find({_id: answerId});
+		return foundAnswer;
+	} catch (err) {
+		console.log("error in getAnswer");
+		console.log(err);
+	}
+}
+var findUser = async function(userId) {
+	try {
+		let foundUser = await schema.User.find({_id: userId});
+		return foundUser;
+	} catch (err) {
+		console.log("error in getUser");
+		console.log(err);
+	}
+}
+
 
 module.exports.createUser = createUser;
 module.exports.createQuestion = createQuestion;
 module.exports.createAnswer = createAnswer;
+module.exports.upvoteAnswer = upvoteAnswer;
+module.exports.resetDB = resetDB;
+module.exports.findQuestion = findQuestion;
+module.exports.findUser = findUser;
+module.exports.findAnswer = findAnswer;
