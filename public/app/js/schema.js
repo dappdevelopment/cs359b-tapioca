@@ -16,13 +16,15 @@ var QuestionSchema = new mongoose.Schema({
    	topAnswerHash: {type: String},
     timeExp: {type: Date},
     title: {type: String},
-    body: {type: String}
+    body: {type: String},
+    askerId: {type: mongoose.Schema.ObjectId}
 });
 
 var AnswerSchema = new mongoose.Schema({
     answererId: {type: String, required: true},
-    votes: {type: Number},
-    voters: [{type: mongoose.Schema.ObjectId}]
+    voters: [{type: mongoose.Schema.ObjectId}],
+    questionId: {type: String},
+    body: {type: String}
 });
 
 
