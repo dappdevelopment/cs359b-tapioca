@@ -1,20 +1,25 @@
 {
-  "name": "truffle",
+  "name": "cs359b-tapioca",
   "version": "1.0.0",
-  "main": "truffle.js",
-  "directories": {
-    "test": "test"
+  "description": "Tapioca is a question-answer platform where askers can set bounties and rules of bounty distribution for quality answers.",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.16.3",
+    "mongoose": "^5.0.17"
   },
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "lite-server"
+    "start": "node app.js"
   },
-  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dappdevelopment/cs359b-tapioca.git"
+  },
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "lite-server": "^2.3.0"
+  "bugs": {
+    "url": "https://github.com/dappdevelopment/cs359b-tapioca/issues"
   },
-  "dependencies": {},
-  "description": ""
+  "homepage": "https://github.com/dappdevelopment/cs359b-tapioca#readme"
 }

@@ -10,19 +10,19 @@ var NUM_QUERIES = 3
 
 var app = express();
 
-var model = require('./public/app/js/model');
+var model = require('./app/js/model');
 
 // parse json bodies in post requests
 app.use(bodyParser.json());
 
 // serve all files out of public folder
-app.use(express.static('public'));
+app.use(express.static(__dirname + '/app'));
 
 var path = require("path");
 
 app.get('/', function(request, response) { 
   console.log("/GET index")
-  response.sendFile(path.join(__dirname + '/public/app/index.html'));
+  response.sendFile('/index.html');
 })
 
 app.get('/question_feed', function(request, response) {
