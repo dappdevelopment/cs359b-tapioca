@@ -21,6 +21,7 @@ app.use(express.static('public'));
 var path = require("path");
 
 app.get('/', function(request, response) { 
+  console.log("/GET index")
   response.sendFile(path.join(__dirname + '/public/app/index.html'));
 })
 
