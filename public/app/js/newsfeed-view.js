@@ -38,3 +38,33 @@
 
   window.NewsfeedView = NewsfeedView;
 })();
+
+function submitQuestion() { 
+  var q_title = $("#question_title").val()
+  var q_details = $("textarea").val()
+  var q_bounty = $('#bounty_amount').val()
+
+  $("#question_title").val(""); 
+  $("textarea").val("")
+  $('#bounty_amount').val(null)
+
+  var question_data = { 
+    title: q_title, 
+    details: q_details,
+    user_id: "Sprinkles", 
+    bounty: q_bounty
+  }
+
+  PostModel.add(question_data)
+
+  $("#add_container").css("display", "none");
+  $("#myPopup").show(); 
+  setTimeout(function() {
+      $("#myPopup").hide();
+  }, 1000);
+}
+
+
+
+
+
