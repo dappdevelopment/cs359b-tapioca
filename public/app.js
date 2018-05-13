@@ -112,6 +112,10 @@ app.get('/question_detail', function(request, response)  {
   response.send(JSON.stringify(data))
 });
 
+app.post('/submit_question', function(request, response) {
+  console.log("question submit");
+  console.log(request.body);
+});
 
 
 app.listen(3000);
