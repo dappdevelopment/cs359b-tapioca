@@ -14,7 +14,6 @@
    */
   PostModel.loadAll = function(callback) {
     var postRequest = new XMLHttpRequest()
-
     postRequest.addEventListener('load', function() {
       if (postRequest.status === STATUS_OK) {
         var posts = JSON.parse(postRequest.responseText)
@@ -52,48 +51,27 @@
     addPostRequest.send(JSON.stringify(post))
   };
 
-  /* Removes the post with the given id.
-   *
-   * Calls: callback(error)
-   *  error -- the error that occurred or null if no error occurred
-   */
-  PostModel.remove = function(id, callback) {
-    var removePostRequest = new XMLHttpRequest()
-
-    removePostRequest.addEventListener('load', function() {
-      if (removePostRequest.status === STATUS_OK) {
-        callback(null)
-      } else {
-        callback(removePostRequest.responseText)
-      }
-    })
-
-    removePostRequest.open('POST', POSTS_URL + '/remove')
-    removePostRequest.setRequestHeader('Content-type', 'application/json')
-    removePostRequest.send(JSON.stringify({id: id}))
-  };
-
   /* Upvotes the post with the given id.
    *
    * Calls: callback(error, post)
    *  error -- the error that occurred or null if no error occurred
    *  post -- the updated post model
    */
-  PostModel.upvote = function(id, callback) {
+  PostModel.upvote = function(question_id, answer_id) {
     var upvoteRequest = new XMLHttpRequest()
 
-    upvoteRequest.addEventListener('load', function() {
-      if (upvoteRequest.status === STATUS_OK) {
-        callback(null, JSON.parse(upvoteRequest.responseText))
-      } else {
-        callback(upvoteRequest.responseText)
-      }
-    })
-
-    upvoteRequest.open('POST', POSTS_URL + '/' + 'upvote')
+    upvoteRequest.open('POST', '/upvote')
     upvoteRequest.setRequestHeader('Content-type', 'application/json')
-    upvoteRequest.send(JSON.stringify({id: id}))
+    upvoteRequest.send(JSON.stringify({question_id: question_id, answer_id: answer_id}))
   };
+
+  PostModel.addAnswer = function(answer_data) {
+    var answerRequest = new XMLHttpRequest()
+    
+    answerRequest.open('POST', '/add_answer')
+    answerRequest.setRequestHeader('Content-type', 'application/json')
+    answerRequest.send(JSON.stringify(answer_data))
+  }
 
   window.PostModel = PostModel;
 })();
