@@ -57,21 +57,21 @@
    *  error -- the error that occurred or null if no error occurred
    *  post -- the updated post model
    */
-  PostModel.upvote = function(id, callback) {
+  PostModel.upvote = function(question_id, answer_id) {
     var upvoteRequest = new XMLHttpRequest()
 
-    upvoteRequest.addEventListener('load', function() {
-      if (upvoteRequest.status === STATUS_OK) {
-        callback(null, JSON.parse(upvoteRequest.responseText))
-      } else {
-        callback(upvoteRequest.responseText)
-      }
-    })
-
-    upvoteRequest.open('POST', POSTS_URL + '/' + 'upvote')
+    upvoteRequest.open('POST', '/upvote')
     upvoteRequest.setRequestHeader('Content-type', 'application/json')
-    upvoteRequest.send(JSON.stringify({id: id}))
+    upvoteRequest.send(JSON.stringify({question_id: question_id, answer_id: answer_id}))
   };
+
+  PostModel.addAnswer = function(answer_data) {
+    var answerRequest = new XMLHttpRequest()
+    
+    answerRequest.open('POST', '/add_answer')
+    answerRequest.setRequestHeader('Content-type', 'application/json')
+    answerRequest.send(JSON.stringify(answer_data))
+  }
 
   window.PostModel = PostModel;
 })();
