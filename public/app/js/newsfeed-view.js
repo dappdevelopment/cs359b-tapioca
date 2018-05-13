@@ -40,19 +40,21 @@
 })();
 
 function submitQuestion() { 
-  var q_title = $("#question_title").val()
-  var q_details = $("textarea").val()
-  var q_bounty = $('#bounty_amount').val()
+  let q_title = $("#question_title").val()
+  let q_details = $("textarea").val()
+  let q_bounty = $('#bounty_amount').val()
+  let q_time_exp = $('#time_exp').val()
 
   $("#question_title").val(""); 
-  $("textarea").val("")
+  $("textarea").val("");
   $('#bounty_amount').val(null)
 
   var question_data = { 
     title: q_title, 
     details: q_details,
-    user_id: "Sprinkles", 
-    bounty: q_bounty
+    user_id: "79dbf5b39adf273eb3be65e0", 
+    bounty: q_bounty,
+    time_exp: q_time_exp
   }
 
   PostModel.add(question_data)

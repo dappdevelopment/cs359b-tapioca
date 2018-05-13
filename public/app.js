@@ -2,6 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var ObjectId = require('mongoose').Types.ObjectId;
 
+
 var STATUS_USER_ERROR = 422
 var STATUS_OK = 200
 var NUM_QUERIES = 3
@@ -31,7 +32,7 @@ var path = require("path");
 
 app.get('/question_feed', function(request, response) {
   console.log("/GET question_feed")
-	var query = request.query.q
+	var query = request.query.q;
 
 	var data = { 
     questions: [
@@ -119,12 +120,12 @@ app.get('/question_detail', function(request, response)  {
 });
 
 app.post('/submit_question', function(request, response) {
+  console.log(request.body);
   console.log("POST /submit_question", "title: " + request.body.title, "details: " + request.body.details, 
     "user_id: " + request.body.user_id, "bounty: " + request.body.bounty);
   let bounty = Number(request.body.bounty);
-  let time_exp = Date.parse(request.body.time_exp);
   let placeholder_id = ObjectId("73b312067720199e377e6fb9"); // random 24 digit hex string
-  model.createQuestion(bounty, time_exp, request.body.title, request.body.body, placeholder_id);
+  model.createQuestion(bounty, request.body.time_exp, request.body.title, request.body.details, placeholder_id);
 
   //needs some logic around enough money 
 
@@ -157,22 +158,27 @@ app.post('/add_answer', function(request, response) {
 app.listen(3000);
 console.log('Listening at 127.0.0.1:' + 3000);
 
-async function test() {
+// async function test() {
+//   await model.resetDB();
+//   let askerId = await model.createUser("mchang4", "0xwiofjeojo023kr03");
+//   let answererId = await model.createUser("peterlu6", "0x29040g3hfej322ri");
+//   let user3 = await model.createUser("sclaire", "0x0932r09j24023r");
+//   let questionId = await model.createQuestion(50, "hash goes here", new Date("2016-12-12"), "title", "body", askerId);
+//   let answerId = await model.createAnswer(answererId, questionId);
+//   let retrievedQuestion = await model.findQuestion(questionId);
+//   let retrievedAnswer = await model.findAnswer(answerId);
+//   let retrievedUser = await model.findUser(askerId);
+//   console.log(retrievedQuestion);
+//   console.log(retrievedAnswer);
+//   console.log(retrievedUser);
+//   await model.upvoteAnswer(answerId, user3);
+// }
+
+async function clearDB() {
   await model.resetDB();
-  let askerId = await model.createUser("mchang4", "0xwiofjeojo023kr03");
-  let answererId = await model.createUser("peterlu6", "0x29040g3hfej322ri");
-  let user3 = await model.createUser("sclaire", "0x0932r09j24023r");
-  let questionId = await model.createQuestion(50, "hash goes here", new Date("2016-12-12"), "title", "body", askerId);
-  let answerId = await model.createAnswer(answererId, questionId);
-  let retrievedQuestion = await model.findQuestion(questionId);
-  let retrievedAnswer = await model.findAnswer(answerId);
-  let retrievedUser = await model.findUser(askerId);
-  console.log(retrievedQuestion);
-  console.log(retrievedAnswer);
-  console.log(retrievedUser);
-  await model.upvoteAnswer(answerId, user3);
 }
 
+clearDB();
 
-test();
+// test();
 
