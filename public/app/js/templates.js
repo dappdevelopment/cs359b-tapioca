@@ -72,13 +72,17 @@
     </ul>
   */
 
-  Templates.renderAnswer = function(answer) { 
+  Templates.renderAnswer = function(answer, canUpvote) { 
+    var upvote_tags = [tag('p', {class: "upvote_count " + answer.id}, "Upvotes: " + answer.upvotes)] 
+    if (canUpvote) { 
+      upvote_tags.push(tag('input', {type:"submit", name: "upvote", value: "upvote", class: answer.id, onclick: "upvoteClicked(this)"}))
+    } else {
+      upvote_tags.push(tag('p', {}, "Upvoting Disabled"))
+    }
+
     return tag('li', {}, 
       tag('div', {class: "answer_box"}, [
-        tag('div', {class: "left_column"}, [
-          tag('p', {}, "Upvotes: " + answer.upvotes),
-          tag('input', {type:"submit", name: "upvote", value: "upvote"})
-        ]), 
+        tag('div', {class: "left_column"}, upvote_tags), 
         tag('div', {class: "right_column"}, 
           tag('p', {}, answer.text)
         )

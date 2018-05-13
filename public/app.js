@@ -94,14 +94,16 @@ app.get('/question_detail', function(request, response)  {
         upvotes: 100,
         answers: [
           {
-            text: "Hello world",
+            text: "Friends, Romans, countrymen, lend me your ears;I come to bury Caesar, not to praise him. The evil that men do lives after them; The good is oft interrèd with their bones. So let it be with Caesar. The noble Brutus Hath told you Caesar was ambitious. If it were so, it was a grievous fault, And grievously hath Caesar answered it [1].Here under leave of Brutus and the rest(For Brutus is an honorable man;So are they all, all honorable men), Come I to speak in Caesar's funeral.",
             user_id: "max_imaginary_gf",
-            upvotes: 5
+            upvotes: 5,
+            id: "panckaes_and_berta"
           },
           {
             text: "Hello max",
             user_id: "claire",
-            upvotes: 2
+            upvotes: 2,
+            id: "sleep"
           }, 
         ]
     }
@@ -112,7 +114,22 @@ app.get('/question_detail', function(request, response)  {
   response.send(JSON.stringify(data))
 });
 
+app.post('/upvote', function(request, response) {
+  console.log("POST /upvotes " + "question_ID: " + request.body.question_id + "; answer_ID: " + request.body.answer_id)
+  console.log("upvoting")
 
+  response.set('Content-type', 'application/json');
+  response.status(STATUS_OK);
+  response.send();
+})
+
+app.post('/add_answer', function(request, response) {
+  console.log("POST /add_answer " + "question_ID: " + request.body.question_id + "; answer: " + request.body.text)
+
+  response.set('Content-type', 'application/json');
+  response.status(STATUS_OK);
+  response.send();
+})
 
 app.listen(3000);
 console.log('Listening at 127.0.0.1:' + 3000);
