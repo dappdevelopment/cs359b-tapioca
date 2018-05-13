@@ -120,7 +120,7 @@ app.get('/question_detail', function(request, response)  {
 
 app.post('/submit_question', function(request, response) {
   console.log("POST /submit_question", "title: " + request.body.title, "details: " + request.body.details, 
-    "user_id: " + request.body.user_id, "bounty: " + request.body.bounty
+    "user_id: " + request.body.user_id, "bounty: " + request.body.bounty);
   let bounty = Number(request.body.bounty);
   let time_exp = Date.parse(request.body.time_exp);
   let placeholder_id = ObjectId("73b312067720199e377e6fb9"); // random 24 digit hex string
