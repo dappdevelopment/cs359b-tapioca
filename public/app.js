@@ -1,5 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var ObjectId = require('mongoose').Types.ObjectId;
 
 var STATUS_USER_ERROR = 422
 var STATUS_OK = 200
@@ -13,6 +14,9 @@ var app = express();
 var model = require('./app/js/model');
 
 // parse json bodies in post requests
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 app.use(bodyParser.json());
 
 // serve all files out of public folder
@@ -32,7 +36,7 @@ app.get('/question_feed', function(request, response) {
 	var data = { 
     questions: [
 		{
-      id: "f02j90r3i0k023jr",
+      id: "6f00619911a8782b8226823d",
       title: "Max is Cool",
       content: "I have a question please answer",
       bounty: 60,
@@ -52,7 +56,7 @@ app.get('/question_feed', function(request, response) {
       ]
     },
     {
-      id: "f02j90r3i0k023jr",
+      id: "6c99733a9ebc103f71216f53",
       title: "Peter is Cool",
       content: "Hi hi hi hi",
       bounty: 50,
@@ -86,7 +90,7 @@ app.get('/question_detail', function(request, response)  {
   var data = {
     q_data: 
     {
-        id: "f02j90r3i0k023jr",
+        id: "5c4e518fd19133c034636780",
         title: "Max is Cool",
         content: "I have a question please answer",
         bounty: 60,
@@ -95,15 +99,15 @@ app.get('/question_detail', function(request, response)  {
         answers: [
           {
             text: "Friends, Romans, countrymen, lend me your ears;I come to bury Caesar, not to praise him. The evil that men do lives after them; The good is oft interrèd with their bones. So let it be with Caesar. The noble Brutus Hath told you Caesar was ambitious. If it were so, it was a grievous fault, And grievously hath Caesar answered it [1].Here under leave of Brutus and the rest(For Brutus is an honorable man;So are they all, all honorable men), Come I to speak in Caesar's funeral.",
-            user_id: "max_imaginary_gf",
+            user_id: "79e748ad42e83196ca78c471",
             upvotes: 5,
-            id: "panckaes_and_berta"
+            id: "21e32fe7d0a8ccc8f6d61eca"
           },
           {
             text: "Hello max",
-            user_id: "claire",
+            user_id: "79e748ad42e83196ca78c471",
             upvotes: 2,
-            id: "sleep"
+            id: "e4e3af27d4a2cac8f6d61ece"
           }, 
         ]
     }
@@ -115,14 +119,23 @@ app.get('/question_detail', function(request, response)  {
 });
 
 app.post('/submit_question', function(request, response) {
-  console.log("question submit");
-  console.log(request.body);
+  console.log("POST /submit_question");
+  let bounty = Number(request.body.bounty);
+  let time_exp = Date.parse(request.body.time_exp);
+  let placeholder_id = ObjectId("73b312067720199e377e6fb9"); // random 24 digit hex string
+  model.createQuestion(bounty, time_exp, request.body.title, request.body.body, placeholder_id);
+
+  response.set('Content-type', 'application/json');
+  response.status(STATUS_OK);
+  response.send();
 });
 
 app.post('/upvote', function(request, response) {
-  console.log("POST /upvotes " + "question_ID: " + request.body.question_id + "; answer_ID: " + request.body.answer_id)
+  console.log("POST /upvotes " + "question_ID: " + request.body.question_id + "; answer_ID: " + request.body.answer_id) // Question Id is unnecessary for this call.
   console.log("upvoting")
-
+  let placeholder_id = ObjectId("b31297b8606e2adc55fed05f");
+  let answer_id = ObjectId(request.body.answer_id);
+  model.upvoteAnswer(placeholder_id, answer_id);
   response.set('Content-type', 'application/json');
   response.status(STATUS_OK);
   response.send();
@@ -130,7 +143,9 @@ app.post('/upvote', function(request, response) {
 
 app.post('/add_answer', function(request, response) {
   console.log("POST /add_answer " + "question_ID: " + request.body.question_id + "; answer: " + request.body.text)
-
+  let placeholder_id = ObjectId("915bed12d3704298d62224fe");
+  let question_id = ObjectId(request.body.question_id);
+  model.createAnswer(placeholder_id, question_id, request.body.text);
   response.set('Content-type', 'application/json');
   response.status(STATUS_OK);
   response.send();

@@ -40,18 +40,5 @@ function app() {
         // }
 }
 
-function subForm(e){
-    console.log("submit form");
-    let title = document.getElementById("question_title").value;
-    let body = document.getElementById("question_body").value;
-    console.log(title);
-    $.ajax({
-        url:'127.0.0.1/submit_question'
-        title:title,
-        body:body,
-        type:'POST'
-    });
-}
-
 $(document).ready(app);
 

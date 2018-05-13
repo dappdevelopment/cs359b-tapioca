@@ -39,7 +39,9 @@
     <p>submit a new question</p>
     <input type="text" id="question_title" placeholder="title"><br>
     <input type="text" id="question_body" placeholder="details"><br>
-    <button onclick="subForm()">submit your shitty question</button>
+    <input type="number" id="question_bounty" placeholder="bounty"><br>
+    <input type="datetime-local" id="question_time_exp" placeholder="expiration time"><br>
+    <input type="submit" name="Submit" value="Submit" onclick="submitQuestion()"/>
 
     <!-- Libraries -->
     <script src="/js/jquery.min.js"></script>

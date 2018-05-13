@@ -2,6 +2,8 @@ var mongoose = require('mongoose');
 
 var schema = require('./schema');
 
+var sha256 = require('js-sha256').sha256;
+
 var uristring = process.env.MONGODB_URI || "mongodb://localhost:27017/tapioca";
 
 mongoose.connect(uristring, function (err, res) {
@@ -30,7 +32,9 @@ var createUser = async function(username, address) {
 	}
 }
 
-var createQuestion = async function(bounty, questionHash, timeExp, title, body, askerId) {
+var createQuestion = async function(bounty, timeExp, title, body, askerId) {
+	console.log("askerId: " + askerId);
+	let questionHash = sha256(bounty + title + body + timeExp + askerId);
 	let newQuestion = new schema.Question ({
 		answers: [],
 		bounty: bounty,
@@ -52,11 +56,12 @@ var createQuestion = async function(bounty, questionHash, timeExp, title, body, 
 	}
 }
 
-var createAnswer = async function(answererId, questionId) {
+var createAnswer = async function(answererId, questionId, body) {
 	let newAnswer = new schema.Answer ({
 		answererId: answererId,
 		voters: [],
 		questionId: questionId,
+		body: body
 	});
 	try {
 		let savedAnswer = await newAnswer.save();
