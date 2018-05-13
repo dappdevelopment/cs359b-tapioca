@@ -114,16 +114,14 @@ app.get('/question_detail', function(request, response)  {
   response.send(JSON.stringify(data))
 });
 
-<<<<<<< HEAD
 app.post('/submit_question', function(request, response) {
   console.log("question submit");
   console.log(request.body);
 });
-=======
+
 app.post('/upvote', function(request, response) {
   console.log("POST /upvotes " + "question_ID: " + request.body.question_id + "; answer_ID: " + request.body.answer_id)
   console.log("upvoting")
->>>>>>> f79eb0d5edef07c9c61cac966a2356ca0247a5c8
 
   response.set('Content-type', 'application/json');
   response.status(STATUS_OK);
