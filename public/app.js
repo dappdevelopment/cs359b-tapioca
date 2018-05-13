@@ -115,8 +115,14 @@ app.get('/question_detail', function(request, response)  {
 });
 
 app.post('/submit_question', function(request, response) {
-  console.log("question submit");
-  console.log(request.body);
+  console.log("POST /submit_question", "title: " + request.body.title, "details: " + request.body.details, 
+    "user_id: " + request.body.user_id, "bounty: " + request.body.bounty)
+
+  //needs some logic around enough money 
+
+  response.set('Content-type', 'application/json');
+  response.status(STATUS_OK);
+  response.send();
 });
 
 app.post('/upvote', function(request, response) {
