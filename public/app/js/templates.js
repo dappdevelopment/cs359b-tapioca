@@ -22,7 +22,7 @@
         tag('div', {class: 'right_title'}, [
             tag('h1', {}, post.title),
             tag('h3', {}, post.content),
-            tag('a', {href: 'app/question_view.html?qid=' + post.id}, 'See answers >')
+            tag('a', {href: 'question_view.html?qid=' + post.id}, 'See answers >')
           ]),
       ]),
     ]);

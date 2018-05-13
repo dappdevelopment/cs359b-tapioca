@@ -20,10 +20,10 @@ app.use(express.static(__dirname + '/app'));
 
 var path = require("path");
 
-app.get('/', function(request, response) { 
+/*app.get('/', function(request, response) { 
   console.log("/GET index")
   response.sendFile('/index.html');
-})
+})*/
 
 app.get('/question_feed', function(request, response) {
   console.log("/GET question_feed")
