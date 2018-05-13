@@ -1,0 +1,25 @@
+.left_column {
+	flex: 0 0 33.33333%; 
+}
+
+.right_column { 
+	flex: 0 0 66.6666%;
+}
+
+.container_details { 
+	padding-top: 15px;
+	color: black;
+	display: flex;
+}
+
+.answer_box .left_column  {
+	flex: 0 0 20%; 
+}
+
+.answer_box .right_column {
+	flex: 0 0 80%; 
+}
+
+.answer_box {
+	display: flex;
+}
