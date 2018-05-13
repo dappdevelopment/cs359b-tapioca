@@ -37,16 +37,7 @@
   PostModel.add = function(post, callback) {
     var addPostRequest = new XMLHttpRequest()
 
-    addPostRequest.addEventListener('load', function() {
-      if (addPostRequest.status === STATUS_OK) {
-        var newPost = JSON.parse(addPostRequest.responseText)
-        callback(null, newPost)
-      } else {
-        callback(addPostRequest.responseText)
-      }
-    })
-
-    addPostRequest.open('POST', POSTS_URL)
+    addPostRequest.open('POST', '/submit_question')
     addPostRequest.setRequestHeader('Content-type', 'application/json')
     addPostRequest.send(JSON.stringify(post))
   };
