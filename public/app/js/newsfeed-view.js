@@ -58,7 +58,13 @@ function submitQuestion() {
   PostModel.add(question_data)
 
   $("#add_container").css("display", "none");
+  $("#myPopup").show(); 
+  setTimeout(function() {
+      $("#myPopup").hide();
+  }, 1000);
 }
+
+
 
 
 

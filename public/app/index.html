@@ -49,6 +49,23 @@
           text-decoration: none;
           cursor: pointer;
       }
+
+      .popuptext {
+        display: none;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 8px 0;
+
+        position:absolute;
+        top:50%;
+        left:50%;
+        width:400px;  /* adjust as per your needs */
+        height:40px;   /* adjust as per your needs */
+        margin-left:-200px;   /* negative half of width above */
+        margin-top:-20px;   /* negative half of height above */
+      }
     </style>
   </head>
 
@@ -77,12 +94,14 @@
       </div>
     </header>
 
+    
     <!-- Question-Posting Modal -->
     <div id="add_container" class="modal">
       <div class="add_content">
         <span class="close" onclick="closeModal()">&times;</span>
         <h1>New Question</h1> <br/>
         <input type="text" id="question_title" placeholder="Title" style="width: 100%;">
+
         <br /> <br /> 
         <input id="bounty_amount" type="number" placeholder="Bounty"> <br/>  <br />
         <textarea placeholder="Add Details Here" rows="4" cols="50" style="width: 100%"></textarea> 
@@ -93,6 +112,7 @@
     </div>
 
     <div class="error"></div>
+    <span class="popuptext" id="myPopup">Question Submitted!</span>
     <div id="newsfeed">
       <ul id="questions_list"> 
       </ul>
