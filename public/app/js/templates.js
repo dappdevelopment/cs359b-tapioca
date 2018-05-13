@@ -54,6 +54,38 @@
     ]);
   }
 
+  /*
+    <ul id="answers_list"  list-style="none">
+        <li> 
+          <div class="answer_box">
+            <div class="left_column"> 
+              <p> Upvotes: 30</p>
+              <input type="submit" name="upvote" value="upvote" />
+            </div>
+            <div class="right_column"> 
+              <p> Lorem Ipsum </p>
+            </div> 
+          </div>
+        </li>
+        <li> Jayson Tatum is a baller </li>
+        <li> Free Markelle Fultz </li>
+    </ul>
+  */
+
+  Templates.renderAnswer = function(answer) { 
+    return tag('li', {}, 
+      tag('div', {class: "answer_box"}, [
+        tag('div', {class: "left_column"}, [
+          tag('p', {}, "Upvotes: " + answer.upvotes),
+          tag('input', {type:"submit", name: "upvote", value: "upvote"})
+        ]), 
+        tag('div', {class: "right_column"}, 
+          tag('p', {}, answer.text)
+        )
+      ])
+    )
+  }
+
   /* Creates an HTMLElement to display search results.
    *
    * Arguments:

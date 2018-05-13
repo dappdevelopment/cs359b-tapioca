@@ -13,11 +13,11 @@
 }
 
 .answer_box .left_column  {
-	flex: 0 0 10%; 
+	flex: 0 0 20%; 
 }
 
 .answer_box .right_column {
-	flex: 0 0 90%; 
+	flex: 0 0 80%; 
 }
 
 .answer_box {
