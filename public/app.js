@@ -57,10 +57,11 @@ app.post('/submit_question', function(request, response) {
   console.log("POST /submit_question", "title: " + request.body.title, "details: " + request.body.details, 
     "user_id: " + request.body.user_id, "bounty: " + request.body.bounty);
   let bounty = Number(request.body.bounty);
+  let user_addr = request.body.user_id
   let placeholder_id = ObjectId("73b312067720199e377e6fb9"); // random 24 digit hex string
   let questionHash = sha256(bounty + request.body.title + request.body.details + request.body.time_exp + placeholder_id);
 
-  model.createQuestion(bounty, request.body.time_exp, request.body.title, request.body.details, placeholder_id, questionHash);
+  model.createQuestion(bounty, request.body.time_exp, request.body.title, request.body.details, placeholder_id, questionHash, user_addr);
 
   response.set('Content-type', 'application/json');
   response.status(STATUS_OK);
@@ -74,18 +75,18 @@ app.post('/submit_question', function(request, response) {
 app.post('/upvote', function(request, response) {
   console.log("POST /upvotes " + "user_ID: " + request.body.user_id + "; answer_ID: " + request.body.answer_id);
   let answer_id = ObjectId(request.body.answer_id);
-  let user_id = ObjectId(request.body.user_id);
-  model.upvoteAnswer(answer_id, user_id);
+  let user_addr = request.body.user_id;
+  model.upvoteAnswer(answer_id, user_addr);
   response.set('Content-type', 'application/json');
   response.status(STATUS_OK);
   response.send();
 })
 
 app.post('/add_answer', function(request, response) {
-  console.log("POST /add_answer " + "question_ID: " + request.body.question_id + "; answer: " + request.body.text)
+  console.log("POST /add_answer "  + "question_ID: " + request.body.question_id + "; answer: " + request.body.text)
   let placeholder_id = ObjectId("915bed12d3704298d62224fe");
   let question_id = ObjectId(request.body.question_id);
-  model.createAnswer(placeholder_id, question_id, request.body.text);
+  model.createAnswer(request.body.user_addr, question_id, request.body.text);
   response.set('Content-type', 'application/json');
   response.status(STATUS_OK);
   response.send();

@@ -102,9 +102,11 @@ function submitAnswer() {
   console.log('omg')
   var box_text = document.getElementById("answer_input").value
   console.log("answer_submission " + box_text)
+  console.log(QuestionView.question_id)
+  console.log(localStorage.getItem("userAccount"))
   answer_data = {
     question_id: QuestionView.question_id,
-    user_id: localStorage.getItem("userAccount"), 
+    user_addr: localStorage.getItem("userAccount"), 
     text: box_text
   }
   PostModel.addAnswer(answer_data)
@@ -144,9 +146,10 @@ function closeQuestion() {
       console.log("winner is " + highest_answerer_id);
       console.log(question_detail);
       console.log("call metamask");
-      distributeBounty(highest_answerer_id, "hi claire", question_detail.question.questionHash);
+      distributeBounty(highest_answerer_id, 1234, question_detail.question.questionHash);
     }
   });
+
   xmlQuestionDetail.open("GET", QuestionView.remoteHost + 'question_detail' + "?q_id=" + encodeURIComponent(QuestionView.post_data._id));
   xmlQuestionDetail.send(null);
 }
