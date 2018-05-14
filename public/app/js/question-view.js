@@ -39,6 +39,10 @@
 
     xmlQuestionDetail.open("GET", QuestionView.remoteHost + 'question_detail' + "?q_id=" + encodeURIComponent(question_id))
     xmlQuestionDetail.send(null)
+
+    if (localStorage.getItem("userAccount") == 0x067EAA4c5317318FC9BABE105C818E73629495fA) {
+      $("#master").css('display', 'block')
+    }
   }
 
 
