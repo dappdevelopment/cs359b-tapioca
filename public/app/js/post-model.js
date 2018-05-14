@@ -37,11 +37,16 @@
   PostModel.add = function(post, callback) {
     var addPostRequest = new XMLHttpRequest()
 
+    addPostRequest.onreadystatechange = function() {
+      if (addPostRequest.readyState === 4) {
+        callback(addPostRequest.response);
+        console.log(addPostRequest.response);
+      }
+    }
+
     addPostRequest.open('POST', '/submit_question')
     addPostRequest.setRequestHeader('Content-type', 'application/json')
-    addPostRequest.send(JSON.stringify(post))
-
-    collectBounty(1234, post.bounty); // 1234 is the question hash
+    addPostRequest.send(JSON.stringify(post));
   };
 
   /* Upvotes the post with the given id.

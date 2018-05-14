@@ -14,6 +14,8 @@ var app = express();
 
 var model = require('./app/js/model');
 
+var sha256 = require('js-sha256').sha256;
+
 // parse json bodies in post requests
 app.use(bodyParser.urlencoded({
     extended: true
@@ -125,13 +127,17 @@ app.post('/submit_question', function(request, response) {
     "user_id: " + request.body.user_id, "bounty: " + request.body.bounty);
   let bounty = Number(request.body.bounty);
   let placeholder_id = ObjectId("73b312067720199e377e6fb9"); // random 24 digit hex string
-  model.createQuestion(bounty, request.body.time_exp, request.body.title, request.body.details, placeholder_id);
+  let questionHash = sha256(bounty + request.body.title + request.body.details + request.body.time_exp + placeholder_id);
 
-  //needs some logic around enough money 
+  model.createQuestion(bounty, request.body.time_exp, request.body.title, request.body.details, placeholder_id, questionHash);
 
   response.set('Content-type', 'application/json');
   response.status(STATUS_OK);
-  response.send();
+  console.log("qhash: " + questionHash); 
+  data = {
+    qHash: questionHash
+  }
+  response.send(JSON.stringify(data));
 });
 
 app.post('/upvote', function(request, response) {

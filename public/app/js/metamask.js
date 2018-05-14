@@ -30,16 +30,6 @@ function app() {
             contractAddress = contractData.networks[networkId].address;
             contract = new web3.eth.Contract(contractData.abi, contractAddress);
         }).catch(console.error);
-        // Refresh balance instead of printing to the console
-        // .then(refreshBalance)
-        // .catch(console.error);
-        // function refreshBalance() { // Returns web3's PromiEvent
-        //     // Calling the contract (try with/without declaring view)
-        //     contract.methods.balanceOf(userAccount).call().then(function (balance) {
-        //         $('#display').text(balance + " CDT");
-        //         $("#loader").hide();
-        //     })
-        // }
 
     function refreshBalance() { 
         console.log("refreshed"); 
@@ -54,7 +44,3 @@ function app() {
 }
 
 $(document).ready(app);
-
-// module.exports.setUpMetamask = setUpMetamask;
-// module.exports.userAccount = userAccount; 
-
