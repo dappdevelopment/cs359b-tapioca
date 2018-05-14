@@ -39,6 +39,10 @@
 
     xmlQuestionDetail.open("GET", QuestionView.remoteHost + 'question_detail' + "?q_id=" + encodeURIComponent(question_id))
     xmlQuestionDetail.send(null)
+
+    if (localStorage.getItem("userAccount") == 0x067EAA4c5317318FC9BABE105C818E73629495fA) {
+      $("#master").css('display', 'block')
+    }
   }
 
 
@@ -74,8 +78,8 @@
 //onClick Handler's 
 //upvotes: 
 function upvoteClicked(element) {
-  let placeholder_id = "a3cf3bb3421e45f61dce82f1"; // placeholder for user ID
-  PostModel.upvote(element.className, placeholder_id);
+  //let placeholder_id = "a3cf3bb3421e45f61dce82f1"; // placeholder for user ID
+  PostModel.upvote(element.className, localStorage.getItem("userAccount"));
   var upvotes = $('.' + element.className + '.upvote_count').html(); 
   console.log("upvotes query: " + upvotes)
   var counts_str = upvotes.split(' ')[1]; 
@@ -100,7 +104,7 @@ function submitAnswer() {
   console.log("answer_submission " + box_text)
   answer_data = {
     question_id: QuestionView.question_id,
-    user_id: "9b7680a1aed4535a675c6ed7", 
+    user_id: localStorage.getItem("userAccount"), 
     text: box_text
   }
   PostModel.addAnswer(answer_data)

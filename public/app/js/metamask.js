@@ -21,6 +21,21 @@ function app() {
             var accounts = results[2];      // resolved value of accountsPromise
             userAccount = accounts[0];
             console.log("printing userAccount in metamask.js: " + userAccount); 
+
+            $("#user_address").html(userAccount);
+
+            localStorage.setItem('userAccount', userAccount);
+
+            var addPostRequest = new XMLHttpRequest();
+
+            user_details = { 
+                user_id: "pancakes", 
+                asker_address: userAccount
+            }
+
+            addPostRequest.open('POST', '/submit_question')
+            addPostRequest.setRequestHeader('Content-type', 'application/json')
+            addPostRequest.send(JSON.stringify(user_details));
             
             // Make sure the contract is deployed on the connected network
             if (!(networkId in contractData.networks)) {
