@@ -40,6 +40,8 @@
     addPostRequest.open('POST', '/submit_question')
     addPostRequest.setRequestHeader('Content-type', 'application/json')
     addPostRequest.send(JSON.stringify(post))
+
+    collectBounty(1234, post.bounty); // 1234 is the question hash
   };
 
   /* Upvotes the post with the given id.

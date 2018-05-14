@@ -8,6 +8,7 @@ function app() {
 
     var contract;
     var userAccount;
+    var contractAddress; 
   
     var contractDataPromise = $.getJSON('build/contracts/BountyDistribution.json');
     var networkIdPromise = web3.eth.net.getId(); // resolves on the current network id
@@ -26,7 +27,7 @@ function app() {
                 throw new Error("Contract not found in selected Ethereum network on MetaMask.");
             }
 
-            var contractAddress = contractData.networks[networkId].address;
+            contractAddress = contractData.networks[networkId].address;
             contract = new web3.eth.Contract(contractData.abi, contractAddress);
         }).catch(console.error);
         // Refresh balance instead of printing to the console
@@ -40,19 +41,16 @@ function app() {
         //     })
         // }
 
-
-    function collectBounty() {
-        contract.methods.collectBounty(asker, qHash, bounty).send({from: userAccount})
-            .then(refreshPage)
-            .catch(function (e) {
-                // catch things here
-            })
+    function refreshBalance() { 
+        console.log("refreshed"); 
     }
-
-    $("#link-to-metamask").click(function() {
-        localStorage.setItem('userAccount', userAccount);
-        console.log("userAccount in metamask.js click function:" + userAccount); 
-    })
+    
+    window.collectBounty = function (qHash, bounty) {
+        console.log("collected bounty with qHash: " + qHash + " and bounty: " + bounty);
+        contract.methods.collectBounty(userAccount, qHash, bounty).send({from: userAccount, to: contractAddress, value: bounty})
+            .then(refreshBalance)
+            .catch(console.error);
+    };
 }
 
 $(document).ready(app);
