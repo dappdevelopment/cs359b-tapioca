@@ -8,6 +8,7 @@ function app() {
 
     var contract;
     var userAccount;
+    var contractAddress; 
   
     var contractDataPromise = $.getJSON('build/contracts/BountyDistribution.json');
     var networkIdPromise = web3.eth.net.getId(); // resolves on the current network id
@@ -19,25 +20,27 @@ function app() {
             var networkId = results[1];     // resolved value of networkIdPromise
             var accounts = results[2];      // resolved value of accountsPromise
             userAccount = accounts[0];
+            console.log("printing userAccount in metamask.js: " + userAccount); 
             
             // Make sure the contract is deployed on the connected network
             if (!(networkId in contractData.networks)) {
                 throw new Error("Contract not found in selected Ethereum network on MetaMask.");
             }
 
-            var contractAddress = contractData.networks[networkId].address;
+            contractAddress = contractData.networks[networkId].address;
             contract = new web3.eth.Contract(contractData.abi, contractAddress);
-        })
-        // Refresh balance instead of printing to the console
-        // .then(refreshBalance)
-        // .catch(console.error);
-        // function refreshBalance() { // Returns web3's PromiEvent
-        //     // Calling the contract (try with/without declaring view)
-        //     contract.methods.balanceOf(userAccount).call().then(function (balance) {
-        //         $('#display').text(balance + " CDT");
-        //         $("#loader").hide();
-        //     })
-        // }
+        }).catch(console.error);
+
+    function refreshBalance() { 
+        console.log("refreshed"); 
+    }
+    
+    window.collectBounty = function (qHash, bounty) {
+        console.log("collected bounty with qHash: " + qHash + " and bounty: " + bounty);
+        contract.methods.collectBounty(userAccount, qHash, bounty).send({from: userAccount, to: contractAddress, value: bounty})
+            .then(refreshBalance)
+            .catch(console.error);
+    };
 }
 
 $(document).ready(app);

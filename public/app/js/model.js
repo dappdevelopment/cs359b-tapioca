@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 var schema = require('./schema');
-var sha256 = require('js-sha256').sha256;
 var ObjectId = mongoose.Types.ObjectId;
 
 var uristring = process.env.MONGODB_URI || "mongodb://localhost:27017/tapioca";
@@ -31,8 +30,8 @@ var createUser = async function(username, address) {
 	}
 }
 
-var createQuestion = async function(bounty, timeExp, title, body, askerId) {
-	let questionHash = sha256(bounty + title + body + timeExp + askerId);
+var createQuestion = async function(bounty, timeExp, title, body, askerId, questionHash) {
+	console.log("askerId: " + askerId);
 	let newQuestion = new schema.Question ({
 		answers: [],
 		bounty: bounty,
@@ -159,7 +158,6 @@ var findUser = async function(userId) {
 		console.log(err);
 	}
 }
-
 
 module.exports.createUser = createUser;
 module.exports.createQuestion = createQuestion;

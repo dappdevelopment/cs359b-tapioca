@@ -56,7 +56,10 @@ function submitQuestion() {
     time_exp: q_time_exp
   }
 
-  PostModel.add(question_data)
+  PostModel.add(question_data, function(body) {
+    console.log(JSON.parse(body)); 
+    collectBounty(JSON.parse(body).qHash, question_data.bounty); 
+  })
 
   $("#add_container").css("display", "none");
   $("#myPopup").show(); 

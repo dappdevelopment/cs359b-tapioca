@@ -37,9 +37,16 @@
   PostModel.add = function(post, callback) {
     var addPostRequest = new XMLHttpRequest()
 
+    addPostRequest.onreadystatechange = function() {
+      if (addPostRequest.readyState === 4) {
+        callback(addPostRequest.response);
+        console.log(addPostRequest.response);
+      }
+    }
+
     addPostRequest.open('POST', '/submit_question')
     addPostRequest.setRequestHeader('Content-type', 'application/json')
-    addPostRequest.send(JSON.stringify(post))
+    addPostRequest.send(JSON.stringify(post));
   };
 
   /* Upvotes the post with the given id.
@@ -61,7 +68,15 @@
     answerRequest.open('POST', '/add_answer')
     answerRequest.setRequestHeader('Content-type', 'application/json')
     answerRequest.send(JSON.stringify(answer_data))
-  }
+  };
+
+  PostModel.createUser = function(user_data) {
+    var createUserRequest = new XMLHttpRequest()
+
+    createUserRequest.open('POST', '/create_user')
+    createUserRequest.setRequestHeader('Content-type', 'application/json')
+    createUserRequest.send(JSON.stringify(user_data))
+  };
 
   window.PostModel = PostModel;
 })();
