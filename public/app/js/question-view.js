@@ -2,7 +2,7 @@
 (function() {
   var QuestionView = {};
 
-  var remoteHost = "http://127.0.0.1:3000/"
+  QuestionView.remoteHost = "http://127.0.0.1:3000/"
 
   function getParameterByName(name, url) {
     if (!url) url = window.location.href;
@@ -37,7 +37,7 @@
       }
     })
 
-    xmlQuestionDetail.open("GET", remoteHost + 'question_detail' + "?q_id=" + encodeURIComponent(question_id))
+    xmlQuestionDetail.open("GET", QuestionView.remoteHost + 'question_detail' + "?q_id=" + encodeURIComponent(question_id))
     xmlQuestionDetail.send(null)
   }
 
@@ -46,7 +46,8 @@
   QuestionView.renderQuestion = function($newsfeed, post) {
     console.log(post)
 
-    var post_data = post.question
+    var post_data = post.question;
+    QuestionView.post_data = post_data;
 
     adaptElements($newsfeed, post_data); 
 
@@ -58,7 +59,7 @@
     if (Object.keys(answers).length == 0) {
       var no_answers = document.createElement('p');
       no_answers.innerHTML = "There have been no responses.";
-      $answers_view.append(no_answers)
+      $answers_view.append(no_answers);
     } else {
       for (answer in answers) {
         $answers_view.append(Templates.renderAnswer(answers[answer], post.users, true));
@@ -112,3 +113,26 @@ function submitAnswer() {
   $answers_view.append(answer)
   document.getElementById("answer_input").value = "";
 }
+
+function closeQuestion() {
+  console.log("closing question");
+  var xmlQuestionDetail = new XMLHttpRequest();
+
+  xmlQuestionDetail.addEventListener('load', function() {
+    if (xmlQuestionDetail.status === 200) {
+      let question_detail = JSON.parse(xmlQuestionDetail.responseText);
+      console.log(question_detail);
+      console.log("call metamask");
+    }
+  });
+  xmlQuestionDetail.open("GET", QuestionView.remoteHost + 'question_detail' + "?q_id=" + encodeURIComponent(QuestionView.post_data._id));
+  xmlQuestionDetail.send(null);
+}
+
+
+closeQuestion();
+
+
+
+
+
