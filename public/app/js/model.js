@@ -125,7 +125,6 @@ var findQuestionData = async function(questionId) {
 		for (answer of answers) {
 			answerMap[answer._id] = answer;
 		}
-		// console.log(questions);
 		return {question: question, answers: answerMap, users: userMap};
 	} catch (err) {
 		console.log("error in findQuestionData");

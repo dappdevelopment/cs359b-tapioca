@@ -14,6 +14,7 @@
     return decodeURIComponent(results[2].replace(/\+/g, " "));
   }
 
+// this fn is unused, because I don't know what its for. ~ Peter
   function adaptElements($newsfeed, post) { 
     $('.left_column h1').first().html('$' + post.bounty) 
     $('.left_column h2').first().html(post.user_id) 
@@ -44,13 +45,8 @@
   QuestionView.renderQuestion = function($newsfeed, post) {
     let postHtml = Templates.renderPost(post.question, post.users, show_link=false);
     $newsfeed.append(postHtml);
-
-    // adaptElements($newsfeed, post_data); 
-
-    console.log(post.answers);
     let answers = post.answers;
 
-    // var $answers_view = $('#answers_list')
     if (Object.keys(answers).length == 0) {
       var no_answers = document.createElement('p');
       no_answers.innerHTML = "There have been no responses.";
@@ -59,10 +55,6 @@
       for (answer in answers) {
         $newsfeed.append(Templates.renderAnswer(answers[answer], post.users, true));
       }
-      // answers.forEach(function(value) {
-      //   var answer = Templates.renderAnswer(value, post_data.id, true)
-      //   $answers_view.append(answer)
-      // }) 
     }
   };
 
@@ -74,7 +66,8 @@
 //onClick Handler's 
 //upvotes: 
 function upvoteClicked(element) {
-  PostModel.upvote(QuestionView.question_id, element.className);
+  let placeholder_id = "a3cf3bb3421e45f61dce82f1"; // placeholder for user ID
+  PostModel.upvote(element.className, placeholder_id);
   var upvotes = $('.' + element.className + '.upvote_count').html(); 
   console.log("upvotes query: " + upvotes)
   var counts_str = upvotes.split(' ')[1]; 
@@ -91,7 +84,7 @@ function submitAnswer() {
   console.log("answer_submission " + box_text)
   answer_data = {
     question_id: QuestionView.question_id,
-    user_id: "chachang", 
+    user_id: "9b7680a1aed4535a675c6ed7", 
     text: box_text
   }
   PostModel.addAnswer(answer_data)

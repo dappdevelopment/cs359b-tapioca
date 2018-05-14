@@ -87,7 +87,10 @@
     </ul>
   */
 
-  Templates.renderAnswer = function(answer, users, canUpvote) { 
+  Templates.renderAnswer = function(answer, users, canUpvote) {
+    console.log(answer.voters);
+    console.log(answer.voters.length);
+    console.log(answer);
     var upvote_tags = [tag('p', {class: "upvote_count " + answer._id}, "Upvotes: " + answer.voters.length)] 
     if (canUpvote) { 
       upvote_tags.push(tag('input', {type:"submit", name: "upvote", value: "upvote", class: answer._id, onclick: "upvoteClicked(this)"}))
