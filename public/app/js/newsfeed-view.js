@@ -44,6 +44,12 @@ function submitQuestion() {
   var q_details = $("textarea").val()
   var q_bounty = $('#bounty_amount').val()
 
+  if (MainView.user_id == null) { 
+    return
+  } else {
+    console.log("Ethereum: " + MainView.user_id)
+  }
+
   $("#question_title").val(""); 
   $("textarea").val("")
   $('#bounty_amount').val(null)

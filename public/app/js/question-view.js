@@ -87,10 +87,11 @@ function upvoteClicked(element) {
 function submitAnswer() {
   console.log('omg')
   var box_text = document.getElementById("answer_input").value
-  console.log("answer_submission " + box_text)
+
+
   answer_data = {
     question_id: QuestionView.question_id,
-    user_id: "chachang", 
+    user_id: MainView.user_id, 
     text: box_text
   }
   PostModel.addAnswer(answer_data)
