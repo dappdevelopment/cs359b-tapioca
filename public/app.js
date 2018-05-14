@@ -32,93 +32,24 @@ var path = require("path");
   response.sendFile('/index.html');
 })*/
 
-app.get('/question_feed', function(request, response) {
+app.get('/question_feed', async function(request, response) {
   console.log("/GET question_feed")
-	var query = request.query.q;
 
-	var data = { 
-    questions: [
-		{
-      id: "6f00619911a8782b8226823d",
-      title: "Max is Cool",
-      content: "I have a question please answer",
-      bounty: 60,
-      user_id: "max",
-      upvotes: 100,
-      answers: [
-        {
-          text: "Hello world",
-          user_id: "max_imaginary_gf",
-          upvotes: 5
-        },
-        {
-          text: "Hello max",
-          user_id: "claire",
-          upvotes: 2
-        }, 
-      ]
-    },
-    {
-      id: "6c99733a9ebc103f71216f53",
-      title: "Peter is Cool",
-      content: "Hi hi hi hi",
-      bounty: 50,
-      user_id: "varun",
-      upvotes: 1000,
-      answers: [
-        {
-          text: "Chickens",
-          user_id: "alex_lee",
-          upvotes: 4
-        },
-        {
-          text: "Cats",
-          user_id: "maddie_wang",
-          upvotes: 8
-        }, 
-      ]
-    }
-   ]
-  }
+  let questions = await model.findQuestionFeedData();
 
 	response.set('Content-type', 'application/json')
 	response.status(STATUS_OK) 
-	response.send(JSON.stringify(data))
+	response.send(JSON.stringify(questions))
 })
 
-app.get('/question_detail', function(request, response)  {
+app.get('/question_detail', async function(request, response)  {
   var q_id = request.query.q_id 
   console.log("GET /questions_detail " + q_id) 
+  let question_data = await model.findQuestionData(q_id);
 
-  var data = {
-    q_data: 
-    {
-        id: "5c4e518fd19133c034636780",
-        title: "Max is Cool",
-        content: "I have a question please answer",
-        bounty: 60,
-        user_id: "max",
-        upvotes: 100,
-        answers: [
-          {
-            text: "Friends, Romans, countrymen, lend me your ears;I come to bury Caesar, not to praise him. The evil that men do lives after them; The good is oft interrèd with their bones. So let it be with Caesar. The noble Brutus Hath told you Caesar was ambitious. If it were so, it was a grievous fault, And grievously hath Caesar answered it [1].Here under leave of Brutus and the rest(For Brutus is an honorable man;So are they all, all honorable men), Come I to speak in Caesar's funeral.",
-            user_id: "79e748ad42e83196ca78c471",
-            upvotes: 5,
-            id: "21e32fe7d0a8ccc8f6d61eca"
-          },
-          {
-            text: "Hello max",
-            user_id: "79e748ad42e83196ca78c471",
-            upvotes: 2,
-            id: "e4e3af27d4a2cac8f6d61ece"
-          }, 
-        ]
-    }
-  }
-
-  response.set('Content-type', 'application/json')
-  response.status(STATUS_OK) 
-  response.send(JSON.stringify(data))
+  response.set('Content-type', 'application/json');
+  response.status(STATUS_OK);
+  response.send(JSON.stringify(question_data));
 });
 
 app.post('/submit_question', function(request, response) {
@@ -141,11 +72,10 @@ app.post('/submit_question', function(request, response) {
 });
 
 app.post('/upvote', function(request, response) {
-  console.log("POST /upvotes " + "question_ID: " + request.body.question_id + "; answer_ID: " + request.body.answer_id) // Question Id is unnecessary for this call.
-  console.log("upvoting")
-  let placeholder_id = ObjectId("b31297b8606e2adc55fed05f");
+  console.log("POST /upvotes " + "user_ID: " + request.body.user_id + "; answer_ID: " + request.body.answer_id);
   let answer_id = ObjectId(request.body.answer_id);
-  model.upvoteAnswer(placeholder_id, answer_id);
+  let user_id = ObjectId(request.body.user_id);
+  model.upvoteAnswer(answer_id, user_id);
   response.set('Content-type', 'application/json');
   response.status(STATUS_OK);
   response.send();
@@ -172,31 +102,21 @@ app.post('/create_user', function(request, response) {
 app.listen(3000);
 console.log('Listening at 127.0.0.1:' + 3000);
 
-// async function test() {
-//   await model.resetDB();
-//   let askerId = await model.createUser("mchang4", "0xwiofjeojo023kr03");
-//   let answererId = await model.createUser("peterlu6", "0x29040g3hfej322ri");
-//   let user3 = await model.createUser("sclaire", "0x0932r09j24023r");
-//   let questionId = await model.createQuestion(50, "hash goes here", new Date("2016-12-12"), "title", "body", askerId);
-//   let answerId = await model.createAnswer(answererId, questionId);
-//   let retrievedQuestion = await model.findQuestion(questionId);
-//   let retrievedAnswer = await model.findAnswer(answerId);
-//   let retrievedUser = await model.findUser(askerId);
-//   console.log(retrievedQuestion);
-//   console.log(retrievedAnswer);
-//   console.log(retrievedUser);
-//   await model.upvoteAnswer(answerId, user3);
-// }
-
 async function clearDB() {
   await model.resetDB();
 }
 
-async function test() {
-  clearDB();
-  // tempCreateUser(); 
+async function initDB() {
+  let askerId = await model.createUser("mchang4", "0xwiofjeojo023kr03");
+  let answererId = await model.createUser("peterlu6", "0x29040g3hfej322ri");
+  let questionId = await model.createQuestion(50, new Date("2016-12-12"), "how do i make friends", "i have no friends", askerId);
+  let answerId = await model.createAnswer(answererId, questionId, "plastic surgery");
 }
 
+async function test() {
+  await clearDB();
+  await initDB();
+}
 
 test();
 
