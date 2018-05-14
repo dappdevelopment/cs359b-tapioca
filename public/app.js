@@ -108,9 +108,9 @@ async function clearDB() {
 }
 
 async function initDB() {
-  let askerId = await model.createUser("mchang4", "0xwiofjeojo023kr03");
-  let answererId = await model.createUser("peterlu6", "0x29040g3hfej322ri");
-  let questionId = await model.createQuestion(50, new Date("2016-12-12"), "how do i make friends", "i have no friends", askerId);
+  let askerId = await model.createUser("mchang4", "0x66FDDd026Dbf64D6F907154365113ae124eB2DD6");
+  let answererId = await model.createUser("peterlu6", "0xd08923976D510F8f834E1B8BC4E1c03599F2644F");
+  let questionId = await model.createQuestion(50, new Date("2016-12-12"), "how do i make friends", "i have no friends", ObjectId("73b312067720199e377e6fb9"), sha256("test"), "0xC6941bc0804722076716F4ba131D7B7B663E0a92");
   let answerId = await model.createAnswer(answererId, questionId, "plastic surgery");
 }
 

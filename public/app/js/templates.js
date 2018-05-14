@@ -13,12 +13,13 @@
    *   upvotes: the number of upvotes
    */
   Templates.renderPost = function(post, users, show_link=true) {
+    console.log("post1"); 
+    console.log(post); 
     if (show_link) {
       return tag('li', {display: "inline-block", class: "question"}, [
         tag('div', {class: 'meta'}, [
           tag('div', {class: 'left_title'}, [
               tag('h1', {}, post.bounty + " ETH"),
-              tag('h5', {}, users[post.askerId])
               ]),
           tag('div', {class: 'right_title'}, [
               tag('h1', {}, post.title),

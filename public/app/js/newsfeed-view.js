@@ -23,6 +23,8 @@
 
   /* Given post information, renders a post element into $newsfeed. */
   NewsfeedView.renderPost = function($newsfeed, post, users) {
+    console.log("posttt");
+    console.log(post); 
     var postHtml = Templates.renderPost(post, users)
     $newsfeed.append(postHtml);
    

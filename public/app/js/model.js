@@ -24,7 +24,7 @@ var createUser = async function(username, address) {
 		let savedUser = await schema.User.findOneAndUpdate({address: address}, {$setOnInsert: newUser}, {upsert: true, returnNewDocument: true});
 		console.log("saved user successfully");
 		console.log(savedUser); 
-		return savedUser.id;
+		return address;
 	} catch (err) {
 		console.log("err in createUser");
 		console.log(err);
