@@ -48,10 +48,12 @@ function submitQuestion() {
   $("textarea").val("");
   $('#bounty_amount').val(null)
 
+  
+
   var question_data = { 
     title: q_title, 
     details: q_details,
-    user_id: "79dbf5b39adf273eb3be65e0", 
+    user_id: localStorage.getItem("userAccount"), 
     bounty: q_bounty,
     time_exp: q_time_exp
   }
