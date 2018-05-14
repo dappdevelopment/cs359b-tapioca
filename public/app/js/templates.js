@@ -17,7 +17,7 @@
       return tag('li', {display: "inline-block", class: "question"}, [
         tag('div', {class: 'meta'}, [
           tag('div', {class: 'left_title'}, [
-              tag('h1', {}, '$' + post.bounty),
+              tag('h1', {}, post.bounty + " ETH"),
               tag('h5', {}, users[post.askerId])
               ]),
           tag('div', {class: 'right_title'}, [
@@ -31,7 +31,7 @@
       return tag('li', {display: "inline-block", class: "question"}, [
         tag('div', {class: 'meta'}, [
           tag('div', {class: 'left_title'}, [
-              tag('h1', {}, '$' + post.bounty),
+              tag('h1', {}, post.bounty + " ETH"),
               tag('h5', {}, users[post.askerId])
               ]),
           tag('div', {class: 'right_title'}, [
