@@ -18,7 +18,7 @@
         tag('div', {class: 'meta'}, [
           tag('div', {class: 'left_title'}, [
               tag('h1', {}, '$' + post.bounty),
-              tag('h2', {}, users[post.askerId])
+              tag('h5', {}, post.askerId)
               ]),
           tag('div', {class: 'right_title'}, [
               tag('h1', {}, post.title),
@@ -32,7 +32,7 @@
         tag('div', {class: 'meta'}, [
           tag('div', {class: 'left_title'}, [
               tag('h1', {}, '$' + post.bounty),
-              tag('h2', {}, users[post.askerId])
+              tag('h5', {}, post.askerId)
               ]),
           tag('div', {class: 'right_title'}, [
               tag('h1', {}, post.title),

@@ -2,7 +2,7 @@
 (function() {
   var QuestionView = {};
 
-  var remoteHost = "http://127.0.0.1:3000/"
+  QuestionView.remoteHost = "http://127.0.0.1:3000/"
 
   function getParameterByName(name, url) {
     if (!url) url = window.location.href;
@@ -37,7 +37,7 @@
       }
     })
 
-    xmlQuestionDetail.open("GET", remoteHost + 'question_detail' + "?q_id=" + encodeURIComponent(question_id))
+    xmlQuestionDetail.open("GET", QuestionView.remoteHost + 'question_detail' + "?q_id=" + encodeURIComponent(question_id))
     xmlQuestionDetail.send(null)
   }
 
@@ -46,7 +46,8 @@
   QuestionView.renderQuestion = function($newsfeed, post) {
     console.log(post)
 
-    var post_data = post.question
+    var post_data = post.question;
+    QuestionView.post_data = post_data;
 
     adaptElements($newsfeed, post_data); 
 
@@ -58,7 +59,7 @@
     if (Object.keys(answers).length == 0) {
       var no_answers = document.createElement('p');
       no_answers.innerHTML = "There have been no responses.";
-      $answers_view.append(no_answers)
+      $answers_view.append(no_answers);
     } else {
       for (answer in answers) {
         $answers_view.append(Templates.renderAnswer(answers[answer], post.users, true));
@@ -109,6 +110,46 @@ function submitAnswer() {
 
   var $answers_view = $('#answers_list')
   var answer = Templates.renderAnswer(answer_data, false)
-  $answers_view.append(answer)
+  $answers_view.append(answer);
   document.getElementById("answer_input").value = "";
 }
+
+function getTopAnswer(question_detail) {
+  let answerMap = question_detail.answers;
+  let questionAnswerIds = question_detail.question.answers;
+  let highest_vote_count = -1;
+  let highest_answerer_id = "";
+  for (answerId of questionAnswerIds) {
+    let curAnswer = answerMap[answerId];
+    if (curAnswer.voters.length > highest_vote_count) {
+      highest_vote_count = curAnswer.voters.length;
+      highest_answerer_id = curAnswer.answererId;
+    }
+  }
+  return highest_answerer_id;
+}
+
+function closeQuestion() {
+  console.log("closing question");
+  var xmlQuestionDetail = new XMLHttpRequest();
+
+  xmlQuestionDetail.addEventListener('load', function() {
+    if (xmlQuestionDetail.status === 200) {
+      let question_detail = JSON.parse(xmlQuestionDetail.responseText);
+      let highest_answerer_id = getTopAnswer(question_detail);
+      console.log("winner is " + highest_answerer_id);
+      console.log(question_detail);
+      console.log("call metamask");
+    }
+  });
+  xmlQuestionDetail.open("GET", QuestionView.remoteHost + 'question_detail' + "?q_id=" + encodeURIComponent(QuestionView.post_data._id));
+  xmlQuestionDetail.send(null);
+}
+
+
+closeQuestion();
+
+
+
+
+
