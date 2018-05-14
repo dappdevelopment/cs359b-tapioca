@@ -110,8 +110,23 @@ function submitAnswer() {
 
   var $answers_view = $('#answers_list')
   var answer = Templates.renderAnswer(answer_data, false)
-  $answers_view.append(answer)
+  $answers_view.append(answer);
   document.getElementById("answer_input").value = "";
+}
+
+function getTopAnswer(question_detail) {
+  let answerMap = question_detail.answers;
+  let questionAnswerIds = question_detail.question.answers;
+  let highest_vote_count = -1;
+  let highest_answerer_id = "";
+  for (answerId of questionAnswerIds) {
+    let curAnswer = answerMap[answerId];
+    if (curAnswer.voters.length > highest_vote_count) {
+      highest_vote_count = curAnswer.voters.length;
+      highest_answerer_id = curAnswer.answererId;
+    }
+  }
+  return highest_answerer_id;
 }
 
 function closeQuestion() {
@@ -121,6 +136,8 @@ function closeQuestion() {
   xmlQuestionDetail.addEventListener('load', function() {
     if (xmlQuestionDetail.status === 200) {
       let question_detail = JSON.parse(xmlQuestionDetail.responseText);
+      let highest_answerer_id = getTopAnswer(question_detail);
+      console.log("winner is " + highest_answerer_id);
       console.log(question_detail);
       console.log("call metamask");
     }
