@@ -21,8 +21,9 @@ var createUser = async function(username, address) {
 		upvotes: []
 	});
 	try {
-		let savedUser = await newUser.save();
+		let savedUser = await schema.User.findOneAndUpdate({address: address}, {$setOnInsert: newUser}, {upsert: true, returnNewDocument: true});
 		console.log("saved user successfully");
+		console.log(savedUser); 
 		return savedUser.id;
 	} catch (err) {
 		console.log("err in createUser");
@@ -30,7 +31,7 @@ var createUser = async function(username, address) {
 	}
 }
 
-var createQuestion = async function(bounty, timeExp, title, body, askerId, questionHash) {
+var createQuestion = async function(bounty, timeExp, title, body, askerId, questionHash, askerAddr) {
 	console.log("askerId: " + askerId);
 	let newQuestion = new schema.Question ({
 		answers: [],
@@ -45,7 +46,7 @@ var createQuestion = async function(bounty, timeExp, title, body, askerId, quest
 	});
 	try {
 		let savedQuestion = await newQuestion.save();
-		await schema.User.findOneAndUpdate({_id: askerId}, {$push: {questions: savedQuestion.id}}, {upsert: true});
+		await schema.User.findOneAndUpdate({address: askerAddr}, {$push: {questions: savedQuestion.id}}, {upsert: true});
 		return savedQuestion.id;
 	} catch (err) {
 		console.log("error in create question!");
@@ -61,9 +62,10 @@ var createAnswer = async function(answererId, questionId, body) {
 		body: body
 	});
 	try {
+		console.log(newAnswer); 
 		let savedAnswer = await newAnswer.save();
 		let updatedQuestion = await schema.Question.findOneAndUpdate({_id: questionId}, {$push: {answers: savedAnswer.id}}, {upsert: true});
-		let udpatedUser = await schema.User.findOneAndUpdate({_id: answererId}, {$push: {answers: savedAnswer.id}}, {upsert: true});
+		let updatedUser = await schema.User.findOneAndUpdate({address: answererId}, {$push: {answers: savedAnswer.id}}, {upsert: true});
 		return savedAnswer.id;
 	} catch (err) {
 		console.log("error in createanswer");
@@ -71,10 +73,14 @@ var createAnswer = async function(answererId, questionId, body) {
 	}
 }
 
-var upvoteAnswer = async function(answerId, voterId) {
+var upvoteAnswer = async function(answerId, voterAddr) {
+	// voterID: 0xC6941bc0804722076716F4ba131D7B7B663E0a92
+	// answerID: 5af9d02e092138575b67a58a
+	// user id wasnt being used and its actually user address. change schema? or figure out new way to do this
 	try {
-		let updatedAnswer = await schema.Answer.findOneAndUpdate({_id: answerId}, {$push: {voters: voterId}}, {upsert: true});
-		let updatedUser = await schema.User.findOneAndUpdate({_id: voterId}, {$push: {answers: answerId}}, {upsert: true});
+		let placeholder_id = ObjectId("73b312067720199e377e6fb9"); // random 24 digit hex string
+		let updatedAnswer = await schema.Answer.findOneAndUpdate({_id: answerId}, {$push: {voters: placeholder_id}}, {upsert: true});
+		let updatedUser = await schema.User.findOneAndUpdate({address: voterAddr}, {$push: {answers: answerId}}, {upsert: true});
 		console.log("updated answer successfully");
 	} catch (err) {
 		console.log("error in upvote answer");

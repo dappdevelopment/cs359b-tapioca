@@ -33,7 +33,7 @@ function app() {
                 asker_address: userAccount
             }
 
-            addPostRequest.open('POST', '/submit_question')
+            addPostRequest.open('POST', '/create_user')
             addPostRequest.setRequestHeader('Content-type', 'application/json')
             addPostRequest.send(JSON.stringify(user_details));
             
