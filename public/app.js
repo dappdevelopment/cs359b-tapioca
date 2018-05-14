@@ -155,6 +155,14 @@ app.post('/add_answer', function(request, response) {
   response.send();
 })
 
+app.post('/create_user', function(request, response) {
+  console.log("POST /create_user " + "user_ID: " + request.body.user_id + "; asker_address: " + request.body.asker_address);
+  model.createUser(request.body.user_id, request.body.asker_address);
+  response.set('Content-type', 'application/json');
+  response.status(STATUS_OK); 
+  response.send()
+})
+
 app.listen(3000);
 console.log('Listening at 127.0.0.1:' + 3000);
 
@@ -178,7 +186,11 @@ async function clearDB() {
   await model.resetDB();
 }
 
-clearDB();
+async function test() {
+  clearDB();
+  // tempCreateUser(); 
+}
+
 
 // test();
 

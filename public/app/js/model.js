@@ -125,7 +125,6 @@ var findUser = async function(userId) {
 	}
 }
 
-
 module.exports.createUser = createUser;
 module.exports.createQuestion = createQuestion;
 module.exports.createAnswer = createAnswer;

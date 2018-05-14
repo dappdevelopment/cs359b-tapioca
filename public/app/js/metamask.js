@@ -19,6 +19,7 @@ function app() {
             var networkId = results[1];     // resolved value of networkIdPromise
             var accounts = results[2];      // resolved value of accountsPromise
             userAccount = accounts[0];
+            console.log("printing userAccount in metamask.js: " + userAccount); 
             
             // Make sure the contract is deployed on the connected network
             if (!(networkId in contractData.networks)) {
@@ -27,7 +28,7 @@ function app() {
 
             var contractAddress = contractData.networks[networkId].address;
             contract = new web3.eth.Contract(contractData.abi, contractAddress);
-        })
+        }).catch(console.error);
         // Refresh balance instead of printing to the console
         // .then(refreshBalance)
         // .catch(console.error);
@@ -38,7 +39,24 @@ function app() {
         //         $("#loader").hide();
         //     })
         // }
+
+
+    function collectBounty() {
+        contract.methods.collectBounty(asker, qHash, bounty).send({from: userAccount})
+            .then(refreshPage)
+            .catch(function (e) {
+                // catch things here
+            })
+    }
+
+    $("#link-to-metamask").click(function() {
+        localStorage.setItem('userAccount', userAccount);
+        console.log("userAccount in metamask.js click function:" + userAccount); 
+    })
 }
 
 $(document).ready(app);
+
+// module.exports.setUpMetamask = setUpMetamask;
+// module.exports.userAccount = userAccount; 
 

@@ -84,6 +84,14 @@ function upvoteClicked(element) {
   $('.' + element.className + '.upvote_count').html("Upvotes: " + count)
 }
 
+function createUser() {
+  user_data = {
+    asker_address: localStorage.getItem("userAccount"),
+    user_id: "testinguser", 
+  }
+  PostModel.createUser(user_data)
+}
+
 function submitAnswer() {
   console.log('omg')
   var box_text = document.getElementById("answer_input").value

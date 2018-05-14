@@ -62,7 +62,15 @@
     answerRequest.open('POST', '/add_answer')
     answerRequest.setRequestHeader('Content-type', 'application/json')
     answerRequest.send(JSON.stringify(answer_data))
-  }
+  };
+
+  PostModel.createUser = function(user_data) {
+    var createUserRequest = new XMLHttpRequest()
+
+    createUserRequest.open('POST', '/create_user')
+    createUserRequest.setRequestHeader('Content-type', 'application/json')
+    createUserRequest.send(JSON.stringify(user_data))
+  };
 
   window.PostModel = PostModel;
 })();
