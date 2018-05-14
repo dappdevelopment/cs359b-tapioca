@@ -47,7 +47,12 @@ function app() {
         contract.methods.distributeBounty(answerer, aHash, qHash).send({from: userAccount})
             .then(refreshBalance)
             .catch(console.error);
-    }
+    };
+
+    $("#link-to-metamask").click(function() {
+        localStorage.setItem('userAccount', userAccount);
+        console.log("userAccount in metamask.js click function:" + userAccount); 
+    });
 }
 
 $(document).ready(app);
