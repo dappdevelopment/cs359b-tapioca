@@ -14,27 +14,28 @@
     return decodeURIComponent(results[2].replace(/\+/g, " "));
   }
 
-// this fn is unused, because I don't know what its for. ~ Peter
   function adaptElements($newsfeed, post) { 
     $('.left_column h1').first().html('$' + post.bounty) 
-    $('.left_column h2').first().html(post.user_id) 
+    $('.left_column h2').first().html(post.askerId) 
 
     $('.right_column h1').first().html(post.title)
-    $('.right_column h3').first().html(post.content) 
+    $('.right_column h3').first().html(post.body) 
   }
 
   QuestionView.render = function($newsfeed) { 
+    // TODO: replace with database call.
     var xmlQuestionDetail = new XMLHttpRequest(); 
 
     var question_id = getParameterByName("qid"); 
     QuestionView.question_id = question_id; 
+    console.log("question_ID " + question_id)
 
     xmlQuestionDetail.addEventListener('load', function() {
       if (xmlQuestionDetail.status === 200) {
-        var question_detail = JSON.parse(xmlQuestionDetail.responseText);
-        QuestionView.renderQuestion($newsfeed, question_detail);
+        var question_detail = JSON.parse(xmlQuestionDetail.responseText)
+        QuestionView.renderQuestion($newsfeed, question_detail)
       }
-    });
+    })
 
     xmlQuestionDetail.open("GET", remoteHost + 'question_detail' + "?q_id=" + encodeURIComponent(question_id))
     xmlQuestionDetail.send(null)
@@ -43,21 +44,27 @@
 
   /* Given post information, renders a post element into $newsfeed. */
   QuestionView.renderQuestion = function($newsfeed, post) {
-    let postHtml = Templates.renderPost(post.question, post.users, show_link=false);
-    $newsfeed.append(postHtml);
+    console.log(post)
+
+    var post_data = post.question
+
+    adaptElements($newsfeed, post_data); 
+
     let answers = post.answers;
+
+    var $answers_view = $('#answers_list')
+    console.log(answers)
 
     if (Object.keys(answers).length == 0) {
       var no_answers = document.createElement('p');
       no_answers.innerHTML = "There have been no responses.";
-      $newsfeed.append(no_answers)
+      $answers_view.append(no_answers)
     } else {
       for (answer in answers) {
-        $newsfeed.append(Templates.renderAnswer(answers[answer], post.users, true));
+        $answers_view.append(Templates.renderAnswer(answers[answer], post.users, true));
       }
     }
   };
-
 
   window.QuestionView = QuestionView; 
 })();
