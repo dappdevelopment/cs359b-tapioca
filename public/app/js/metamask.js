@@ -50,8 +50,8 @@ function app() {
     };
 
     $("#link-to-metamask").click(function() {
-        localStorage.setItem('userAccount', userAccount);
         console.log("userAccount in metamask.js click function:" + userAccount); 
+        localStorage.setItem('userAccount', userAccount);
     });
 }
 

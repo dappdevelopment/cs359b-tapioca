@@ -37,10 +37,10 @@ app.get('/question_feed', async function(request, response) {
 
   let questions = await model.findQuestionFeedData();
 
-	response.set('Content-type', 'application/json')
-	response.status(STATUS_OK) 
-	response.send(JSON.stringify(questions))
-})
+	response.set('Content-type', 'application/json');
+	response.status(STATUS_OK);
+	response.send(JSON.stringify(questions));
+});
 
 app.get('/question_detail', async function(request, response)  {
   var q_id = request.query.q_id 
