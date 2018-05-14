@@ -41,6 +41,13 @@ function app() {
             .then(refreshBalance)
             .catch(console.error);
     };
+
+    window.distributeBounty = function (answerer, aHash, qHash) {
+        console.log("distributing bounty with answerer: " + answerer + " aHash: " + aHash + " qHash: " + qHash);
+        contract.methods.distributeBounty(answerer, aHash, qHash).send({from: userAccount})
+            .then(refreshBalance)
+            .catch(console.error);
+    }
 }
 
 $(document).ready(app);
