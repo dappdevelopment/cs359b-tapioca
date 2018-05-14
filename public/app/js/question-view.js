@@ -98,6 +98,7 @@ function createUser() {
   PostModel.createUser(user_data)
 }
 
+
 function submitAnswer() {
   console.log('omg')
   var box_text = document.getElementById("answer_input").value
@@ -110,11 +111,11 @@ function submitAnswer() {
   PostModel.addAnswer(answer_data)
 
   answer_data["upvotes"] = 0; 
-  answer_data["id"] = -1; 
+  answer_data["_id"] = -1; 
 
-  var $answers_view = $('#answers_list')
-  var answer = Templates.renderAnswer(answer_data, false)
-  $answers_view.append(answer);
+  //var $answers_view = $('#answers_list')
+  //var answer = Templates.renderAnswer(answer_data, false)
+  //$answers_view.append(answer);
   document.getElementById("answer_input").value = "";
 }
 
