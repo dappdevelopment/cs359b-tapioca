@@ -12,6 +12,7 @@
     xmlQuestions.addEventListener('load', function() {
       if (xmlQuestions.status === 200) {
         var questions = JSON.parse(xmlQuestions.responseText)
+        console.log(questions);
         NewsfeedView.renderFeed($newsfeed, questions)
       }
     })
@@ -21,17 +22,15 @@
   };
 
   /* Given post information, renders a post element into $newsfeed. */
-  NewsfeedView.renderPost = function($newsfeed, post) {
-    var postHtml = Templates.renderPost(post)
+  NewsfeedView.renderPost = function($newsfeed, post, users) {
+    var postHtml = Templates.renderPost(post, users)
     $newsfeed.append(postHtml);
    
   };
 
   NewsfeedView.renderFeed = function($newsfeed, response) { 
-    values = response.questions
-
-    values.forEach(function(value) {
-        NewsfeedView.renderPost($newsfeed, value, false) 
+    response.questions.forEach(function(value) {
+        NewsfeedView.renderPost($newsfeed, value, response.users, false) 
     })
 
   }
@@ -40,19 +39,21 @@
 })();
 
 function submitQuestion() { 
-  var q_title = $("#question_title").val()
-  var q_details = $("textarea").val()
-  var q_bounty = $('#bounty_amount').val()
+  let q_title = $("#question_title").val()
+  let q_details = $("textarea").val()
+  let q_bounty = $('#bounty_amount').val()
+  let q_time_exp = $('#time_exp').val()
 
   $("#question_title").val(""); 
-  $("textarea").val("")
+  $("textarea").val("");
   $('#bounty_amount').val(null)
 
   var question_data = { 
     title: q_title, 
     details: q_details,
-    user_id: "Sprinkles", 
-    bounty: q_bounty
+    user_id: "79dbf5b39adf273eb3be65e0", 
+    bounty: q_bounty,
+    time_exp: q_time_exp
   }
 
   PostModel.add(question_data)

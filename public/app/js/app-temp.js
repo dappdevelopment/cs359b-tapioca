@@ -41,4 +41,3 @@ function app() {
 }
 
 $(document).ready(app);
-

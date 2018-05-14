@@ -12,20 +12,35 @@
    *   source: the source URL
    *   upvotes: the number of upvotes
    */
-  Templates.renderPost = function(post) {
-    return tag('li', {display: "inline-block", class: "question"}, [
-      tag('div', {class: 'meta'}, [
-        tag('div', {class: 'left_title'}, [
-            tag('h1', {}, '$' + post.bounty),
-            tag('h2', {}, post.user_id)
+  Templates.renderPost = function(post, users, show_link=true) {
+    if (show_link) {
+      return tag('li', {display: "inline-block", class: "question"}, [
+        tag('div', {class: 'meta'}, [
+          tag('div', {class: 'left_title'}, [
+              tag('h1', {}, '$' + post.bounty),
+              tag('h2', {}, users[post.askerId])
+              ]),
+          tag('div', {class: 'right_title'}, [
+              tag('h1', {}, post.title),
+              tag('h3', {}, post.body),
+              tag('a', {href: 'question_view.html?qid=' + post._id}, 'See answers >')
             ]),
-        tag('div', {class: 'right_title'}, [
-            tag('h1', {}, post.title),
-            tag('h3', {}, post.content),
-            tag('a', {href: 'question_view.html?qid=' + post.id}, 'See answers >')
-          ]),
-      ]),
-    ]);
+        ]),
+      ]);
+    } else {
+      return tag('li', {display: "inline-block", class: "question"}, [
+        tag('div', {class: 'meta'}, [
+          tag('div', {class: 'left_title'}, [
+              tag('h1', {}, '$' + post.bounty),
+              tag('h2', {}, users[post.askerId])
+              ]),
+          tag('div', {class: 'right_title'}, [
+              tag('h1', {}, post.title),
+              tag('h3', {}, post.body)
+            ]),
+        ]),
+      ]);
+    }
   };
 
   Templates.renderQuestion = function(post) {
@@ -72,10 +87,13 @@
     </ul>
   */
 
-  Templates.renderAnswer = function(answer, canUpvote) { 
-    var upvote_tags = [tag('p', {class: "upvote_count " + answer.id}, "Upvotes: " + answer.upvotes)] 
+  Templates.renderAnswer = function(answer, users, canUpvote) {
+    console.log(answer.voters);
+    console.log(answer.voters.length);
+    console.log(answer);
+    var upvote_tags = [tag('p', {class: "upvote_count " + answer._id}, "Upvotes: " + answer.voters.length)] 
     if (canUpvote) { 
-      upvote_tags.push(tag('input', {type:"submit", name: "upvote", value: "upvote", class: answer.id, onclick: "upvoteClicked(this)"}))
+      upvote_tags.push(tag('input', {type:"submit", name: "upvote", value: "upvote", class: answer._id, onclick: "upvoteClicked(this)"}))
     } else {
       upvote_tags.push(tag('p', {}, "Upvoting Disabled"))
     }
@@ -84,7 +102,7 @@
       tag('div', {class: "answer_box"}, [
         tag('div', {class: "left_column"}, upvote_tags), 
         tag('div', {class: "right_column"}, 
-          tag('p', {}, answer.text)
+          tag('p', {}, answer.body)
         )
       ])
     )
