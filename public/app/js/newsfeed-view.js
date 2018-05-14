@@ -12,6 +12,7 @@
     xmlQuestions.addEventListener('load', function() {
       if (xmlQuestions.status === 200) {
         var questions = JSON.parse(xmlQuestions.responseText)
+        console.log(questions);
         NewsfeedView.renderFeed($newsfeed, questions)
       }
     })
@@ -21,17 +22,15 @@
   };
 
   /* Given post information, renders a post element into $newsfeed. */
-  NewsfeedView.renderPost = function($newsfeed, post) {
-    var postHtml = Templates.renderPost(post)
+  NewsfeedView.renderPost = function($newsfeed, post, users) {
+    var postHtml = Templates.renderPost(post, users)
     $newsfeed.append(postHtml);
    
   };
 
   NewsfeedView.renderFeed = function($newsfeed, response) { 
-    values = response.questions
-
-    values.forEach(function(value) {
-        NewsfeedView.renderPost($newsfeed, value, false) 
+    response.questions.forEach(function(value) {
+        NewsfeedView.renderPost($newsfeed, value, response.users, false) 
     })
 
   }

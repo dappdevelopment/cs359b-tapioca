@@ -1,8 +1,7 @@
 var mongoose = require('mongoose');
-
 var schema = require('./schema');
-
 var sha256 = require('js-sha256').sha256;
+var ObjectId = mongoose.Types.ObjectId;
 
 var uristring = process.env.MONGODB_URI || "mongodb://localhost:27017/tapioca";
 
@@ -33,7 +32,6 @@ var createUser = async function(username, address) {
 }
 
 var createQuestion = async function(bounty, timeExp, title, body, askerId) {
-	console.log("askerId: " + askerId);
 	let questionHash = sha256(bounty + title + body + timeExp + askerId);
 	let newQuestion = new schema.Question ({
 		answers: [],
@@ -48,7 +46,7 @@ var createQuestion = async function(bounty, timeExp, title, body, askerId) {
 	});
 	try {
 		let savedQuestion = await newQuestion.save();
-		schema.User.findOneAndUpdate({_id: askerId}, {$push: {questions: savedQuestion.id}}, {upsert: true});
+		await schema.User.findOneAndUpdate({_id: askerId}, {$push: {questions: savedQuestion.id}}, {upsert: true});
 		return savedQuestion.id;
 	} catch (err) {
 		console.log("error in create question!");
@@ -97,6 +95,44 @@ var resetDB = async function() {
 	}
 }
 
+var findQuestionFeedData = async function() {
+	try {
+		let questions = await schema.Question.find({});
+		let users = await schema.User.find({});
+		let userMap = {};
+		for (user of users){
+			userMap[user._id] = user.username;
+		}
+		return {questions: questions, users: userMap};
+	} catch (err) {
+		console.log("error in findQuestionFeedData");
+		console.log(err);
+	}
+}
+
+var findQuestionData = async function(questionId) {
+	try {
+		let question_list = await schema.Question.find({_id: questionId});
+		let users = await schema.User.find({});
+		let userMap = {};
+		for (user of users){
+			userMap[user._id] = user.username;
+		}
+		question = question_list[0]
+		let answerIds = question.answers;
+		let answers = await schema.Answer.find({_id: {$in: answerIds}});
+		let answerMap = {};
+		for (answer of answers) {
+			answerMap[answer._id] = answer;
+		}
+		// console.log(questions);
+		return {question: question, answers: answerMap, users: userMap};
+	} catch (err) {
+		console.log("error in findQuestionData");
+		console.log(err);
+	}
+}
+
 var findQuestion = async function(questionId) {
 	try {
 		let foundQuestion = await schema.Question.find({_id: questionId});
@@ -134,3 +170,8 @@ module.exports.resetDB = resetDB;
 module.exports.findQuestion = findQuestion;
 module.exports.findUser = findUser;
 module.exports.findAnswer = findAnswer;
+module.exports.findQuestionFeedData = findQuestionFeedData;
+module.exports.findQuestionData = findQuestionData;
+
+
+
