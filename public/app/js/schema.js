@@ -4,7 +4,7 @@ var UserSchema = new mongoose.Schema({
     username: {type: String, required: true},
     questions: [{type: mongoose.Schema.ObjectId}],
     answers: [{type: mongoose.Schema.ObjectId}],
-    address: {type: String},
+    address: {type: String, unique: true},
     upvotes: [{type: mongoose.Schema.ObjectId}]
 });
 

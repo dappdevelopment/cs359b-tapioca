@@ -14,12 +14,12 @@
     return decodeURIComponent(results[2].replace(/\+/g, " "));
   }
 
-  function adaptElements($newsfeed, post) { 
-    $('.left_column h1').first().html('$' + post.bounty) 
-    $('.left_column h2').first().html(post.askerId) 
+  function adaptElements($newsfeed, post, users) { 
+    $('.left_column h1').first().html('$' + post.bounty);
+    $('.left_column h5').first().html(users[post.askerId]);
 
-    $('.right_column h1').first().html(post.title)
-    $('.right_column h3').first().html(post.body) 
+    $('.right_column h1').first().html(post.title);
+    $('.right_column h3').first().html(post.body);
   }
 
   QuestionView.render = function($newsfeed) { 
@@ -49,7 +49,7 @@
     var post_data = post.question;
     QuestionView.post_data = post_data;
 
-    adaptElements($newsfeed, post_data); 
+    adaptElements($newsfeed, post_data, post.users); 
 
     let answers = post.answers;
 
@@ -140,15 +140,18 @@ function closeQuestion() {
       console.log("winner is " + highest_answerer_id);
       console.log(question_detail);
       console.log("call metamask");
+      distributeBounty(highest_answerer_id, "hi claire", )
+      distributeBounty = function (answerer, aHash, qHash) {
+        console.log("distributing bounty with answerer: " + answerer + " aHash: " + aHash + " qHash: " + qHash);
+        contract.methods.distributeBounty(answerer, aHash, qHash).send({from: userAccount})
+            .then(refreshBalance)
+            .catch(console.error); 
+      }
     }
   });
   xmlQuestionDetail.open("GET", QuestionView.remoteHost + 'question_detail' + "?q_id=" + encodeURIComponent(QuestionView.post_data._id));
   xmlQuestionDetail.send(null);
 }
-
-
-closeQuestion();
-
 
 
 

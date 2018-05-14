@@ -100,7 +100,7 @@ var findQuestionFeedData = async function() {
 		let users = await schema.User.find({});
 		let userMap = {};
 		for (user of users){
-			userMap[user._id] = user.username;
+			userMap[user._id] = user.address; // map from user to their eth address.
 		}
 		return {questions: questions, users: userMap};
 	} catch (err) {
@@ -115,7 +115,7 @@ var findQuestionData = async function(questionId) {
 		let users = await schema.User.find({});
 		let userMap = {};
 		for (user of users){
-			userMap[user._id] = user.username;
+			userMap[user._id] = user.address;
 		}
 		question = question_list[0]
 		let answerIds = question.answers;
