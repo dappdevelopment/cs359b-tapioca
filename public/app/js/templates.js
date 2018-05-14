@@ -19,7 +19,7 @@
       return tag('li', {display: "inline-block", class: "question"}, [
         tag('div', {class: 'meta'}, [
           tag('div', {class: 'left_title'}, [
-              tag('h1', {}, post.bounty + " ETH"),
+              tag('h1', {}, post.bounty + " WEI"),
               ]),
           tag('div', {class: 'right_title'}, [
               tag('h1', {}, post.title),

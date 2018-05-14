@@ -119,5 +119,7 @@ async function test() {
   await initDB();
 }
 
-test();
+clearDB();
+
+// test();
 

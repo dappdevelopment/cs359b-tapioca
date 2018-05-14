@@ -15,8 +15,8 @@
   }
 
   function adaptElements($newsfeed, post, users) { 
-    $('.left_column h1').first().html('$' + post.bounty);
-    $('.left_column h5').first().html(users[post.askerId]);
+    $('.left_column h1').first().html(post.bounty + " WEI");
+    //$('.left_column h5').first().html(users[post.askerId]);
 
     $('.right_column h1').first().html(post.title);
     $('.right_column h3').first().html(post.body);
