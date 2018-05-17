@@ -1,6 +1,6 @@
 // anonymous, self-invoking function to limit scope
 (function() {
-  var remoteHost = "http://127.0.0.1:3000/"
+  var remoteHost = "http://tapioca-dapp.herokuapp.com/"
 
   var NewsfeedView = {};
 
@@ -23,6 +23,8 @@
 
   /* Given post information, renders a post element into $newsfeed. */
   NewsfeedView.renderPost = function($newsfeed, post, users) {
+    console.log("posttt");
+    console.log(post); 
     var postHtml = Templates.renderPost(post, users)
     $newsfeed.append(postHtml);
    

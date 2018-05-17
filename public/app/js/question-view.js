@@ -2,7 +2,7 @@
 (function() {
   var QuestionView = {};
 
-  QuestionView.remoteHost = "http://127.0.0.1:3000/"
+  QuestionView.remoteHost = "http://tapioca-dapp.herokuapp.com/"
 
   function getParameterByName(name, url) {
     if (!url) url = window.location.href;
@@ -15,8 +15,8 @@
   }
 
   function adaptElements($newsfeed, post, users) { 
-    $('.left_column h1').first().html('$' + post.bounty);
-    $('.left_column h5').first().html(users[post.askerId]);
+    $('.left_column h1').first().html(post.bounty + " WEI");
+    //$('.left_column h5').first().html(users[post.askerId]);
 
     $('.right_column h1').first().html(post.title);
     $('.right_column h3').first().html(post.body);
@@ -103,9 +103,11 @@ function submitAnswer() {
   console.log('omg')
   var box_text = document.getElementById("answer_input").value
   console.log("answer_submission " + box_text)
+  console.log(QuestionView.question_id)
+  console.log(localStorage.getItem("userAccount"))
   answer_data = {
     question_id: QuestionView.question_id,
-    user_id: localStorage.getItem("userAccount"), 
+    user_addr: localStorage.getItem("userAccount"), 
     text: box_text
   }
   PostModel.addAnswer(answer_data)
@@ -145,9 +147,10 @@ function closeQuestion() {
       console.log("winner is " + highest_answerer_id);
       console.log(question_detail);
       console.log("call metamask");
-      distributeBounty(highest_answerer_id, "hi claire", question_detail.question.questionHash);
+      distributeBounty(highest_answerer_id, 1234, question_detail.question.questionHash);
     }
   });
+
   xmlQuestionDetail.open("GET", QuestionView.remoteHost + 'question_detail' + "?q_id=" + encodeURIComponent(QuestionView.post_data._id));
   xmlQuestionDetail.send(null);
 }

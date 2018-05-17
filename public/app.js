@@ -57,10 +57,11 @@ app.post('/submit_question', function(request, response) {
   console.log("POST /submit_question", "title: " + request.body.title, "details: " + request.body.details, 
     "user_id: " + request.body.user_id, "bounty: " + request.body.bounty);
   let bounty = Number(request.body.bounty);
+  let user_addr = request.body.user_id
   let placeholder_id = ObjectId("73b312067720199e377e6fb9"); // random 24 digit hex string
   let questionHash = sha256(bounty + request.body.title + request.body.details + request.body.time_exp + placeholder_id);
 
-  model.createQuestion(bounty, request.body.time_exp, request.body.title, request.body.details, placeholder_id, questionHash);
+  model.createQuestion(bounty, request.body.time_exp, request.body.title, request.body.details, placeholder_id, questionHash, user_addr);
 
   response.set('Content-type', 'application/json');
   response.status(STATUS_OK);
@@ -74,18 +75,18 @@ app.post('/submit_question', function(request, response) {
 app.post('/upvote', function(request, response) {
   console.log("POST /upvotes " + "user_ID: " + request.body.user_id + "; answer_ID: " + request.body.answer_id);
   let answer_id = ObjectId(request.body.answer_id);
-  let user_id = ObjectId(request.body.user_id);
-  model.upvoteAnswer(answer_id, user_id);
+  let user_addr = request.body.user_id;
+  model.upvoteAnswer(answer_id, user_addr);
   response.set('Content-type', 'application/json');
   response.status(STATUS_OK);
   response.send();
 })
 
 app.post('/add_answer', function(request, response) {
-  console.log("POST /add_answer " + "question_ID: " + request.body.question_id + "; answer: " + request.body.text)
+  console.log("POST /add_answer "  + "question_ID: " + request.body.question_id + "; answer: " + request.body.text)
   let placeholder_id = ObjectId("915bed12d3704298d62224fe");
   let question_id = ObjectId(request.body.question_id);
-  model.createAnswer(placeholder_id, question_id, request.body.text);
+  model.createAnswer(request.body.user_addr, question_id, request.body.text);
   response.set('Content-type', 'application/json');
   response.status(STATUS_OK);
   response.send();
@@ -99,7 +100,7 @@ app.post('/create_user', function(request, response) {
   response.send()
 })
 
-app.listen(3000);
+app.listen(process.env.PORT || 3000);
 console.log('Listening at 127.0.0.1:' + 3000);
 
 async function clearDB() {
@@ -107,9 +108,9 @@ async function clearDB() {
 }
 
 async function initDB() {
-  let askerId = await model.createUser("mchang4", "0xwiofjeojo023kr03");
-  let answererId = await model.createUser("peterlu6", "0x29040g3hfej322ri");
-  let questionId = await model.createQuestion(50, new Date("2016-12-12"), "how do i make friends", "i have no friends", askerId);
+  let askerId = await model.createUser("mchang4", "0x66FDDd026Dbf64D6F907154365113ae124eB2DD6");
+  let answererId = await model.createUser("peterlu6", "0xd08923976D510F8f834E1B8BC4E1c03599F2644F");
+  let questionId = await model.createQuestion(50, new Date("2016-12-12"), "how do i make friends", "i have no friends", ObjectId("73b312067720199e377e6fb9"), sha256("test"), "0xC6941bc0804722076716F4ba131D7B7B663E0a92");
   let answerId = await model.createAnswer(answererId, questionId, "plastic surgery");
 }
 
@@ -118,5 +119,7 @@ async function test() {
   await initDB();
 }
 
-test();
+clearDB();
+
+// test();
 
