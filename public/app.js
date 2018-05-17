@@ -100,7 +100,7 @@ app.post('/create_user', function(request, response) {
   response.send()
 })
 
-app.listen(3000);
+app.listen(process.env.PORT || 3000);
 console.log('Listening at 127.0.0.1:' + 3000);
 
 async function clearDB() {
