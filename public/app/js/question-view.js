@@ -78,7 +78,6 @@
 //onClick Handler's 
 //upvotes: 
 function upvoteClicked(element) {
-  //let placeholder_id = "a3cf3bb3421e45f61dce82f1"; // placeholder for user ID
   PostModel.upvote(element.className, localStorage.getItem("userAccount"));
   var upvotes = $('.' + element.className + '.upvote_count').html(); 
   console.log("upvotes query: " + upvotes)

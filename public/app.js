@@ -72,9 +72,9 @@ app.post('/submit_question', function(request, response) {
 });
 
 app.post('/upvote', function(request, response) {
-  console.log("POST /upvotes " + "user_ID: " + request.body.user_id + "; answer_ID: " + request.body.answer_id);
+  console.log("POST /upvotes " + "user_addr: " + request.body.user_addr + "; answer_ID: " + request.body.answer_id);
   let answer_id = ObjectId(request.body.answer_id);
-  let user_addr = request.body.user_id;
+  let user_addr = request.body.user_addr;
   model.upvoteAnswer(answer_id, user_addr);
   response.set('Content-type', 'application/json');
   response.status(STATUS_OK);
