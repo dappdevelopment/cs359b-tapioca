@@ -31,8 +31,8 @@ var createUser = async function(username, address) {
 	}
 }
 
-var createQuestion = async function(bounty, timeExp, title, body, askerId, questionHash, askerAddr) {
-	console.log("askerId: " + askerId);
+var createQuestion = async function(bounty, timeExp, title, body, askerAddr, questionHash) {
+	console.log("askerAddr: " + askerAddr);
 	let newQuestion = new schema.Question ({
 		answers: [],
 		bounty: bounty,
@@ -42,7 +42,7 @@ var createQuestion = async function(bounty, timeExp, title, body, askerId, quest
 		timeExp: timeExp,
 		title: title,
 		body: body,
-		askerId: askerId
+		askerAddr: askerAddr
 	});
 	try {
 		let savedQuestion = await newQuestion.save();
@@ -54,9 +54,9 @@ var createQuestion = async function(bounty, timeExp, title, body, askerId, quest
 	}
 }
 
-var createAnswer = async function(answererId, questionId, body) {
+var createAnswer = async function(answererAddr, questionId, body) {
 	let newAnswer = new schema.Answer ({
-		answererId: answererId,
+		answererAddr: answererAddr,
 		voters: [],
 		questionId: questionId,
 		body: body
@@ -65,7 +65,7 @@ var createAnswer = async function(answererId, questionId, body) {
 		console.log(newAnswer); 
 		let savedAnswer = await newAnswer.save();
 		let updatedQuestion = await schema.Question.findOneAndUpdate({_id: questionId}, {$push: {answers: savedAnswer.id}}, {upsert: true});
-		let updatedUser = await schema.User.findOneAndUpdate({address: answererId}, {$push: {answers: savedAnswer.id}}, {upsert: true});
+		let updatedUser = await schema.User.findOneAndUpdate({address: answererAddr}, {$push: {answers: savedAnswer.id}}, {upsert: true});
 		return savedAnswer.id;
 	} catch (err) {
 		console.log("error in createanswer");
@@ -74,12 +74,8 @@ var createAnswer = async function(answererId, questionId, body) {
 }
 
 var upvoteAnswer = async function(answerId, voterAddr) {
-	// voterID: 0xC6941bc0804722076716F4ba131D7B7B663E0a92
-	// answerID: 5af9d02e092138575b67a58a
-	// user id wasnt being used and its actually user address. change schema? or figure out new way to do this
 	try {
-		let placeholder_id = ObjectId("73b312067720199e377e6fb9"); // random 24 digit hex string
-		let updatedAnswer = await schema.Answer.findOneAndUpdate({_id: answerId}, {$push: {voters: placeholder_id}}, {upsert: true});
+		let updatedAnswer = await schema.Answer.findOneAndUpdate({_id: answerId}, {$push: {voters: voterAddr}}, {upsert: true});
 		let updatedUser = await schema.User.findOneAndUpdate({address: voterAddr}, {$push: {answers: answerId}}, {upsert: true});
 		console.log("updated answer successfully");
 	} catch (err) {

@@ -5,23 +5,23 @@ var UserSchema = new mongoose.Schema({
     questions: [{type: mongoose.Schema.ObjectId}],
     answers: [{type: mongoose.Schema.ObjectId}],
     address: {type: String, unique: true},
-    upvotes: [{type: mongoose.Schema.ObjectId}]
+    upvotes: [{type: String}]
 });
 
 var QuestionSchema = new mongoose.Schema({
     answers: [{type: mongoose.Schema.ObjectId}],
     bounty: {type: Number},
-    upvotes: [{type: mongoose.Schema.ObjectId}],
+    upvotes: [{type: String}],
     questionHash: {type: String},
    	topAnswerHash: {type: String},
     timeExp: {type: Date},
     title: {type: String},
     body: {type: String},
-    askerId: {type: mongoose.Schema.ObjectId}
+    askerAddr: {type: String}
 });
 
 var AnswerSchema = new mongoose.Schema({
-    answererId: {type: String, required: true},
+    answererAddr: {type: String, required: true},
     voters: [{type: mongoose.Schema.ObjectId}],
     questionId: {type: String},
     body: {type: String}

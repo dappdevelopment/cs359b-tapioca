@@ -16,7 +16,7 @@
 
   function adaptElements($newsfeed, post, users) { 
     $('.left_column h1').first().html(post.bounty + " WEI");
-    //$('.left_column h5').first().html(users[post.askerId]);
+    $('.left_column h5').first().html(post.askerAddr);
 
     $('.right_column h1').first().html(post.title);
     $('.right_column h3').first().html(post.body);
@@ -130,7 +130,7 @@ function getTopAnswer(question_detail) {
     let curAnswer = answerMap[answerId];
     if (curAnswer.voters.length > highest_vote_count) {
       highest_vote_count = curAnswer.voters.length;
-      highest_answerer_id = curAnswer.answererId;
+      highest_answerer_id = curAnswer.answererAddr;
     }
   }
   return highest_answerer_id;

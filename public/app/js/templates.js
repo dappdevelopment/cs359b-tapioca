@@ -20,6 +20,7 @@
         tag('div', {class: 'meta'}, [
           tag('div', {class: 'left_title'}, [
               tag('h1', {}, post.bounty + " WEI"),
+              tag('h5', {}, post.askerAddr)
               ]),
           tag('div', {class: 'right_title'}, [
               tag('h1', {}, post.title),
@@ -33,7 +34,7 @@
         tag('div', {class: 'meta'}, [
           tag('div', {class: 'left_title'}, [
               tag('h1', {}, post.bounty + " ETH"),
-              tag('h5', {}, users[post.askerId])
+              tag('h5', {}, post.askerAddr)
               ]),
           tag('div', {class: 'right_title'}, [
               tag('h1', {}, post.title),

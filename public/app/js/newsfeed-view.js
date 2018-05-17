@@ -55,7 +55,7 @@ function submitQuestion() {
   var question_data = { 
     title: q_title, 
     details: q_details,
-    user_id: localStorage.getItem("userAccount"), 
+    asker_addr: localStorage.getItem("userAccount"), 
     bounty: q_bounty,
     time_exp: q_time_exp
   }

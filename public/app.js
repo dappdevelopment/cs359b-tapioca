@@ -57,11 +57,10 @@ app.post('/submit_question', function(request, response) {
   console.log("POST /submit_question", "title: " + request.body.title, "details: " + request.body.details, 
     "user_id: " + request.body.user_id, "bounty: " + request.body.bounty);
   let bounty = Number(request.body.bounty);
-  let user_addr = request.body.user_id
-  let placeholder_id = ObjectId("73b312067720199e377e6fb9"); // random 24 digit hex string
-  let questionHash = sha256(bounty + request.body.title + request.body.details + request.body.time_exp + placeholder_id);
+  let asker_addr = request.body.asker_addr
+  let questionHash = sha256(bounty + request.body.title + request.body.details + request.body.time_exp + asker_addr);
 
-  model.createQuestion(bounty, request.body.time_exp, request.body.title, request.body.details, placeholder_id, questionHash, user_addr);
+  model.createQuestion(bounty, request.body.time_exp, request.body.title, request.body.details, asker_addr, questionHash);
 
   response.set('Content-type', 'application/json');
   response.status(STATUS_OK);
@@ -108,10 +107,10 @@ async function clearDB() {
 }
 
 async function initDB() {
-  let askerId = await model.createUser("mchang4", "0x66FDDd026Dbf64D6F907154365113ae124eB2DD6");
-  let answererId = await model.createUser("peterlu6", "0xd08923976D510F8f834E1B8BC4E1c03599F2644F");
+  let askerAddr = await model.createUser("mchang4", "0x66FDDd026Dbf64D6F907154365113ae124eB2DD6");
+  let answererAddr = await model.createUser("peterlu6", "0xd08923976D510F8f834E1B8BC4E1c03599F2644F");
   let questionId = await model.createQuestion(50, new Date("2016-12-12"), "how do i make friends", "i have no friends", ObjectId("73b312067720199e377e6fb9"), sha256("test"), "0xC6941bc0804722076716F4ba131D7B7B663E0a92");
-  let answerId = await model.createAnswer(answererId, questionId, "plastic surgery");
+  let answerId = await model.createAnswer(answererAddr, questionId, "plastic surgery");
 }
 
 async function test() {
