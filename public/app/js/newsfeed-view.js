@@ -1,6 +1,6 @@
 // anonymous, self-invoking function to limit scope
 (function() {
-  var remoteHost = "http://tapioca-dapp.herokuapp.com/"
+  var remoteHost = "http://127.0.0.1:3000/"
 
   var NewsfeedView = {};
 

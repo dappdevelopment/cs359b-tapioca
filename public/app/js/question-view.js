@@ -2,7 +2,7 @@
 (function() {
   var QuestionView = {};
 
-  QuestionView.remoteHost = "http://tapioca-dapp.herokuapp.com/"
+  QuestionView.remoteHost = "http://127.0.0.1:3000/"
 
   function getParameterByName(name, url) {
     if (!url) url = window.location.href;
