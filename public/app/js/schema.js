@@ -17,7 +17,8 @@ var QuestionSchema = new mongoose.Schema({
     timeExp: {type: Date},
     title: {type: String},
     body: {type: String},
-    askerAddr: {type: String}
+    askerAddr: {type: String},
+    state: {type: Number} // enumerated type
 });
 
 var AnswerSchema = new mongoose.Schema({

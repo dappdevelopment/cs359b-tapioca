@@ -4,6 +4,11 @@ var ObjectId = mongoose.Types.ObjectId;
 
 var uristring = process.env.MONGODB_URI || "mongodb://localhost:27017/tapioca";
 
+// Question states
+var OPEN_STATE = 1;
+var CLOSED_STATE = 2;
+var SETTLED_STATE = 3;
+
 mongoose.connect(uristring, function (err, res) {
     if (err) {
       	console.log ('ERROR connecting to: ' + uristring + '. ' + err);
@@ -31,8 +36,15 @@ var createUser = async function(username, address) {
 	}
 }
 
+async function markQuestionClosed(questionId) {
+	await schema.Question.findOneAndUpdate({_id: questionId}, {state: CLOSED_STATE});
+	console.log("marked question closed");
+}
+
 var createQuestion = async function(bounty, timeExp, title, body, askerAddr, questionHash) {
 	console.log("askerAddr: " + askerAddr);
+	let timezoneOffset = new Date().getTimezoneOffset() * 60000; // make timezone agnostic
+	timeExp = Date.parse(timeExp) + timezoneOffset;
 	let newQuestion = new schema.Question ({
 		answers: [],
 		bounty: bounty,
@@ -42,12 +54,16 @@ var createQuestion = async function(bounty, timeExp, title, body, askerAddr, que
 		timeExp: timeExp,
 		title: title,
 		body: body,
-		askerAddr: askerAddr
+		askerAddr: askerAddr,
+		state: OPEN_STATE
 	});
 	try {
 		let savedQuestion = await newQuestion.save();
 		await schema.User.findOneAndUpdate({address: askerAddr}, {$push: {questions: savedQuestion.id}}, {upsert: true});
-		return savedQuestion.id;
+		let timeToClose = timeExp - Date.now();
+		setTimeout(function() {
+			markQuestionClosed(savedQuestion._id);
+		}, timeToClose);
 	} catch (err) {
 		console.log("error in create question!");
 		console.log(err);
