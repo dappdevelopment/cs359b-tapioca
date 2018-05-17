@@ -56,6 +56,7 @@
    *  post -- the updated post model
    */
   PostModel.upvote = function(answer_id, user_addr) {
+    console.log("postmodel.upvote reached")
     var upvoteRequest = new XMLHttpRequest()
     upvoteRequest.open('POST', '/upvote')
     upvoteRequest.setRequestHeader('Content-type', 'application/json')
