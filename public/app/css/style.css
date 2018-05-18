@@ -13,6 +13,17 @@ p {
   text-decoration: none;
 }
 
+.post-state-2 {
+  background-color: #f46842;
+}
+.post-state-1 {
+  background-color: #41f4ac;
+}
+
+.is-winner-true {
+  background-color: #41f4ac;
+}
+
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
   font-weight: normal;

@@ -2,6 +2,11 @@
 (function() {
   var QuestionView = {};
 
+  // Question states
+  var OPEN_STATE = 1;
+  var CLOSED_STATE = 2;
+  var SETTLED_STATE = 3;
+
   QuestionView.remoteHost = "http://127.0.0.1:3000/"
 
   function getParameterByName(name, url) {
@@ -58,7 +63,16 @@
     let answers = post.answers;
 
     var $answers_view = $('#answers_list')
-    console.log(answers)
+    console.log(answers);
+
+    let canUpvote = true;
+      if (QuestionView.post_data.state !== OPEN_STATE) { // If question is closed, disable upvoting on all answers. 
+        canUpvote = false;
+        $("#answer_input").prop('placeholder', "Question has been CLOSED. No more answers can be submitted.");
+        $("#answer_input").prop('disabled', true);
+        $("#answer_input_submit").hide();
+        console.log("question closed. answers are not upvotable.");
+      }
 
     if (Object.keys(answers).length == 0) {
       var no_answers = document.createElement('p');
@@ -66,7 +80,7 @@
       $answers_view.append(no_answers);
     } else {
       for (answer in answers) {
-        $answers_view.append(Templates.renderAnswer(answers[answer], post.users, true));
+        $answers_view.append(Templates.renderAnswer(answers[answer], post.users, canUpvote));
       }
     }
   };
@@ -85,8 +99,8 @@ function upvoteClicked(element) {
   var counts_str = upvotes.split(' ')[1]; 
 
   var count = parseInt(counts_str); 
-  console.log("upvote count: " + count)
-  count += 1
+  console.log("upvote count: " + count);
+  count += 1;
   $('.' + element.className + '.upvote_count').html("Upvotes: " + count)
 }
 
@@ -115,9 +129,6 @@ function submitAnswer() {
   answer_data["upvotes"] = 0; 
   answer_data["_id"] = -1; 
 
-  //var $answers_view = $('#answers_list')
-  //var answer = Templates.renderAnswer(answer_data, false)
-  //$answers_view.append(answer);
   document.getElementById("answer_input").value = "";
 }
 

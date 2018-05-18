@@ -14,17 +14,20 @@ var QuestionSchema = new mongoose.Schema({
     upvotes: [{type: String}],
     questionHash: {type: String},
    	topAnswerHash: {type: String},
+    topAnswerId: {type: mongoose.Schema.ObjectId},
     timeExp: {type: Date},
     title: {type: String},
     body: {type: String},
-    askerAddr: {type: String}
+    askerAddr: {type: String},
+    state: {type: Number} // enumerated type
 });
 
 var AnswerSchema = new mongoose.Schema({
     answererAddr: {type: String, required: true},
-    voters: [{type: mongoose.Schema.ObjectId}],
+    voters: [{type: String}],
     questionId: {type: String},
-    body: {type: String}
+    body: {type: String},
+    isWinner: {type: Boolean, default: false}
 });
 
 
