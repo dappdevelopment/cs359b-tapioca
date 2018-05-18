@@ -4,6 +4,8 @@ var ObjectId = mongoose.Types.ObjectId;
 
 var uristring = process.env.MONGODB_URI || "mongodb://localhost:27017/tapioca";
 
+var sha256 = require('js-sha256').sha256;
+
 // Question states
 var OPEN_STATE = 1;
 var CLOSED_STATE = 2;
@@ -37,12 +39,34 @@ var createUser = async function(username, address) {
 }
 
 async function markQuestionClosed(questionId) {
-	await schema.Question.findOneAndUpdate({_id: questionId}, {state: CLOSED_STATE});
+	let updated_question = await schema.Question.find({_id: questionId});
+	let answers = await schema.Answer.find({_id: {$in: updated_question[0]._doc.answers}});
+	let winning_votes = -1; 
+	let winning_answer_text = "";
+	let winning_answer_id = "";
+	for (answer of answers) {
+		console.log("length: " + answer.voters.length);
+		if (answer.voters.length > winning_votes) {
+			console.log("updating best answer");
+			winning_votes = answer.voters.length;
+			winning_answer_text = answer.body;
+			winning_answer_id = answer._id;
+		}
+	}
+	let winning_answer_hash = sha256(winning_answer_text);
+	await schema.Question.findOneAndUpdate({_id: questionId}, 
+		{state: CLOSED_STATE,
+		topAnswerHash: winning_answer_hash,
+		topAnswerId: winning_answer_id}
+	);
+	console.log("winning_answer_id: " + winning_answer_id); // ID is ""
+	await schema.Answer.findOneAndUpdate({_id: winning_answer_id}, {isWinner: true});
 	console.log("marked question closed");
 }
 
-var createQuestion = async function(bounty, timeExp, title, body, askerAddr, questionHash) {
+var createQuestion = async function(bounty, timeExp, title, body, askerAddr) {
 	console.log("askerAddr: " + askerAddr);
+	let questionHash = sha256(bounty + title + body + timeExp + askerAddr);
 	let timezoneOffset = new Date().getTimezoneOffset() * 60000; // make timezone agnostic
 	timeExp = Date.parse(timeExp) + timezoneOffset;
 	let newQuestion = new schema.Question ({
@@ -64,6 +88,7 @@ var createQuestion = async function(bounty, timeExp, title, body, askerAddr, que
 		setTimeout(function() {
 			markQuestionClosed(savedQuestion._id);
 		}, timeToClose);
+		return {questionHash: questionHash, questionId: savedQuestion._id};
 	} catch (err) {
 		console.log("error in create question!");
 		console.log(err);
@@ -187,6 +212,7 @@ module.exports.findUser = findUser;
 module.exports.findAnswer = findAnswer;
 module.exports.findQuestionFeedData = findQuestionFeedData;
 module.exports.findQuestionData = findQuestionData;
+module.exports.markQuestionClosed = markQuestionClosed;
 
 
 

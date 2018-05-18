@@ -14,6 +14,7 @@ var QuestionSchema = new mongoose.Schema({
     upvotes: [{type: String}],
     questionHash: {type: String},
    	topAnswerHash: {type: String},
+    topAnswerId: {type: mongoose.Schema.ObjectId},
     timeExp: {type: Date},
     title: {type: String},
     body: {type: String},
@@ -23,9 +24,10 @@ var QuestionSchema = new mongoose.Schema({
 
 var AnswerSchema = new mongoose.Schema({
     answererAddr: {type: String, required: true},
-    voters: [{type: mongoose.Schema.ObjectId}],
+    voters: [{type: String}],
     questionId: {type: String},
-    body: {type: String}
+    body: {type: String},
+    isWinner: {type: Boolean, default: false}
 });
 
 

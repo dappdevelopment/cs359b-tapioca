@@ -16,7 +16,7 @@
     console.log("post1"); 
     console.log(post); 
     if (show_link) {
-      return tag('li', {display: "inline-block", class: "question"}, [
+      return tag('li', {display: "inline-block", class: "question post-state-" + post.state}, [
         tag('div', {class: 'meta'}, [
           tag('div', {class: 'left_title'}, [
               tag('h1', {}, post.bounty + " WEI"),
@@ -100,7 +100,7 @@
       upvote_tags.push(tag('p', {}, "Upvoting Disabled"))
     }
 
-    return tag('li', {}, 
+    return tag('li', {class: "is-winner-" + answer.isWinner}, 
       tag('div', {class: "answer_box"}, [
         tag('div', {class: "left_column"}, upvote_tags), 
         tag('div', {class: "right_column"}, 
