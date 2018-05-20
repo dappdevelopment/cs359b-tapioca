@@ -14,8 +14,6 @@ var app = express();
 
 var model = require('./app/js/model');
 
-var sha256 = require('js-sha256').sha256;
-
 // parse json bodies in post requests
 app.use(bodyParser.urlencoded({
     extended: true
@@ -52,21 +50,20 @@ app.get('/question_detail', async function(request, response)  {
   response.send(JSON.stringify(question_data));
 });
 
-app.post('/submit_question', function(request, response) {
+app.post('/submit_question', async function(request, response) {
   console.log(request.body);
   console.log("POST /submit_question", "title: " + request.body.title, "details: " + request.body.details, 
     "user_id: " + request.body.user_id, "bounty: " + request.body.bounty);
   let bounty = Number(request.body.bounty);
-  let asker_addr = request.body.asker_addr
-  let questionHash = sha256(bounty + request.body.title + request.body.details + request.body.time_exp + asker_addr);
+  let asker_addr = request.body.asker_addr;
 
-  model.createQuestion(bounty, request.body.time_exp, request.body.title, request.body.details, asker_addr, questionHash);
+  let returnData = await model.createQuestion(bounty, request.body.time_exp, request.body.title, request.body.details, asker_addr);
 
   response.set('Content-type', 'application/json');
   response.status(STATUS_OK);
-  console.log("qhash: " + questionHash); 
+  console.log("qhash: " + returnData.questionHash); 
   data = {
-    qHash: questionHash
+    qHash: returnData.questionHash
   }
   response.send(JSON.stringify(data));
 });
@@ -109,8 +106,9 @@ async function clearDB() {
 async function initDB() {
   let askerAddr = await model.createUser("mchang4", "0x66FDDd026Dbf64D6F907154365113ae124eB2DD6");
   let answererAddr = await model.createUser("peterlu6", "0xd08923976D510F8f834E1B8BC4E1c03599F2644F");
-  let questionId = await model.createQuestion(50, new Date("2016-12-12"), "how do i make friends", "i have no friends", ObjectId("73b312067720199e377e6fb9"), sha256("test"), "0xC6941bc0804722076716F4ba131D7B7B663E0a92");
-  let answerId = await model.createAnswer(answererAddr, questionId, "plastic surgery");
+  let returnData = await model.createQuestion(50, new Date("2016-12-12"), "how do i make friends", "i have no friends", askerAddr);
+  let answerId = await model.createAnswer(answererAddr, returnData.questionId, "plastic surgery");
+  await model.markQuestionClosed(returnData.questionId);
 }
 
 async function test() {
@@ -120,5 +118,5 @@ async function test() {
 
 // clearDB();
 
-// test();
+test();
 

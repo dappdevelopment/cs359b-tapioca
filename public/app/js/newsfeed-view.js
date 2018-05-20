@@ -15,7 +15,7 @@
         console.log(questions);
         NewsfeedView.renderFeed($newsfeed, questions)
       }
-    })
+    });
 
     xmlQuestions.open("GET", remoteHost + 'question_feed', true)
     xmlQuestions.send(null)
