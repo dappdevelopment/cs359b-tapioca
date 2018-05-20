@@ -55,11 +55,12 @@
    *  error -- the error that occurred or null if no error occurred
    *  post -- the updated post model
    */
-  PostModel.upvote = function(answer_id, user_id) {
+  PostModel.upvote = function(answer_id, user_addr) {
+    console.log("postmodel.upvote reached")
     var upvoteRequest = new XMLHttpRequest()
     upvoteRequest.open('POST', '/upvote')
     upvoteRequest.setRequestHeader('Content-type', 'application/json')
-    upvoteRequest.send(JSON.stringify({answer_id: answer_id, user_id: user_id}))
+    upvoteRequest.send(JSON.stringify({answer_id: answer_id, user_addr: user_addr}))
   };
 
   PostModel.addAnswer = function(answer_data) {

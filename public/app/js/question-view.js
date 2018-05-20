@@ -53,8 +53,6 @@
 
   /* Given post information, renders a post element into $newsfeed. */
   QuestionView.renderQuestion = function($newsfeed, post) {
-    console.log(post)
-
     var post_data = post.question;
     QuestionView.post_data = post_data;
 
@@ -63,6 +61,7 @@
     let answers = post.answers;
 
     var $answers_view = $('#answers_list')
+    console.log("answers below")
     console.log(answers);
 
     let canUpvote = true;
@@ -80,6 +79,14 @@
       $answers_view.append(no_answers);
     } else {
       for (answer in answers) {
+        let current_answer = answers[answer];
+        let canUpvote; 
+        if (current_answer.voters.length !== 0) {
+          canUpvote = (current_answer.voters.indexOf(localStorage.getItem("userAccount")) <= -1);
+        } else {
+          canUpvote = true;
+        }
+        console.log("can upvote: " + canUpvote)
         $answers_view.append(Templates.renderAnswer(answers[answer], post.users, canUpvote));
       }
     }
@@ -91,17 +98,21 @@
 
 //onClick Handler's 
 //upvotes: 
+        // $('#display').text(balance + " CDT")
 function upvoteClicked(element) {
-  //let placeholder_id = "a3cf3bb3421e45f61dce82f1"; // placeholder for user ID
+  console.log("element printing")
+  console.log(element)
   PostModel.upvote(element.className, localStorage.getItem("userAccount"));
   var upvotes = $('.' + element.className + '.upvote_count').html(); 
   console.log("upvotes query: " + upvotes)
   var counts_str = upvotes.split(' ')[1]; 
 
   var count = parseInt(counts_str); 
-  console.log("upvote count: " + count);
-  count += 1;
+  count += 1
+  console.log("upvote count: " + count)
   $('.' + element.className + '.upvote_count').html("Upvotes: " + count)
+  $('input[name=upvote]').remove()
+  $('.' + element.className).append("<p>Upvoting Disabled</p>");
 }
 
 function createUser() {
