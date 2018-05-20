@@ -116,8 +116,8 @@ var createAnswer = async function(answererAddr, questionId, body) {
 
 var upvoteAnswer = async function(answerId, voterAddr) {
 	try {
-		let updatedAnswer = await schema.Answer.findOneAndUpdate({_id: answerId}, {$push: {voters: voterAddr}}, {upsert: true});
-		let updatedUser = await schema.User.findOneAndUpdate({address: voterAddr}, {$push: {answers: answerId}}, {upsert: true});
+		let updatedAnswer = await schema.Answer.findOneAndUpdate({_id: answerId}, {$addToSet: {voters: voterAddr}}, {upsert: true});
+		let updatedUser = await schema.User.findOneAndUpdate({address: voterAddr}, {$addToSet: {answers: answerId}}, {upsert: true});
 		console.log("updated answer successfully");
 	} catch (err) {
 		console.log("error in upvote answer");
