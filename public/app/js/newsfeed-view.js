@@ -43,12 +43,14 @@
 function submitQuestion() { 
   let q_title = $("#question_title").val()
   let q_details = $("textarea").val()
-  let q_bounty = $('#bounty_amount').val()
-  let q_time_exp = $('#time_exp').val()
+  let q_bounty = $("#bounty_amount").val()
+  let q_time_exp_days = $("#time_exp_days").val()
+  let q_time_exp_hours = $("#time_exp_hours").val()
+  let q_time_exp_minutes = $("#time_exp_minutes").val()
 
   $("#question_title").val(""); 
   $("textarea").val("");
-  $('#bounty_amount').val(null)
+  $("#bounty_amount").val(null)
 
   
 
@@ -57,7 +59,9 @@ function submitQuestion() {
     details: q_details,
     asker_addr: localStorage.getItem("userAccount"), 
     bounty: q_bounty,
-    time_exp: q_time_exp
+    time_exp_days: q_time_exp_days,
+    time_exp_hours: q_time_exp_hours,
+    time_exp_minutes: q_time_exp_minutes
   }
 
   PostModel.add(question_data, function(body) {

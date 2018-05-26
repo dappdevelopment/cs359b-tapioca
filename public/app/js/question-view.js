@@ -125,7 +125,6 @@ function createUser() {
 
 
 function submitAnswer() {
-  console.log('omg')
   var box_text = document.getElementById("answer_input").value
   console.log("answer_submission " + box_text)
   console.log(QuestionView.question_id)

@@ -47,7 +47,9 @@
 
         <br /> <br /> 
         <input id="bounty_amount" type="number" placeholder="Bounty"> <br/>  <br />
-        <input id="time_exp" type="datetime-local"> <br/>  <br />
+        <input id="time_exp_days" type="number" min="0" max="20" placeholder="Days"> <br/> <br/>
+        <input id="time_exp_hours" type="number" min="0" max="23" placeholder="Hours"> <br/> <br/>
+        <input id="time_exp_minutes" type="number" min="0" max="59" placeholder="Minutes"> <br/> <br/>
         <textarea placeholder="Add Details Here" rows="4" cols="50" style="width: 100%"></textarea> 
         <br/> <br/>
         <button onclick="submitQuestion()">Submit Question</button>
