@@ -50,8 +50,6 @@ function submitQuestion() {
   $("textarea").val("");
   $('#bounty_amount').val(null)
 
-  
-
   var question_data = { 
     title: q_title, 
     details: q_details,
@@ -60,10 +58,9 @@ function submitQuestion() {
     time_exp: q_time_exp
   }
 
-  PostModel.add(question_data, function(body) {
-    console.log(JSON.parse(body)); 
-    collectBounty(JSON.parse(body).qHash, question_data.bounty); 
-  })
+  collectBounty(JSON.parse(body).qHash, question_data.bounty, {
+    PostModel.add(question_data);
+  }); 
 
   $("#add_container").css("display", "none");
   $("#myPopup").show(); 
