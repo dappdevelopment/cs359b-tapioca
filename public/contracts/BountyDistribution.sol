@@ -1,19 +1,19 @@
 pragma solidity ^0.4.21;
 
 contract BountyDistribution {
-
+    // only employees may alter
     modifier onlyMembers {
         require(membership[msg.sender]); 
         _;
     }
 
-    // Congress Variables
+    // Congress Variables/Structs
     mapping (address => bool) membership; 
     mapping (address => MemberProposal) addProposals; 
     mapping (address => MemberProposal) removeProposals; 
 
     uint numMembers; 
-    uint debatingPeriodInMinutes = 10; 
+    uint debatingPeriodInMinutes = 600; 
 
     struct MemberProposal { 
         address recipient; 
@@ -26,6 +26,36 @@ contract BountyDistribution {
         mapping (address => bool) voted; 
     }
 
+    // Q&A Variables/Structs
+    struct Question {
+        uint256 hash;
+        uint256 bounty; // denominated in WEI. 1 ether = 10^18 wei
+        address askerAddr;
+        mapping(uint256 => Answer) answers;
+        mapping(uint256 => uint256) indexes; 
+        uint minExecutionDate; 
+
+        uint numAnswers; 
+        bool settled;
+        bool isValue; // checks for existence of key
+    }
+
+    struct Answer {
+        address answerAddr; 
+        uint256 answerHash; 
+        
+        uint256 numUpvotes; 
+        bool isValue;
+        mapping(address => bool) voted; 
+    }
+
+    mapping (uint256 => Question) public questions;
+
+    constructor() public {
+        membership[msg.sender] = true; 
+    }
+
+    // Membership Functions
     function newProposal(address recipient, bool addAddress) onlyMembers public {
         if (addAddress) {
             require(!addProposals[recipient].isValid || !addProposals[recipient].open);
@@ -94,36 +124,7 @@ contract BountyDistribution {
         }
     }
 
-    struct Question {
-        uint256 hash;
-        uint256 bounty; // denominated in WEI. 1 ether = 10^18 wei
-        address askerAddr;
-        mapping(uint256 => Answer) answers;
-        mapping(uint256 => uint256) indexes; 
-        uint minExecutionDate; 
-
-        uint numAnswers; 
-        bool settled;
-        bool isValue; // checks for existence of key
-    }
-
-    struct Answer {
-        address answerAddr; 
-        uint256 answerHash; 
-        
-        uint256 numUpvotes; 
-        bool isValue;
-        mapping(address => bool) voted; 
-    }
-
-    mapping (uint256 => Question) public questions;
-    address contractCreator;
-
-    constructor() public { // constructor
-        contractCreator = msg.sender;
-        membership[msg.sender] = true; 
-    }
-
+    // Q&A Functions
     function addAnswer(uint256 _qHash, uint256 _aHash) public {
         require(questions[_qHash].isValue && !questions[_qHash].settled);
         questions[_qHash].answers[questions[_qHash].numAnswers] = Answer({
