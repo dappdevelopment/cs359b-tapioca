@@ -10,7 +10,9 @@ contract BountyDistribution {
     // Congress Variables
     address[] members; 
     mapping (address => bool) membership; 
-    MemberProposal[] proposals; 
+    mapping (address => MemberProposal) addProposals; 
+    mapping (address => MemberProposal) removeProposals; 
+
     uint numMembers; 
     uint debatingPeriodInMinutes = 10; 
 
@@ -18,26 +20,50 @@ contract BountyDistribution {
         address recipient; 
         uint minExecutionDate; 
         uint numberOfVotes; 
-        bool addAddress;
         int currentResult; 
         bool open; 
+        bool isValid;
         
         mapping (address => bool) voted; 
     }
 
-    function newProposal(address recipient, bool addAddress) onlyMembers public returns (uint) {
-        MemberProposal storage p = proposals[proposals.length]; 
-        p.recipient = recipient; 
-        p.minExecutionDate = now + debatingPeriodInMinutes * 1 minutes; 
-        p.numberOfVotes = 0; 
-        p.addAddress = addAddress; 
-        p.open = true; 
+    function newProposal(address recipient, bool addAddress) onlyMembers public {
+        if (addAddress) {
+            require(!addProposals[recipient].isValid || !addProposals[recipient].open);
+        } else {
+            require(!removeProposals[recipient].isValid || !removeProposals[recipient].open);
+        }
 
-        return proposals.length; 
+        if (addAddress) { 
+            addProposals[recipient] = MemberProposal({
+                recipient: recipient, 
+                minExecutionDate: now + debatingPeriodInMinutes * 1 minutes, 
+                numberOfVotes: 0, 
+                currentResult: 0,
+                open: true, 
+                isValid: true
+            });
+        } else {
+            removeProposals[recipient] = MemberProposal({
+                recipient: recipient, 
+                minExecutionDate: now + debatingPeriodInMinutes * 1 minutes, 
+                numberOfVotes: 0, 
+                currentResult: 0,
+                open: true, 
+                isValid: true
+            });
+        }
     }
 
-    function vote(uint proposalNumber, bool support) onlyMembers public {
-        MemberProposal storage p = proposals[proposalNumber]; 
+    function vote(address recipient, bool add, bool support) onlyMembers public {
+        MemberProposal storage p; 
+        if (add) { 
+            p = addProposals[recipient];
+        } else {
+            p = removeProposals[recipient]; 
+        }
+        require (p.isValid); 
+
         require(!p.voted[msg.sender]); 
         p.numberOfVotes++; 
         if (support) {
@@ -47,17 +73,23 @@ contract BountyDistribution {
         }
     }
 
-    function executeProposal(uint proposalNumber) public {
-        MemberProposal storage p = proposals[proposalNumber]; 
+    function executeProposal(address recipient, bool add) public {
+        MemberProposal storage p; 
+        if (add) { 
+            p = addProposals[recipient];
+        } else {
+            p = removeProposals[recipient]; 
+        }
+        require (p.isValid);  
         require(now > p.minExecutionDate && p.open); 
 
         p.open = false; 
 
-        if (p.currentResult > 0 && p.addAddress) {
+        if (p.currentResult > 0 && add) {
             // add member
             membership[p.recipient] = true; 
             numMembers++; 
-        } else if (p.currentResult > 0 && !p.addAddress) {
+        } else if (p.currentResult > 0 && !add) {
             membership[p.recipient] = false; 
             numMembers--; 
         }
