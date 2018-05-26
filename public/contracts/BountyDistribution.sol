@@ -125,7 +125,7 @@ contract BountyDistribution {
     }
 
     // Q&A Functions
-    function addAnswer(uint256 _qHash, uint256 _aHash) public {
+    function addAnswer(uint256 _qHash, uint256 _aHash) onlyMembers public {
         require(questions[_qHash].isValue && !questions[_qHash].settled);
         questions[_qHash].answers[questions[_qHash].numAnswers] = Answer({
             answerAddr: msg.sender,
@@ -137,7 +137,7 @@ contract BountyDistribution {
         questions[_qHash].numAnswers++; 
     }
 
-    function addUpvote(uint256 _qHash, uint256 _aHash) public { 
+    function addUpvote(uint256 _qHash, uint256 _aHash) onlyMembers public { 
         require(questions[_qHash].isValue && !questions[_qHash].settled);
 
         uint256 idx = questions[_qHash].indexes[_aHash]; 
@@ -147,7 +147,7 @@ contract BountyDistribution {
         questions[_qHash].answers[idx].voted[msg.sender] = true; 
     }
 
-    function distributeBounty(uint256 _qHash) public {
+    function distributeBounty(uint256 _qHash) onlyMembers public {
         require(questions[_qHash].isValue && !questions[_qHash].settled);
         require(now > questions[_qHash].minExecutionDate); 
 
@@ -177,7 +177,7 @@ contract BountyDistribution {
         // should we set answerHash to something?
     }
 
-    function collectBounty(address _asker, uint256 _qHash, uint256 _bounty, uint minExecutionDate) public payable {
+    function collectBounty(address _asker, uint256 _qHash, uint256 _bounty, uint minExecutionDate) onlyMembers public payable {
         // can also use msg.sender and msg.value
         // who controls whether bounty == msg.value
         require(msg.value >= _bounty);
