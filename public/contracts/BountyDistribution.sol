@@ -3,13 +3,13 @@ pragma solidity ^0.4.21;
 contract BountyDistribution {
 
     modifier onlyMembers {
-        require(membership[msg.sender] != 0); 
+        require(membership[msg.sender]); 
         _;
     }
 
     // Congress Variables
     address[] members; 
-    mapping (address => uint) membership; 
+    mapping (address => bool) membership; 
     MemberProposal[] proposals; 
     uint numMembers; 
     uint debatingPeriodInMinutes = 10; 
@@ -55,10 +55,10 @@ contract BountyDistribution {
 
         if (p.currentResult > 0 && p.addAddress) {
             // add member
-            membership[p.recipient] = 1; 
+            membership[p.recipient] = true; 
             numMembers++; 
         } else if (p.currentResult > 0 && !p.addAddress) {
-            membership[p.recipient] = 0; 
+            membership[p.recipient] = false; 
             numMembers--; 
         }
     }
@@ -67,9 +67,18 @@ contract BountyDistribution {
         uint256 hash;
         uint256 bounty; // denominated in WEI. 1 ether = 10^18 wei
         address askerAddr;
-        uint256 answerHash;
+        mapping(uint256 => Answer) answers;
         bool settled;
         bool isValue; // checks for existence of key
+    }
+
+    struct Answer {
+        address answerAddr; 
+        uint256 answerHash; 
+        
+        uint256 numUpvotes; 
+        bool isValue;
+        mapping(address => bool) voted; 
     }
 
     mapping (uint256 => Question) public questions;
@@ -79,10 +88,27 @@ contract BountyDistribution {
         contractCreator = msg.sender;
     }
 
+    function addAnswer(uint256 _qHash, uint256 _aHash) public {
+        require(questions[_qHash].isValue && !questions[_qHash].settled);
+        questions[_qHash].answers[_aHash] = Answer({
+            answerAddr: msg.sender, 
+            answerHash: _aHash, 
+            numUpvotes: 0,
+            isValue: true
+        }); 
+    }
+
+    function addUpvote(uint256 _qHash, uint256 _aHash) public { 
+        require(questions[_qHash].isValue && !questions[_qHash].settled);
+        require(questions[_qHash].answers[_aHash].isValue && !questions[_qHash].answers[_aHash].voted[msg.sender]);
+
+        questions[_qHash].answers[_aHash].numUpvotes++; 
+        questions[_qHash].answers[_aHash].voted[msg.sender] = true; 
+    }
+
     function distributeBounty(address _answerer, uint256 _aHash, uint256 _qHash) public {
         require(questions[_qHash].isValue && !questions[_qHash].settled);
         _answerer.transfer(questions[_qHash].bounty);
-        questions[_qHash].answerHash = _aHash;
         questions[_qHash].settled = true;
     }
 
@@ -102,8 +128,8 @@ contract BountyDistribution {
             bounty: _bounty,
             askerAddr: _asker,
             settled: false,
-            isValue: true,
-            answerHash: 0}); // there's no null
+            isValue: true
+        }); // there's no null
     }
 
     // kill function?
