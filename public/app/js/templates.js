@@ -15,12 +15,16 @@
   Templates.renderPost = function(post, users, show_link=true) {
     console.log("post1"); 
     console.log(post); 
+    let days = Math.floor(post.timeLeft / (24 * 3600 * 1000))
+    let hours = Math.floor((post.timeLeft % (24 * 3600 * 1000)) / (3600 * 1000))
+    let minutes = Math.floor((post.timeLeft % (3600 * 1000)) / (60 * 1000))
     if (show_link) {
       return tag('li', {display: "inline-block", class: "question post-state-" + post.state}, [
         tag('div', {class: 'meta'}, [
           tag('div', {class: 'left_title'}, [
               tag('h1', {}, post.bounty + " WEI"),
-              tag('h5', {}, post.askerAddr)
+              tag('h2', {}, "time left: " + days + " days, " + hours + " hours, " + minutes + " minutes"),
+              tag('h5', {}, post.askerAddr), 
               ]),
           tag('div', {class: 'right_title'}, [
               tag('h1', {}, post.title),

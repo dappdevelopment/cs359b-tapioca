@@ -64,11 +64,11 @@ async function markQuestionClosed(questionId) {
 	console.log("marked question closed");
 }
 
-var createQuestion = async function(bounty, timeExp, title, body, askerAddr) {
+var createQuestion = async function(bounty, timeExpDays, timeExpHours, timeExpMinutes, title, body, askerAddr) {
 	console.log("askerAddr: " + askerAddr);
-	let questionHash = sha256(bounty + title + body + timeExp + askerAddr);
-	let timezoneOffset = new Date().getTimezoneOffset() * 60000; // make timezone agnostic
-	timeExp = Date.parse(timeExp) + timezoneOffset;
+	let questionHash = sha256(bounty + title + body + askerAddr);
+	let timeToClose = timeExpDays * 24 * 3600 * 1000 + timeExpHours * 3600 * 1000 + timeExpMinutes * 60 * 1000
+	let timeExp = Date.now() + timeToClose
 	let newQuestion = new schema.Question ({
 		answers: [],
 		bounty: bounty,
@@ -84,7 +84,6 @@ var createQuestion = async function(bounty, timeExp, title, body, askerAddr) {
 	try {
 		let savedQuestion = await newQuestion.save();
 		await schema.User.findOneAndUpdate({address: askerAddr}, {$push: {questions: savedQuestion.id}}, {upsert: true});
-		let timeToClose = timeExp - Date.now();
 		setTimeout(function() {
 			markQuestionClosed(savedQuestion._id);
 		}, timeToClose);
@@ -145,7 +144,14 @@ var findQuestionFeedData = async function() {
 		for (user of users){
 			userMap[user._id] = user.address; // map from user to their eth address.
 		}
-		return {questions: questions, users: userMap};
+		let modified_question_list = []
+		for (let i in questions) {
+			modified_question = JSON.parse(JSON.stringify(questions[i])); // deep copy 
+			let timeLeft = Date.parse(modified_question.timeExp) - Date.now();
+			modified_question.timeLeft = timeLeft;
+			modified_question_list.push(modified_question)
+		}
+		return {questions: modified_question_list, users: userMap};
 	} catch (err) {
 		console.log("error in findQuestionFeedData");
 		console.log(err);
