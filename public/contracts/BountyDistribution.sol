@@ -16,7 +16,7 @@ contract BountyDistribution {
     uint debatingPeriodInMinutes = 600; 
 
     struct MemberProposal { 
-        address recipient; 
+        address proposedMember; 
         uint minExecutionDate; 
         uint numberOfVotes; 
         int currentResult; 
@@ -31,7 +31,7 @@ contract BountyDistribution {
         uint256 hash;
         uint256 bounty; // denominated in WEI. 1 ether = 10^18 wei
         address askerAddr;
-        mapping(uint256 => Answer) answers;
+        Answer[] answers;
         mapping(uint256 => uint256) indexes; 
         uint minExecutionDate; 
 
@@ -41,7 +41,7 @@ contract BountyDistribution {
     }
 
     struct Answer {
-        address answerAddr; 
+        address answererAddr; 
         uint256 answerHash; 
         
         uint256 numUpvotes; 
@@ -56,16 +56,11 @@ contract BountyDistribution {
     }
 
     // Membership Functions
-    function newProposal(address recipient, bool addAddress) onlyMembers public {
+    function newProposal(address proposedMember, bool addAddress) onlyMembers public {
         if (addAddress) {
-            require(!addProposals[recipient].isValid || !addProposals[recipient].open);
-        } else {
-            require(!removeProposals[recipient].isValid || !removeProposals[recipient].open);
-        }
-
-        if (addAddress) { 
-            addProposals[recipient] = MemberProposal({
-                recipient: recipient,
+            require(!addProposals[proposedMember].isValid || !addProposals[proposedMember].open);
+            addProposals[proposedMember] = MemberProposal({
+                proposedMember: proposedMember,
                 minExecutionDate: now + debatingPeriodInMinutes * 1 minutes,
                 numberOfVotes: 0,
                 currentResult: 0,
@@ -73,8 +68,9 @@ contract BountyDistribution {
                 isValid: true
             });
         } else {
-            removeProposals[recipient] = MemberProposal({
-                recipient: recipient,
+            require(!removeProposals[proposedMember].isValid || !removeProposals[proposedMember].open);
+            removeProposals[proposedMember] = MemberProposal({
+                proposedMember: proposedMember,
                 minExecutionDate: now + debatingPeriodInMinutes * 1 minutes,
                 numberOfVotes: 0,
                 currentResult: 0,
@@ -84,16 +80,18 @@ contract BountyDistribution {
         }
     }
 
-    function vote(address recipient, bool add, bool support) onlyMembers public {
+    function voteOnMembership(address proposedMember, bool add, bool support) onlyMembers public {
         MemberProposal storage p; 
         if (add) { 
-            p = addProposals[recipient];
+            p = addProposals[proposedMember];
         } else {
-            p = removeProposals[recipient]; 
+            p = removeProposals[proposedMember]; 
         }
         require (p.isValid); 
 
-        require(!p.voted[msg.sender]); 
+        require(!p.voted[msg.sender]);
+
+        p.voted[msg.sender] = true; 
         p.numberOfVotes++; 
         if (support) {
             p.currentResult++; 
@@ -102,24 +100,23 @@ contract BountyDistribution {
         }
     }
 
-    function executeProposal(address recipient, bool add) public {
+    function executeProposal(address proposedMember, bool add) public {
         MemberProposal storage p; 
         if (add) { 
-            p = addProposals[recipient];
+            p = addProposals[proposedMember];
         } else {
-            p = removeProposals[recipient]; 
+            p = removeProposals[proposedMember]; 
         }
-        require (p.isValid);  
-        require(now > p.minExecutionDate && p.open); 
+        require (p.isValid && now > p.minExecutionDate && p.open); 
 
         p.open = false; 
 
         if (p.currentResult > 0 && add) {
             // add member
-            membership[p.recipient] = true; 
+            membership[p.proposedMember] = true; 
             numMembers++; 
         } else if (p.currentResult > 0 && !add) {
-            membership[p.recipient] = false; 
+            membership[p.proposedMember] = false; 
             numMembers--; 
         }
     }
@@ -128,7 +125,7 @@ contract BountyDistribution {
     function addAnswer(uint256 _qHash, uint256 _aHash) onlyMembers public {
         require(questions[_qHash].isValue && !questions[_qHash].settled);
         questions[_qHash].answers[questions[_qHash].numAnswers] = Answer({
-            answerAddr: msg.sender,
+            answererAddr: msg.sender,
             answerHash: _aHash,
             numUpvotes: 0,
             isValue: true
@@ -137,7 +134,7 @@ contract BountyDistribution {
         questions[_qHash].numAnswers++; 
     }
 
-    function addUpvote(uint256 _qHash, uint256 _aHash) onlyMembers public { 
+    function addAnswerUpvote(uint256 _qHash, uint256 _aHash) onlyMembers public { 
         require(questions[_qHash].isValue && !questions[_qHash].settled);
 
         uint256 idx = questions[_qHash].indexes[_aHash]; 
@@ -155,13 +152,13 @@ contract BountyDistribution {
         if (questions[_qHash].numAnswers == 0) {
             refundBounty(_qHash); 
         } else {
-            address highestAddress = questions[_qHash].answers[0].answerAddr; 
+            address highestAddress = questions[_qHash].answers[0].answererAddr; 
             uint numUpvotes = questions[_qHash].answers[0].numUpvotes;
 
             for(uint i = 1; i < questions[_qHash].numAnswers; i++)
             {
                 if (questions[_qHash].answers[i].numUpvotes > numUpvotes) { 
-                    highestAddress = questions[_qHash].answers[i].answerAddr; 
+                    highestAddress = questions[_qHash].answers[i].answererAddr; 
                     numUpvotes = questions[_qHash].answers[i].numUpvotes; 
                 }
             }  
@@ -181,15 +178,14 @@ contract BountyDistribution {
         // can also use msg.sender and msg.value
         // who controls whether bounty == msg.value
         require(msg.value >= _bounty);
-        questions[_qHash] = Question({
-            hash: _qHash,
-            bounty: _bounty,
-            askerAddr: _asker,
-            settled: false,
-            isValue: true,
-            numAnswers: 0,
-            minExecutionDate: minExecutionDate
-        }); // there's no null
+        
+        questions[_qHash].hash = _qHash; 
+        questions[_qHash].bounty = _bounty; 
+        questions[_qHash].askerAddr = _asker; 
+        questions[_qHash].settled = false;
+        questions[_qHash].isValue = true; 
+        questions[_qHash].numAnswers = 0; 
+        questions[_qHash].minExecutionDate = minExecutionDate; 
     }
 
     // kill function?
