@@ -53,7 +53,7 @@ app.get('/question_detail', async function(request, response)  {
 app.post('/submit_question', async function(request, response) {
   console.log(request.body);
   console.log("POST /submit_question", "title: " + request.body.title, "details: " + request.body.details, 
-    "user_id: " + request.body.user_id, "bounty: " + request.body.bounty);
+    "asker_addr: " + request.body.asker_addr, "bounty: " + request.body.bounty);
   let bounty = Number(request.body.bounty);
   let asker_addr = request.body.asker_addr;
 
@@ -107,7 +107,7 @@ async function initDB() {
   let askerAddr = await model.createUser("mchang4", "0x66FDDd026Dbf64D6F907154365113ae124eB2DD6");
   let answererAddr = await model.createUser("peterlu6", "0xd08923976D510F8f834E1B8BC4E1c03599F2644F");
   let returnData = await model.createQuestion(50, 10, 1, 23, "how do i make friends", "i have no friends", askerAddr);
-  let answerId = await model.createAnswer(answererAddr, returnData.questionId, "plastic surgery");
+  let answerObject = await model.createAnswer(answererAddr, returnData.questionId, "plastic surgery");
   // await model.markQuestionClosed(returnData.questionId);
 }
 

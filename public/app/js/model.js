@@ -44,10 +44,12 @@ async function markQuestionClosed(questionId) {
 	let winning_votes = -1; 
 	let winning_answer_text = "";
 	let winning_answer_id = "";
+	if (answers.length == 0) { // adding a placeholder "question closed" answer
+		let placeholder_answer = await createAnswer(updated_question[0]._doc.askerAddr, questionId, "No answer was received for this question... refunding bounty.");
+		answers.push(placeholder_answer);
+	}
 	for (answer of answers) {
-		console.log("length: " + answer.voters.length);
 		if (answer.voters.length > winning_votes) {
-			console.log("updating best answer");
 			winning_votes = answer.voters.length;
 			winning_answer_text = answer.body;
 			winning_answer_id = answer._id;
@@ -61,6 +63,7 @@ async function markQuestionClosed(questionId) {
 	);
 	console.log("winning_answer_id: " + winning_answer_id); // ID is ""
 	await schema.Answer.findOneAndUpdate({_id: winning_answer_id}, {isWinner: true});
+
 	console.log("marked question closed");
 }
 
@@ -106,7 +109,7 @@ var createAnswer = async function(answererAddr, questionId, body) {
 		let savedAnswer = await newAnswer.save();
 		let updatedQuestion = await schema.Question.findOneAndUpdate({_id: questionId}, {$push: {answers: savedAnswer.id}}, {upsert: true});
 		let updatedUser = await schema.User.findOneAndUpdate({address: answererAddr}, {$push: {answers: savedAnswer.id}}, {upsert: true});
-		return savedAnswer.id;
+		return savedAnswer;
 	} catch (err) {
 		console.log("error in createanswer");
 		console.log(err);
@@ -147,7 +150,7 @@ var findQuestionFeedData = async function() {
 		let modified_question_list = []
 		for (let i in questions) {
 			modified_question = JSON.parse(JSON.stringify(questions[i])); // deep copy 
-			let timeLeft = Date.parse(modified_question.timeExp) - Date.now();
+			let timeLeft = Math.max(Date.parse(modified_question.timeExp) - Date.now(), 0);
 			modified_question.timeLeft = timeLeft;
 			modified_question_list.push(modified_question)
 		}

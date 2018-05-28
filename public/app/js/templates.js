@@ -17,7 +17,7 @@
     console.log(post); 
     let days = Math.floor(post.timeLeft / (24 * 3600 * 1000))
     let hours = Math.floor((post.timeLeft % (24 * 3600 * 1000)) / (3600 * 1000))
-    let minutes = Math.floor((post.timeLeft % (3600 * 1000)) / (60 * 1000))
+    let minutes = Math.ceil((post.timeLeft % (3600 * 1000)) / (60 * 1000))
     if (show_link) {
       return tag('li', {display: "inline-block", class: "question post-state-" + post.state}, [
         tag('div', {class: 'meta'}, [
