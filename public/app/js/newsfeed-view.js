@@ -48,6 +48,15 @@ function submitQuestion() {
   let q_time_exp_hours = $("#time_exp_hours").val()
   let q_time_exp_minutes = $("#time_exp_minutes").val()
 
+  if (q_time_exp_days > 20 || q.time_exp_hours > 23 || q.time_exp_minutes > 59) {
+    $("submit_question_error").val("Must submit a valid time less than 20 days.");
+    return;
+  }
+  if (!localStorage.getItem("userAccount")) {
+    $("submit_question_error").val("Log in with Metamask to use Tapioca.");
+    return;
+  }
+
   $("#question_title").val(""); 
   $("textarea").val("");
   $("#bounty_amount").val(null)
