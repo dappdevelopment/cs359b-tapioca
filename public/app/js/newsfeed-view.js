@@ -1,8 +1,7 @@
 // anonymous, self-invoking function to limit scope
 (function() {
-  var remoteHost = "http://127.0.0.1:3000/"
-
   var NewsfeedView = {};
+  NewsfeedView.remoteHost = "http://127.0.0.1:3000/"
 
   /* Renders the newsfeed into the given $newsfeed element. */
   NewsfeedView.render = function($newsfeed) {
@@ -17,7 +16,7 @@
       }
     });
 
-    xmlQuestions.open("GET", remoteHost + 'question_feed', true)
+    xmlQuestions.open("GET", NewsfeedView.remoteHost + 'question_feed', true)
     xmlQuestions.send(null)
   };
 
@@ -41,6 +40,7 @@
 })();
 
 function submitQuestion() { 
+  console.log("submitting question");
   let q_title = $("#question_title").val()
   let q_details = $("textarea").val()
   let q_bounty = $("#bounty_amount").val()
@@ -48,12 +48,12 @@ function submitQuestion() {
   let q_time_exp_hours = $("#time_exp_hours").val()
   let q_time_exp_minutes = $("#time_exp_minutes").val()
 
-  if (q_time_exp_days > 20 || q.time_exp_hours > 23 || q.time_exp_minutes > 59) {
-    $("submit_question_error").val("Must submit a valid time less than 20 days.");
+  if (q_time_exp_days > 20 || q_time_exp_hours > 23 || q_time_exp_minutes > 59) {
+    $("#submit_question_error").html("Must submit a valid time less than 20 days.");
     return;
   }
   if (!localStorage.getItem("userAccount")) {
-    $("submit_question_error").val("Log in with Metamask to use Tapioca.");
+    $("#submit_question_error").html("Log in with Metamask to use Tapioca.");
     return;
   }
 
@@ -61,7 +61,7 @@ function submitQuestion() {
   $("textarea").val("");
   $("#bounty_amount").val(null)
 
-  var question_data = { 
+  let question_data = { 
     title: q_title, 
     details: q_details,
     asker_addr: localStorage.getItem("userAccount"), 
@@ -71,9 +71,23 @@ function submitQuestion() {
     time_exp_minutes: q_time_exp_minutes
   }
 
-  collectBounty(JSON.parse(body).qHash, question_data.bounty, {
-    PostModel.add(question_data);
-  }); 
+  let q_summary_string = q_bounty + q_title + q_details + localStorage.getItem("userAccount");
+
+  let xmlHashRequest = new XMLHttpRequest();
+
+  xmlHashRequest.addEventListener('load', function() {
+      if (xmlHashRequest.status === 200) {
+        var hashData = JSON.parse(xmlHashRequest.responseText)
+        collectBounty(hashData.q_hash, question_data.bounty, function() { 
+          console.log("adding data");
+          PostModel.add(question_data);
+        }); 
+      }
+  });
+
+  xmlHashRequest.open("GET", NewsfeedView.remoteHost + 'question_hash' + "?summary=" + encodeURIComponent(q_summary_string));
+  xmlHashRequest.send(null);
+  
 
   $("#add_container").css("display", "none");
   $("#myPopup").show(); 
