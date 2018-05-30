@@ -16,7 +16,7 @@
           Tapioca
         </h1>
         <div style="float: right;margin-top: 20px;"> 
-          <p id="user_address" style="color:white;"> Sprinkles </p>
+          <p id="user_address" style="color:white;">Log in with Metamask ↗</p>
           <button type="submit"  onclick="openModal()" style="float: right;">
                 Submit Question
           </button>
@@ -50,6 +50,7 @@
         <input id="time_exp_days" type="number" min="0" max="20" placeholder="Days"> <br/> <br/>
         <input id="time_exp_hours" type="number" min="0" max="23" placeholder="Hours"> <br/> <br/>
         <input id="time_exp_minutes" type="number" min="0" max="59" placeholder="Minutes"> <br/> <br/>
+        <p id="submit_question_error"></p>
         <textarea placeholder="Add Details Here" rows="4" cols="50" style="width: 100%"></textarea> 
         <br/> <br/>
         <button onclick="submitQuestion()">Submit Question</button>

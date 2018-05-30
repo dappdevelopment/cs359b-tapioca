@@ -7,6 +7,8 @@ var STATUS_USER_ERROR = 422
 var STATUS_OK = 200
 var NUM_QUERIES = 3
 
+var sha256 = require('js-sha256').sha256;
+
 // connect to database
 //mongoose.connect('mongodb://localhost:27017/callback-newsfeed-db');
 
@@ -38,6 +40,16 @@ app.get('/question_feed', async function(request, response) {
 	response.set('Content-type', 'application/json');
 	response.status(STATUS_OK);
 	response.send(JSON.stringify(questions));
+});
+
+app.get('/question_hash', async function(request, response) {
+  console.log("/GET question_hash " + request);
+  let q_summary = request.query.summary;
+  let q_hash = sha256(q_summary);
+  let data = {
+    q_hash: q_hash
+  };
+  response.send(JSON.stringify(data));
 });
 
 app.get('/question_detail', async function(request, response)  {
