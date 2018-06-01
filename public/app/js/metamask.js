@@ -44,10 +44,35 @@ function app() {
 
             contractAddress = contractData.networks[networkId].address;
             contract = new web3.eth.Contract(contractData.abi, contractAddress);
+            contractEvents(contractData.abi, contractData.networks[networkId], userAccount); 
         }).catch(console.error);
 
     function refreshBalance() { 
         console.log("refreshed"); 
+    }
+
+    async function contractEvents(abi, networkId, userAccount) {
+        console.log("Preparing for registration of contract events. ")
+        switch(networkId) { 
+            case 1: 
+                networkURI = 'wss://mainnet.infura.io/ws'; 
+            case 4: 
+                networkURI = 'wss://rinkeby.infura.io/ws'; 
+            default:
+                networkURI = 'ws://localhost:8545';
+        }
+        console.log('Events Provider: ', networkURI); 
+
+        const web3ForEvents = new Web3(new Web3.providers.WebsocketProvider(networkURI)); 
+        const contractForEvents = new web3ForEvents.eth.Contract(abi, contract._address); 
+
+        console.log("Events: " + contractForEvents.events);
+        contractForEvents.events.QuestionCreated({filter: {_address: userAccount} })
+        .on("data", function(event) { 
+            let data = event.returnValues;
+            NewsFeedView.uploadQuestion(data.qHash);
+            console.log("Question Successfully Created"); 
+        })
     }
     
     window.collectBounty = function (qHash, bounty, time, callback) {

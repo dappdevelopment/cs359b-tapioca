@@ -2,6 +2,7 @@
 (function() {
   var NewsfeedView = {};
   NewsfeedView.remoteHost = "http://127.0.0.1:3000/"
+  NewsfeedView.pendingQuestions = {}; 
 
   /* Renders the newsfeed into the given $newsfeed element. */
   NewsfeedView.render = function($newsfeed) {
@@ -33,7 +34,11 @@
     response.questions.forEach(function(value) {
         NewsfeedView.renderPost($newsfeed, value, response.users, false) 
     })
+  }
 
+  NewsfeedView.uploadQuestion = function(q_hash) { 
+    let question_data = NewsfeedView.pendingQuestions[q_hash]; 
+    PostModel.add(question_data);
   }
 
   window.NewsfeedView = NewsfeedView;
@@ -79,13 +84,11 @@ function submitQuestion() {
       if (xmlHashRequest.status === 200) {
         var hashData = JSON.parse(xmlHashRequest.responseText)
 
-        let timeToClose = question_data.time_exp_days * 24 * 3600 * 1000 + question_data.time_exp_hours * 3600 * 1000 + question_data.time_exp_minutes * 60 * 1000
+        let timeToClose = question_data.time_exp_days * 24 * 3600 * 1000 + question_data.time_exp_hours * 3600 * 1000 + question_exp_minutes * 60 * 1000
         let timeExp = Date.now() + timeToClose
 
-        collectBounty(hashData.q_hash, question_data.bounty, timeToClose, function() { 
-          console.log("adding data");
-          PostModel.add(question_data);
-        }); 
+        collectBounty(hashData.q_hash, question_data.bounty, timeToClose); 
+        NewsfeedView.pendingQuestions[hashData.q_hash] = question_data; 
       }
   });
 
