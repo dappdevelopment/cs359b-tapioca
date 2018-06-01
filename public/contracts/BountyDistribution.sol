@@ -174,14 +174,14 @@ contract BountyDistribution {
         // should we set answerHash to something?
     }
 
-    function collectBounty(address _asker, uint256 _qHash, uint256 _bounty, uint minExecutionDate) onlyMembers public payable {
+    function collectBounty(uint256 _qHash, uint minExecutionDate) onlyMembers public payable {
         // can also use msg.sender and msg.value
         // who controls whether bounty == msg.value
-        require(msg.value >= _bounty);
+        //require(msg.value >= _bounty);
         
         questions[_qHash].hash = _qHash; 
-        questions[_qHash].bounty = _bounty; 
-        questions[_qHash].askerAddr = _asker; 
+        questions[_qHash].bounty = msg.value; 
+        questions[_qHash].askerAddr = msg.sender; 
         questions[_qHash].settled = false;
         questions[_qHash].isValue = true; 
         questions[_qHash].numAnswers = 0; 

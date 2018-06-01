@@ -50,9 +50,9 @@ function app() {
         console.log("refreshed"); 
     }
     
-    window.collectBounty = function (qHash, bounty, callback) {
+    window.collectBounty = function (qHash, bounty, time, callback) {
         console.log("collected bounty with qHash: " + qHash + " and bounty: " + bounty);
-        contract.methods.collectBounty(userAccount, qHash, bounty).send({from: userAccount, to: contractAddress, value: bounty})
+        contract.methods.collectBounty(qHash, time).send({from: userAccount, to: contractAddress, value: bounty})
             .then(callback)
             .catch(console.error);
     };
