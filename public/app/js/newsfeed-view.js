@@ -78,7 +78,11 @@ function submitQuestion() {
   xmlHashRequest.addEventListener('load', function() {
       if (xmlHashRequest.status === 200) {
         var hashData = JSON.parse(xmlHashRequest.responseText)
-        collectBounty(hashData.q_hash, question_data.bounty, function() { 
+
+        let timeToClose = question_data.time_exp_days * 24 * 3600 * 1000 + question_data.time_exp_hours * 3600 * 1000 + question_data.time_exp_minutes * 60 * 1000
+        let timeExp = Date.now() + timeToClose
+
+        collectBounty(hashData.q_hash, question_data.bounty, timeToClose, function() { 
           console.log("adding data");
           PostModel.add(question_data);
         }); 
