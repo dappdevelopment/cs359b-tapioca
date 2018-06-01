@@ -45,9 +45,9 @@ app.get('/question_feed', async function(request, response) {
 app.get('/question_hash', async function(request, response) {
   console.log("/GET question_hash " + request);
   let q_summary = request.query.summary;
-  let q_hash = sha256(q_summary);
+  let qHash = sha256(q_summary);
   let data = {
-    q_hash: q_hash
+    qHash: qHash
   };
   response.send(JSON.stringify(data));
 });
@@ -69,7 +69,7 @@ app.post('/submit_question', async function(request, response) {
   let bounty = Number(request.body.bounty);
   let asker_addr = request.body.asker_addr;
 
-  let returnData = await model.createQuestion(bounty, request.body.time_exp_days, request.body.time_exp_hours, request.body.time_exp_minutes, request.body.title, request.body.details, asker_addr);
+  let returnData = await model.createQuestion(bounty, request.body.min_execution_date, request.body.title, request.body.details, asker_addr);
 
   response.set('Content-type', 'application/json');
   response.status(STATUS_OK);
@@ -118,7 +118,7 @@ async function clearDB() {
 async function initDB() {
   let askerAddr = await model.createUser("mchang4", "0x66FDDd026Dbf64D6F907154365113ae124eB2DD6");
   let answererAddr = await model.createUser("peterlu6", "0xd08923976D510F8f834E1B8BC4E1c03599F2644F");
-  let returnData = await model.createQuestion(50, 10, 1, 23, "how do i make friends", "i have no friends", askerAddr);
+  let returnData = await model.createQuestion(50, Date.now() + 100000, "how do i make friends", "i have no friends", askerAddr);
   let answerObject = await model.createAnswer(answererAddr, returnData.questionId, "plastic surgery");
   // await model.markQuestionClosed(returnData.questionId);
 }

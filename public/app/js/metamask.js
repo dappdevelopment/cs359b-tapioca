@@ -47,12 +47,12 @@ function app() {
         }).catch(console.error);
 
     function refreshBalance() { 
-        console.log("refreshed"); 
+        console.log("refreshed");
     }
     
-    window.collectBounty = function (qHash, bounty, callback) {
-        console.log("collected bounty with qHash: " + qHash + " and bounty: " + bounty);
-        contract.methods.collectBounty(userAccount, qHash, bounty).send({from: userAccount, to: contractAddress, value: bounty})
+    window.collectBounty = function (qHash, bounty, minExecutionDate, callback) {
+        console.log("collected bounty with qHash: " + qHash + ", bounty: " + bounty + ", and expTime: " + minExecutionDate);
+        contract.methods.collectBounty(userAccount, qHash, bounty, minExecutionDate).send({from: userAccount, to: contractAddress, value: bounty})
             .then(callback)
             .catch(console.error);
     };

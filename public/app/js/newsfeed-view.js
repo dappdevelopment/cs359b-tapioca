@@ -47,6 +47,8 @@ function submitQuestion() {
   let q_time_exp_days = $("#time_exp_days").val()
   let q_time_exp_hours = $("#time_exp_hours").val()
   let q_time_exp_minutes = $("#time_exp_minutes").val()
+  let timeToClose = q_time_exp_days * 24 * 3600 * 1000 + q_time_exp_hours * 3600 * 1000 + q_time_exp_minutes * 60 * 1000
+  let q_min_execution_date = Date.now() + timeToClose;
 
   if (q_time_exp_days > 20 || q_time_exp_hours > 23 || q_time_exp_minutes > 59) {
     $("#submit_question_error").html("Must submit a valid time less than 20 days.");
@@ -57,6 +59,8 @@ function submitQuestion() {
     return;
   }
 
+  let asker_addr = localStorage.getItem("userAccount");
+
   $("#question_title").val(""); 
   $("textarea").val("");
   $("#bounty_amount").val(null)
@@ -64,21 +68,20 @@ function submitQuestion() {
   let question_data = { 
     title: q_title, 
     details: q_details,
-    asker_addr: localStorage.getItem("userAccount"), 
+    asker_addr: asker_addr, 
     bounty: q_bounty,
-    time_exp_days: q_time_exp_days,
-    time_exp_hours: q_time_exp_hours,
-    time_exp_minutes: q_time_exp_minutes
+    min_execution_date: q_min_execution_date
   }
 
-  let q_summary_string = q_bounty + q_title + q_details + localStorage.getItem("userAccount");
+  let q_summary_string = q_bounty + q_title + q_details + asker_addr;
 
   let xmlHashRequest = new XMLHttpRequest();
 
   xmlHashRequest.addEventListener('load', function() {
       if (xmlHashRequest.status === 200) {
-        var hashData = JSON.parse(xmlHashRequest.responseText)
-        collectBounty(hashData.q_hash, question_data.bounty, function() { 
+        let hashData = JSON.parse(xmlHashRequest.responseText);
+        console.log("hashData:"  + JSON.stringify(hashData.qHash));
+        collectBounty(asker_addr, hashData.qHash, question_data.bounty, q_min_execution_date, function() { 
           console.log("adding data");
           PostModel.add(question_data);
         }); 

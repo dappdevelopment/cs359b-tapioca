@@ -67,11 +67,9 @@ async function markQuestionClosed(questionId) {
 	console.log("marked question closed");
 }
 
-var createQuestion = async function(bounty, timeExpDays, timeExpHours, timeExpMinutes, title, body, askerAddr) {
+var createQuestion = async function(bounty, timeExp, title, body, askerAddr) {
 	console.log("askerAddr: " + askerAddr);
 	let questionHash = sha256(bounty + title + body + askerAddr);
-	let timeToClose = timeExpDays * 24 * 3600 * 1000 + timeExpHours * 3600 * 1000 + timeExpMinutes * 60 * 1000
-	let timeExp = Date.now() + timeToClose
 	let newQuestion = new schema.Question ({
 		answers: [],
 		bounty: bounty,
@@ -84,6 +82,9 @@ var createQuestion = async function(bounty, timeExpDays, timeExpHours, timeExpMi
 		askerAddr: askerAddr,
 		state: OPEN_STATE
 	});
+	console.log(timeExp);
+	let timeToClose = timeExp - Date.now();
+	console.log("timeToClose: " + timeToClose);
 	try {
 		let savedQuestion = await newQuestion.save();
 		await schema.User.findOneAndUpdate({address: askerAddr}, {$push: {questions: savedQuestion.id}}, {upsert: true});
