@@ -78,10 +78,12 @@ function submitQuestion() {
   let xmlHashRequest = new XMLHttpRequest();
 
   xmlHashRequest.addEventListener('load', function() {
+    console.log("XML request returned");
       if (xmlHashRequest.status === 200) {
+        console.log(JSON.stringify(xmlHashRequest.responseText))
         let hashData = JSON.parse(xmlHashRequest.responseText);
-        console.log("hashData:"  + JSON.stringify(hashData.qHash));
-        collectBounty(asker_addr, hashData.qHash, question_data.bounty, q_min_execution_date, function() { 
+        console.log("hashData: " +JSON.stringify(hashData));
+        collectBounty(hashData.qHash, q_bounty, q_min_execution_date, function() { 
           console.log("adding data");
           PostModel.add(question_data);
         }); 

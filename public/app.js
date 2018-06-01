@@ -43,11 +43,9 @@ app.get('/question_feed', async function(request, response) {
 });
 
 app.get('/question_hash', async function(request, response) {
-  console.log("/GET question_hash " + request);
-  let q_summary = request.query.summary;
-  let qHash = sha256(q_summary);
+  console.log("/GET question_hash summary: " + request.query.summary);
   let data = {
-    qHash: qHash
+    qHash: sha256(request.query.summary)
   };
   response.send(JSON.stringify(data));
 });
