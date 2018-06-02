@@ -193,6 +193,10 @@ contract BountyDistribution {
         
     }
 
+    function get(uint256 q_hash) view public returns (uint256 bounty, address askerAddr) {
+        return (questions[q_hash].bounty, questions[q_hash].askerAddr); 
+    }
+
     // kill function?
     // fallback function?
     // msg.value --> how much ether was spent in making this call

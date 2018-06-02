@@ -70,16 +70,18 @@ function app() {
         contractForEvents.events.QuestionCreated({filter: {_address: userAccount} })
         .on("data", function(event) { 
             let data = event.returnValues;
-            NewsFeedView.uploadQuestion(data.qHash);
+            NewsfeedView.uploadQuestion(data["qHash"]);
             console.log("Question Successfully Created"); 
         })
     }
     
     window.collectBounty = function (qHash, bounty, time, callback) {
+        console.log("type: " + typeof qHash);
         console.log("collected bounty with qHash: " + qHash + " and bounty: " + bounty);
-        contract.methods.collectBounty(qHash, time).send({from: userAccount, to: contractAddress, value: bounty})
+        contract.methods.collectBounty(web3.utils.toBN(qHash), time).send({from: userAccount, to: contractAddress, value: bounty})
             .then(callback)
             .catch(console.error);
+        console.log("collected bounty")
     };
 
     window.distributeBounty = function (answerer, aHash, qHash) {

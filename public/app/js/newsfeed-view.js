@@ -37,7 +37,11 @@
   }
 
   NewsfeedView.uploadQuestion = function(q_hash) { 
-    let question_data = NewsfeedView.pendingQuestions[q_hash]; 
+    console.log("Question Hash: " + q_hash)
+    let hex_value = dec2hex(q_hash); 
+    var question_data = NewsfeedView.pendingQuestions[hex_value]; 
+    console.log(NewsfeedView.pendingQuestions)
+    question_data["q_hash"] = hex_value; 
     PostModel.add(question_data);
   }
 
@@ -76,6 +80,8 @@ function submitQuestion() {
     time_exp_minutes: q_time_exp_minutes
   }
 
+  console.log("Outside Title: " + question_data.title); 
+
   let q_summary_string = q_bounty + q_title + q_details + localStorage.getItem("userAccount");
 
   let xmlHashRequest = new XMLHttpRequest();
@@ -84,10 +90,14 @@ function submitQuestion() {
       if (xmlHashRequest.status === 200) {
         var hashData = JSON.parse(xmlHashRequest.responseText)
 
-        let timeToClose = question_data.time_exp_days * 24 * 3600 * 1000 + question_data.time_exp_hours * 3600 * 1000 + question_exp_minutes * 60 * 1000
-        let timeExp = Date.now() + timeToClose
 
-        collectBounty(hashData.q_hash, question_data.bounty, timeToClose); 
+        let timeToClose = question_data.time_exp_days * 24 * 3600 * 1000 + question_data.time_exp_hours * 3600 * 1000 + question_data.time_exp_minutes * 60 * 1000;
+        let timeExp = Date.now() + timeToClose;
+
+        collectBounty(hashData.q_hash, question_data.bounty, timeExp, function() { 
+          console.log("Bounty Request Submitted");
+        });
+        console.log("Question Hash: " + hashData.q_hash) 
         NewsfeedView.pendingQuestions[hashData.q_hash] = question_data; 
       }
   });
@@ -101,6 +111,22 @@ function submitQuestion() {
   setTimeout(function() {
       $("#myPopup").hide();
   }, 1000);
+}
+
+function dec2hex(str){ // .toString(16) only works up to 2^53
+    var dec = str.toString().split(''), sum = [], hex = [], i, s
+    while(dec.length){
+        s = 1 * dec.shift()
+        for(i = 0; s || i < sum.length; i++){
+            s += (sum[i] || 0) * 10
+            sum[i] = s % 16
+            s = (s - sum[i]) / 16
+        }
+    }
+    while(sum.length){
+        hex.push(sum.pop().toString(16))
+    }
+    return hex.join('')
 }
 
 

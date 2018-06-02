@@ -1,3 +1,5 @@
+var contract = require('./app/build/contracts/BountyDistribution.json')
+
 var express = require('express');
 var bodyParser = require('body-parser');
 var ObjectId = require('mongoose').Types.ObjectId;
@@ -8,6 +10,7 @@ var STATUS_OK = 200
 var NUM_QUERIES = 3
 
 var sha256 = require('js-sha256').sha256;
+var Web3 = require('web3')
 
 // connect to database
 //mongoose.connect('mongodb://localhost:27017/callback-newsfeed-db');
@@ -66,18 +69,33 @@ app.post('/submit_question', async function(request, response) {
   console.log(request.body);
   console.log("POST /submit_question", "title: " + request.body.title, "details: " + request.body.details, 
     "asker_addr: " + request.body.asker_addr, "bounty: " + request.body.bounty);
-  let bounty = Number(request.body.bounty);
-  let asker_addr = request.body.asker_addr;
 
-  let returnData = await model.createQuestion(bounty, request.body.time_exp_days, request.body.time_exp_hours, request.body.time_exp_minutes, request.body.title, request.body.details, asker_addr);
-
-  response.set('Content-type', 'application/json');
-  response.status(STATUS_OK);
-  console.log("qhash: " + returnData.questionHash); 
-  data = {
-    qHash: returnData.questionHash
+  if (!global.contract) {
+    console.log("contract not there?")
+    return response.status(400).send({
+       message: 'Server-Side Error; Please try again later.'
+    });
   }
-  response.send(JSON.stringify(data));
+
+  global.contract.methods.get(web3.utils.toBN(request.body.q_hash)).send()
+    .then(console.log)
+    .catch(console.error);
+
+  /*.then(async function(x) {
+    console.log(x); 
+    let bounty = Number(request.body.bounty);
+    let asker_addr = request.body.asker_addr;
+
+    let returnData = await model.createQuestion(bounty, request.body.time_exp_days, request.body.time_exp_hours, request.body.time_exp_minutes, request.body.title, request.body.details, asker_addr);
+
+    response.set('Content-type', 'application/json');
+    response.status(STATUS_OK);
+    console.log("qhash: " + returnData.questionHash); 
+    data = {
+      qHash: returnData.questionHash
+    }
+    response.send(JSON.stringify(data));
+  })*/
 });
 
 app.post('/upvote', function(request, response) {
@@ -128,5 +146,25 @@ async function test() {
   await initDB();
 }
 
+async function connectToEthereum() { 
+  console.log("connecting to ethereum")
+  web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+  console.log("waiting for network id") 
+  var networkId = await web3.eth.net.getId(); // resolves on the current network id
+  console.log("got network id")
+
+  var contractData = contract;  // resolved value of contractDataPromise        
+  // Make sure the contract is deployed on the connected network
+  if (!(networkId in contractData.networks)) {
+    throw new Error("Contract not found in selected Ethereum network on MetaMask.");
+  }
+
+  contractAddress = contractData.networks[networkId].address;
+  global.contract = new web3.eth.Contract(contractData.abi, contractAddress);
+  console.log("retrieved contract")
+  console.log(global.contract)
+}
+
 test();
 
+connectToEthereum(); 
