@@ -4,6 +4,7 @@
   "description": "Tapioca is a question-answer platform where askers can set bounties and rules of bounty distribution for quality answers.",
   "main": "app.js",
   "dependencies": {
+    "ethereumjs-tx": "^1.3.4",
     "express": "^4.16.3",
     "jquery": "^3.3.1",
     "js-sha256": "^0.9.0",
