@@ -7,6 +7,8 @@ contract BountyDistribution {
         _;
     }
 
+    event QuestionCreated(address indexed _address, uint256 qHash); 
+
     // Congress Variables/Structs
     mapping (address => bool) membership; 
     mapping (address => MemberProposal) addProposals; 
@@ -186,6 +188,13 @@ contract BountyDistribution {
         questions[_qHash].isValue = true; 
         questions[_qHash].numAnswers = 0; 
         questions[_qHash].minExecutionDate = minExecutionDate; 
+
+        emit QuestionCreated(msg.sender, _qHash); 
+        
+    }
+
+    function get(uint256 q_hash) view public returns (uint256 bounty, address askerAddr) {
+        return (questions[q_hash].bounty, questions[q_hash].askerAddr); 
     }
 
     // kill function?
