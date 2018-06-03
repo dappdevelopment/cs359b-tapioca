@@ -3,7 +3,6 @@ var contract = require('./app/build/contracts/BountyDistribution.json')
 var express = require('express');
 var bodyParser = require('body-parser');
 var ObjectId = require('mongoose').Types.ObjectId;
-const Tx = require('ethereumjs-tx')
 
 const privateKey = Buffer.from('dd298dcb456d677efb42d1b865acf532789c7b948d8db8901918045ae684ac10', 'hex')
 
