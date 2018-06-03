@@ -202,8 +202,10 @@ async function test() {
   await initDB();
 }
 
+
 async function connectToEthereum() { 
-  web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+  //web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/hzinmOiPQJ95bFyblv1K "));
+  web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:8545"));
   var networkId = await web3.eth.net.getId(); // resolves on the current network id
 
   var contractData = contract;  // resolved value of contractDataPromise        
@@ -214,6 +216,31 @@ async function connectToEthereum() {
 
   contractAddress = contractData.networks[networkId].address;
   global.contract = new web3.eth.Contract(contractData.abi, contractAddress);
+  
+
+  switch(networkId) { 
+      case 1: 
+          networkURI = 'wss://mainnet.infura.io/ws'; 
+          break;
+      case 4: 
+          networkURI = 'wss://rinkeby.infura.io/ws'; 
+          break;
+      default:
+          networkURI = 'ws://localhost:8545';
+          break;
+  }
+  
+  console.log('Events Provider: ', networkURI); 
+
+  const web3ForEvents = new Web3(new Web3.providers.WebsocketProvider(networkURI)); 
+  const contractForEvents = new web3ForEvents.eth.Contract(contractData.abi, contractAddress); 
+
+  console.log("Events: " + contractForEvents.events);
+  contractForEvents.events.QuestionCreated()
+  .on("data", function(event) { 
+      let data = event.returnValues;
+      console.log("Question Successfully Created"); 
+  })
 }
 
 test();
