@@ -2,9 +2,10 @@
 (function() {
   var NewsfeedView = {};
   NewsfeedView.remoteHost = "http://127.0.0.1:3000/"
+  NewsfeedView.pendingQuestions = {}; 
 
   /* Renders the newsfeed into the given $newsfeed element. */
-  NewsfeedView.render = function($newsfeed) {
+  NewsfeedView.render = function($newsfeed, isMyAnswers) {
     // TODO: replace with database call.
     var xmlQuestions = new XMLHttpRequest(); 
 
@@ -16,8 +17,14 @@
       }
     });
 
-    xmlQuestions.open("GET", NewsfeedView.remoteHost + 'question_feed', true)
-    xmlQuestions.send(null)
+    if (isMyAnswers) {
+      let user_addr = localStorage.getItem("userAccount")
+      xmlQuestions.open("GET", NewsfeedView.remoteHost + 'my_answers_feed' + "?user_addr=" + encodeURIComponent(user_addr), true)
+      xmlQuestions.send(null) 
+    } else {
+      xmlQuestions.open("GET", NewsfeedView.remoteHost + 'question_feed', true)
+      xmlQuestions.send(null)
+    }
   };
 
   /* Given post information, renders a post element into $newsfeed. */
@@ -26,14 +33,21 @@
     console.log(post); 
     var postHtml = Templates.renderPost(post, users)
     $newsfeed.append(postHtml);
-   
   };
 
   NewsfeedView.renderFeed = function($newsfeed, response) { 
     response.questions.forEach(function(value) {
         NewsfeedView.renderPost($newsfeed, value, response.users, false) 
     })
+  }
 
+  NewsfeedView.uploadQuestion = function(q_hash) { 
+    console.log("Question Hash: " + q_hash)
+    let hex_value = dec2hex(q_hash); 
+    var question_data = NewsfeedView.pendingQuestions[hex_value]; 
+    console.log(NewsfeedView.pendingQuestions)
+    question_data["q_hash"] = hex_value; 
+    PostModel.add(question_data);
   }
 
   window.NewsfeedView = NewsfeedView;
@@ -71,6 +85,8 @@ function submitQuestion() {
     time_exp_minutes: q_time_exp_minutes
   }
 
+  console.log("Outside Title: " + question_data.title); 
+
   let q_summary_string = q_bounty + q_title + q_details + localStorage.getItem("userAccount");
 
   let xmlHashRequest = new XMLHttpRequest();
@@ -78,10 +94,16 @@ function submitQuestion() {
   xmlHashRequest.addEventListener('load', function() {
       if (xmlHashRequest.status === 200) {
         var hashData = JSON.parse(xmlHashRequest.responseText)
-        collectBounty(hashData.q_hash, question_data.bounty, function() { 
-          console.log("adding data");
-          PostModel.add(question_data);
-        }); 
+
+
+        let timeToClose = question_data.time_exp_days * 24 * 3600 * 1000 + question_data.time_exp_hours * 3600 * 1000 + question_data.time_exp_minutes * 60 * 1000;
+        let timeExp = Date.now() + timeToClose;
+
+        collectBounty(hashData.q_hash, question_data.bounty, timeExp, function() { 
+          console.log("Bounty Request Submitted");
+        });
+        console.log("Question Hash: " + hashData.q_hash) 
+        NewsfeedView.pendingQuestions[hashData.q_hash] = question_data; 
       }
   });
 
@@ -109,6 +131,23 @@ function openTab(evt, tabName) {
   document.getElementById(tabName).style.display = "block";
   evt.currentTarget.className += " active";
 }
+
+function dec2hex(str){ // .toString(16) only works up to 2^53
+    var dec = str.toString().split(''), sum = [], hex = [], i, s
+    while(dec.length){
+        s = 1 * dec.shift()
+        for(i = 0; s || i < sum.length; i++){
+            s += (sum[i] || 0) * 10
+            sum[i] = s % 16
+            s = (s - sum[i]) / 16
+        }
+    }
+    while(sum.length){
+        hex.push(sum.pop().toString(16))
+    }
+    return hex.join('')
+}
+
 
 
 
