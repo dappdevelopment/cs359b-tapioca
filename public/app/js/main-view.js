@@ -3,7 +3,8 @@
   var MainView = {};
 
   MainView.render = function($body) {
-    NewsfeedView.render($body.find('#questions_list'));
+    NewsfeedView.render($body.find('#questions_list', false));
+    NewsfeedView.render($body.find('#my_answers_list', true));
     //SearchView.render($body.find('#search'));
   };
 

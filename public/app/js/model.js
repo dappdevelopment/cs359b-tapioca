@@ -108,7 +108,7 @@ var createAnswer = async function(answererAddr, questionId, body) {
 		console.log(newAnswer); 
 		let savedAnswer = await newAnswer.save();
 		let updatedQuestion = await schema.Question.findOneAndUpdate({_id: questionId}, {$push: {answers: savedAnswer.id}}, {upsert: true});
-		let updatedUser = await schema.User.findOneAndUpdate({address: answererAddr}, {$push: {answers: savedAnswer.id}}, {upsert: true});
+		let updatedUser = await schema.User.findOneAndUpdate({address: answererAddr}, {$push: {answers: savedAnswer.id, questions_answered: questionId}}, {upsert: true});
 		return savedAnswer;
 	} catch (err) {
 		console.log("error in createanswer");
