@@ -48,6 +48,16 @@ app.get('/question_feed', async function(request, response) {
 	response.send(JSON.stringify(questions));
 });
 
+app.get('/my_answers_feed', async function(request, response) {
+  console.log("/GET my_answers_feed")
+
+  let questions_answered = await model.findQuestionsAnswered(); 
+
+	response.set('Content-type', 'application/json');
+	response.status(STATUS_OK);
+	response.send(JSON.stringify(questions_answered));
+});
+
 app.get('/question_hash', async function(request, response) {
   console.log("/GET question_hash " + request);
   let q_summary = request.query.summary;
@@ -157,7 +167,6 @@ app.post('/upvote', function(request, response) {
 
 app.post('/add_answer', function(request, response) {
   console.log("POST /add_answer "  + "question_ID: " + request.body.question_id + "; answer: " + request.body.text)
-  let placeholder_id = ObjectId("915bed12d3704298d62224fe");
   let question_id = ObjectId(request.body.question_id);
   model.createAnswer(request.body.user_addr, question_id, request.body.text);
   response.set('Content-type', 'application/json');

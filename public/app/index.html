@@ -59,11 +59,27 @@
 
     <div class="error"></div>
     <span class="popuptext" id="myPopup">Question Submitted!</span>
-    <div id="newsfeed">
-      <ul id="questions_list"> 
-      </ul>
+
+    <!-- Tab links -->
+    <div class="tab">
+      <button class="tablinks" onclick="openTab(event, 'Feed')">Feed</button>
+      <button class="tablinks" onclick="openTab(event, 'MyAnswers')">My Answers</button>
     </div>
 
+    <!-- Tab content -->
+    <div id="Feed" class="tabcontent">
+      <div id="newsfeed">
+        <ul id="questions_list"> 
+        </ul>
+      </div>
+    </div>
+
+    <div id="MyAnswers" class="tabcontent">
+      <div id="my-answers">
+        <ul id="my_answers_list">
+        </ul>
+      </div>>
+    </div>
 
     <!-- Libraries -->
     <script src="/js/jquery.min.js"></script>
