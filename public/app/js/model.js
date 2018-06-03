@@ -132,16 +132,6 @@ var upvoteAnswer = async function(answerId, voterAddr) {
 	}
 }
 
-var ProposalSchema = new mongoose.Schema({
-    upvotes: [{type: String}], // addresses
-    downvotes: [{type: String}], // addresses
-    proposedMemberAddr: {type: String},
-    proposingMemberAddr: {type: String},
-    timeExp: {type: Date},
-    state: {type: Number}, // enumerated
-    type: {type: Number} // enumerated
-});
-
 var createProposal = async function(proposingMemberAddr, proposedMemberAddr, isAddProposal) {
 	let proposalType = REMOVE_PROPOSAL;
 	if (isAddProposal) {
@@ -189,6 +179,10 @@ var findOpenProposals = async function() {
 		console.log("findProposalData success");
 		console.log(err);
 	}
+}
+
+var executeProposal = async function() {
+
 }
 
 var resetDB = async function() {
