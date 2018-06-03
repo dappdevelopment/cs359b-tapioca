@@ -4,9 +4,34 @@
   NewsfeedView.remoteHost = "http://127.0.0.1:3000/"
   NewsfeedView.pendingQuestions = {}; 
 
+  NewsfeedView.renderProposals = function($proposalsfeed) {
+    var xmlProposals = new XMLHttpRequest(); 
+
+    xmlProposals.addEventListener('load', function() {
+        if (xmlProposals.status == 200) {
+          var proposals = JSON.parse(xmlProposals.responseText)
+          console.log(proposals);
+          NewsfeedView.renderProposalsFeed($proposalsfeed, proposals); 
+        }
+    });
+    xmlProposals.open("GET", NewsfeedView.remoteHost + 'member_proposals', true)
+    xmlProposals.send(null)
+  };
+
+  NewsfeedView.renderProposalPost = function($proposalsfeed, post) {
+    console.log("rendering proposal");
+    var postHtml = Templates.renderProposalPost(post);
+    $proposalsfeed.append(postHtml);
+  }
+
+  NewsfeedView.renderProposalsFeed = function($proposalsfeed, response) {
+    response.proposals.forEach(function(value) {
+      NewsfeedView.renderProposalPost($proposalsfeed, value, false); 
+    })
+  }
+
   /* Renders the newsfeed into the given $newsfeed element. */
   NewsfeedView.render = function($newsfeed, isMyAnswers) {
-    console.log("oiefiowe - " + isMyAnswers);
     // TODO: replace with database call.
     var xmlQuestions = new XMLHttpRequest(); 
 

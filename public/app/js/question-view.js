@@ -95,6 +95,37 @@
   window.QuestionView = QuestionView; 
 })();
 
+function upvoteProposalClicked(element) {
+  console.log("element printing")
+  console.log(element)
+  PostModel.upvoteProposal(element.className, localStorage.getItem("userAccount"));
+  var upvotes = $('.' + element.className + '.upvote_count').html(); 
+  console.log("upvotes query: " + upvotes)
+  var counts_str = upvotes.split(' ')[1]; 
+
+  var count = parseInt(counts_str); 
+  count += 1
+  console.log("upvote count: " + count)
+  $('.' + element.className + '.upvote_count').html("Upvotes: " + count)
+  $('input[name=upvote]').remove()
+  $('.' + element.className).append("<p>You have already voted on this proposal</p>");
+}
+
+function downvoteProposalClicked(element) {
+  console.log("element printing")
+  console.log(element)
+  PostModel.downvoteProposal(element.className, localStorage.getItem("userAccount"));
+  var upvotes = $('.' + element.className + '.upvote_count').html(); 
+  console.log("upvotes query: " + upvotes)
+  var counts_str = upvotes.split(' ')[1]; 
+
+  var count = parseInt(counts_str); 
+  count += 1
+  console.log("upvote count: " + count)
+  $('.' + element.className + '.upvote_count').html("Upvotes: " + count)
+  $('input[name=upvote]').remove()
+  $('.' + element.className).append("<p>You have already voted on this proposal</p>");
+}
 
 //onClick Handler's 
 //upvotes: 
