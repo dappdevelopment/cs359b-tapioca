@@ -12,7 +12,7 @@
    *   source: the source URL
    *   upvotes: the number of upvotes
    */
-  Templates.renderPost = function(post, users, show_link=true) {
+  Templates.renderPost = function(post, show_link=true) {
     console.log("post1"); 
     console.log(post); 
     let days = Math.floor(post.timeLeft / (24 * 3600 * 1000))
@@ -93,7 +93,7 @@
     </ul>
   */
 
-  Templates.renderAnswer = function(answer, users, canUpvote) {
+  Templates.renderAnswer = function(answer, canUpvote) {
     console.log(answer.voters);
     console.log(answer.voters.length);
     console.log(answer);

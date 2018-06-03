@@ -6,6 +6,7 @@
 
   /* Renders the newsfeed into the given $newsfeed element. */
   NewsfeedView.render = function($newsfeed, isMyAnswers) {
+    console.log("oiefiowe - " + isMyAnswers);
     // TODO: replace with database call.
     var xmlQuestions = new XMLHttpRequest(); 
 
@@ -16,9 +17,8 @@
         NewsfeedView.renderFeed($newsfeed, questions)
       }
     });
-
     if (isMyAnswers) {
-      let user_addr = localStorage.getItem("userAccount")
+      let user_addr = localStorage.getItem("userAccount");
       xmlQuestions.open("GET", NewsfeedView.remoteHost + 'my_answers_feed' + "?user_addr=" + encodeURIComponent(user_addr), true)
       xmlQuestions.send(null) 
     } else {
@@ -28,16 +28,16 @@
   };
 
   /* Given post information, renders a post element into $newsfeed. */
-  NewsfeedView.renderPost = function($newsfeed, post, users) {
+  NewsfeedView.renderPost = function($newsfeed, post) {
     console.log("posttt");
     console.log(post); 
-    var postHtml = Templates.renderPost(post, users)
+    var postHtml = Templates.renderPost(post);
     $newsfeed.append(postHtml);
   };
 
   NewsfeedView.renderFeed = function($newsfeed, response) { 
     response.questions.forEach(function(value) {
-        NewsfeedView.renderPost($newsfeed, value, response.users, false) 
+        NewsfeedView.renderPost($newsfeed, value, false);
     })
   }
 
@@ -119,6 +119,7 @@ function submitQuestion() {
 }
 
 function openTab(evt, tabName) {
+  console.log("opening tab: " + tabName);
   var i, tabcontent, tablinks;
   tabcontent = document.getElementsByClassName("tabcontent");
   for (i = 0; i < tabcontent.length; i++) {

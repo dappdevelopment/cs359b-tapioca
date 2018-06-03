@@ -143,20 +143,39 @@ var findQuestionFeedData = async function() {
 	try {
 		let questions = await schema.Question.find({});
 		let users = await schema.User.find({});
-		let userMap = {};
-		for (user of users){
-			userMap[user._id] = user.address; // map from user to their eth address.
-		}
-		let modified_question_list = []
+		// let userMap = {};
+		// for (user of users){
+		// 	userMap[user._id] = user.address; // map from user to their eth address.
+		// }
+		let modified_question_list = [];
 		for (let i in questions) {
-			modified_question = JSON.parse(JSON.stringify(questions[i])); // deep copy 
+			let modified_question = JSON.parse(JSON.stringify(questions[i])); // deep copy 
 			let timeLeft = Math.max(Date.parse(modified_question.timeExp) - Date.now(), 0);
 			modified_question.timeLeft = timeLeft;
-			modified_question_list.push(modified_question)
+			modified_question_list.push(modified_question);
 		}
-		return {questions: modified_question_list, users: userMap};
+		return {questions: modified_question_list};
 	} catch (err) {
 		console.log("error in findQuestionFeedData");
+		console.log(err);
+	}
+}
+
+var findQuestionsAnswered = async function(userId) {
+	try {
+		let user = await schema.User.find({_id: userId});
+		let questions_id_list = user.questions_answered;
+		let questions_answered = await schema.Answer.find({_id: {$in: questions_id_list}});
+		let modified_question_list = [];
+		for (let i in questions_answered) {
+			let modified_question = JSON.parse(JSON.stringify(questions_answered[i])); // deep copy
+			let timeLeft = Math.max(Date.parse(modified_question.timeExp) - Date.now(), 0);
+			modified_question.timeLeft = timeLeft;
+			modified_question_list.push(modified_question);
+		}
+		return {questions: modified_question_list}
+	} catch (err) {
+		console.log("error in findQuestionsAnswered");
 		console.log(err);
 	}
 }
@@ -222,6 +241,7 @@ module.exports.findAnswer = findAnswer;
 module.exports.findQuestionFeedData = findQuestionFeedData;
 module.exports.findQuestionData = findQuestionData;
 module.exports.markQuestionClosed = markQuestionClosed;
+module.exports.findQuestionsAnswered = findQuestionsAnswered;
 
 
 
