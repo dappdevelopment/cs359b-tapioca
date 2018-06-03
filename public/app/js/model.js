@@ -11,6 +11,11 @@ var OPEN_STATE = 1;
 var CLOSED_STATE = 2;
 var SETTLED_STATE = 3;
 
+
+// Proposal types
+var ADD_PROPOSAL = 4;
+var REMOVE_PROPOSAL = 5;
+
 mongoose.connect(uristring, function (err, res) {
     if (err) {
       	console.log ('ERROR connecting to: ' + uristring + '. ' + err);
@@ -123,6 +128,65 @@ var upvoteAnswer = async function(answerId, voterAddr) {
 		console.log("updated answer successfully");
 	} catch (err) {
 		console.log("error in upvote answer");
+		console.log(err);
+	}
+}
+
+var ProposalSchema = new mongoose.Schema({
+    upvotes: [{type: String}], // addresses
+    downvotes: [{type: String}], // addresses
+    proposedMemberAddr: {type: String},
+    proposingMemberAddr: {type: String},
+    timeExp: {type: Date},
+    state: {type: Number}, // enumerated
+    type: {type: Number} // enumerated
+});
+
+var createProposal = async function(proposingMemberAddr, proposedMemberAddr, isAddProposal) {
+	let proposalType = REMOVE_PROPOSAL;
+	if (isAddProposal) {
+		proposalType = ADD_PROPOSAL;
+	}
+	let proposalDelay = 600 * 60 * 1000; // 600 minutes
+	let timeExp = Date.now() + proposalDelay
+	let newProposal = new schema.Proposal({
+		upvotes: [],
+		downvotes: [],
+		proposedMemberAddr: proposedMemberAddr,
+		proposingMemberAddr: proposingMemberAddr,
+		timeExp: timeExp,
+		type: proposalType,
+		state: OPEN_STATE
+	});
+	try {
+		let savedProposal = await newProposal.save();
+		return savedProposal;
+	} catch (err) {
+		console.log("error in createProposal");
+		console.log(err);
+	}
+}
+
+var voteOnProposal = async function(proposedMemberAddr, isSupport, votingMemberAddr) {
+	try {
+		if (isSupport) {
+			let updatedProposal = await schema.Proposal.findOneAndUpdate({proposedMemberAddr: proposedMemberAddr}, {$addToSet: {upvotes: voterAddr}}, {upsert: true});
+		} else {
+			let updatedProposal = await schema.Proposal.findOneAndUpdate({proposedMemberAddr: proposedMemberAddr}, {$addToSet: {downvotes: voterAddr}}, {upsert: true});
+		}
+		console.log("updated Proposal successfully");
+	} catch (err) {
+		console.log("error in voteOnProposal");
+		console.log(err);
+	}
+}
+
+var findOpenProposals = async function() {
+	try {
+		let openProposals = await schema.Proposal.find({state: OPEN_STATE});
+		return openProposals;
+	} catch (err) {
+		console.log("findProposalData success");
 		console.log(err);
 	}
 }

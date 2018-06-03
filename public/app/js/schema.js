@@ -31,6 +31,14 @@ var AnswerSchema = new mongoose.Schema({
     isWinner: {type: Boolean, default: false}
 });
 
+var ProposalSchema = new mongoose.Schema({
+    upvotes: [{type: String}], // addresses
+    downvotes: [{type: String}], // addresses
+    proposedMemberAddr: {type: String},
+    proposingMemberAddr: {type: String},
+    timeExp: {type: Date},
+    state: {type: Number}
+});
 
 // the schema is useless so far
 // we need to create a model using it
