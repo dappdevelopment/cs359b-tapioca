@@ -20,7 +20,6 @@ function app() {
             var networkId = results[1];     // resolved value of networkIdPromise
             var accounts = results[2];      // resolved value of accountsPromise
             userAccount = accounts[0];
-            console.log("printing userAccount in metamask.js: " + userAccount); 
 
             $("#user_address").html(userAccount);
 
@@ -44,7 +43,7 @@ function app() {
 
             contractAddress = contractData.networks[networkId].address;
             contract = new web3.eth.Contract(contractData.abi, contractAddress);
-            contractEvents(contractData.abi, contractData.networks[networkId], userAccount); 
+            contractEvents(contractData.abi, networkId, userAccount); 
         }).catch(console.error);
 
     function refreshBalance() { 
@@ -56,10 +55,13 @@ function app() {
         switch(networkId) { 
             case 1: 
                 networkURI = 'wss://mainnet.infura.io/ws'; 
+                break;
             case 4: 
                 networkURI = 'wss://rinkeby.infura.io/ws'; 
+                break;
             default:
                 networkURI = 'ws://localhost:8545';
+                break;
         }
         console.log('Events Provider: ', networkURI); 
 
