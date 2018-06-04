@@ -204,14 +204,14 @@ async function test() {
 
 
 async function connectToEthereum() { 
-  //web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/hzinmOiPQJ95bFyblv1K "));
-  web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:8545"));
+  web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/hzinmOiPQJ95bFyblv1K "));
+  //web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:8545"));
   var networkId = await web3.eth.net.getId(); // resolves on the current network id
 
-  var contractData = contract;  // resolved value of contractDataPromise        
+  var contractData = contract;       
   // Make sure the contract is deployed on the connected network
   if (!(networkId in contractData.networks)) {
-    throw new Error("Contract not found in selected Ethereum network on MetaMask.");
+    throw new Error("Contract not found in selected Ethereum network.");
   }
 
   contractAddress = contractData.networks[networkId].address;
@@ -230,17 +230,25 @@ async function connectToEthereum() {
           break;
   }
   
-  console.log('Events Provider: ', networkURI); 
-
   const web3ForEvents = new Web3(new Web3.providers.WebsocketProvider(networkURI)); 
-  const contractForEvents = new web3ForEvents.eth.Contract(contractData.abi, contractAddress); 
+  const contractForEvents = new web3ForEvents.eth.Contract(contractData.abi, global.contract._address ); 
 
-  console.log("Events: " + contractForEvents.events);
   contractForEvents.events.QuestionCreated()
   .on("data", function(event) { 
       let data = event.returnValues;
       console.log("Question Successfully Created"); 
   })
+
+  /*
+  const web3Events = new Web3(new Web3.providers.WebsocketProvider('wss://rinkeby.infura.io/ws'));
+
+  const subscription = web3Events.eth.subscribe('newBlockHeaders', (error, blockHeader) => {
+    if (error) return console.error(error);
+
+    console.log('Successfully subscribed!', blockHeader);
+  }).on('data', (blockHeader) => {
+    console.log('data: ', blockHeader);
+  });*/
 }
 
 test();

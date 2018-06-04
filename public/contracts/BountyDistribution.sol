@@ -3,7 +3,7 @@ pragma solidity ^0.4.21;
 contract BountyDistribution {
     // only employees may alter
     modifier onlyMembers {
-        require(membership[msg.sender]); 
+        //require(membership[msg.sender]); 
         _;
     }
 
