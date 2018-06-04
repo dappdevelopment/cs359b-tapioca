@@ -189,7 +189,7 @@ var executeProposal = async function(proposalId) {
 		let downvoteCount = proposal.downvotes.length;
 		if (upvoteCount > downvoteCount) { // execute proposal
 			if (proposal.type == ADD_PROPOSAL) {
-				
+				await schema.MemberTracker.findOneAndUpdate({}) // TODO: start here.
 			}
 		}
 	}
