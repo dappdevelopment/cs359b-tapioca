@@ -40,13 +40,21 @@ var ProposalSchema = new mongoose.Schema({
     state: {type: Number}
 });
 
+var MemberTrackerSchema = new mongoose.Schema({
+    members: [{}]
+})
+
 // the schema is useless so far
 // we need to create a model using it
 var User = mongoose.model('User', UserSchema);
 var Question = mongoose.model('Question', QuestionSchema);
 var Answer = mongoose.model('Answer', AnswerSchema);
+var Proposal = mongoose.model('Proposal', ProposalSchema);
+var MemberTracker = mongoose.model('MemberTracker', MemberTrackerSchema);
 
 // make this available to our photos in our Node applications
 module.exports.User = User;
 module.exports.Question = Question;
 module.exports.Answer = Answer;
+module.exports.Proposal = Proposal;
+module.exports.MemberTracker = MemberTracker;

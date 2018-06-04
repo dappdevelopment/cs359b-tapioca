@@ -181,8 +181,18 @@ var findOpenProposals = async function() {
 	}
 }
 
-var executeProposal = async function() {
-
+var executeProposal = async function(proposalId) {
+	try {
+		let proposalToExecute = await schema.Proposal.find({_id: proposalId});
+		let proposal = proposalToExecute[0]._doc; // needed to get actual object
+		let upvoteCount = proposal.upvotes.length;
+		let downvoteCount = proposal.downvotes.length;
+		if (upvoteCount > downvoteCount) { // execute proposal
+			if (proposal.type == ADD_PROPOSAL) {
+				
+			}
+		}
+	}
 }
 
 var resetDB = async function() {
@@ -190,6 +200,7 @@ var resetDB = async function() {
 		await schema.Answer.remove({});
 		await schema.Question.remove({});
 		await schema.User.remove({});
+		await schema.Proposal.remove({});
 		console.log("successful deletion");
 	} catch (err) {
 		console.log("error during removal");
