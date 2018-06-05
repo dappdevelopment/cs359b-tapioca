@@ -9,9 +9,9 @@
     let hours = Math.floor((post.timeLeft % (24 * 3600 * 1000)) / (3600 * 1000))
     let minutes = Math.ceil((post.timeLeft % (3600 * 1000)) / (60 * 1000))
     let totalVotes = post.upvotes.length - post.downvotes.length; 
-    let currentUserAddr = localStorage.getItem("userAccount")
+    let currentUserAddr = localStorage.getItem("userAccount");
 
-    var upvote_tags = [tag('p', {class: "upvote_count " + post._id}, "Upvotes: " + totalVotes)] 
+    let upvote_tags = [tag('p', {class: "upvote_count " + post._id}, "Vote differential: " + totalVotes)]; 
     if (post.upvotes.includes(currentUserAddr) || post.downvotes.includes(currentUserAddr)) {
       upvote_tags.push(tag('p', {}, "You have already voted on this proposal"))
     } else {
@@ -28,7 +28,7 @@
         tag('div', {class: 'right_title'}, [
             tag('h1', {}, post.proposedMemberAddr)
           ]),
-        tag('div', {class: "left_column"}, upvote_tags), 
+        tag('div', {class: "left_column"}, upvote_tags),  // TODO: visual issues
       ]),
     ]);
   };

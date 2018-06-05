@@ -136,6 +136,7 @@ var upvoteAnswer = async function(answerId, voterAddr) {
 }
 
 var createProposal = async function(proposingMemberAddr, proposedMemberAddr, isAddProposal) {
+	console.log("model.js: creating proposal");
 	let proposalType = REMOVE_PROPOSAL;
 	if (isAddProposal) {
 		proposalType = ADD_PROPOSAL;
@@ -176,10 +177,18 @@ var voteOnProposal = async function(proposedMemberAddr, isSupport, votingMemberA
 
 var findOpenProposals = async function() {
 	try {
-		let openProposals = await schema.Proposal.find({state: OPEN_STATE});
-		return openProposals;
+		console.log("model.js: finding open proposals");
+		let open_proposals = await schema.Proposal.find({state: OPEN_STATE});
+		let modified_proposal_list = [];
+		for (let i in open_proposals) {
+			let modified_proposal = JSON.parse(JSON.stringify(open_proposals[i])); // deep copy
+			let timeLeft = Math.max(Date.parse(modified_proposal.timeExp) - Date.now(), 0);
+			modified_proposal.timeLeft = timeLeft;
+			modified_proposal_list.push(modified_proposal);
+		}
+		return {proposals: modified_proposal_list};
 	} catch (err) {
-		console.log("findProposalData success");
+		console.log("findProposalData error");
 		console.log(err);
 	}
 }
@@ -199,6 +208,7 @@ var executeProposal = async function(proposalId) {
 				await schema.MemberTracker.update({id: MEMBER_PROPOSAL_LIST_ID}, {$pull: {members: proposal.proposedMemberAddr}});
 			}
 		}
+		await schema.Proposal.findOneAndUpdate({_id: proposalId}, {state: CLOSED_STATE});
 	} catch (err) {
 		console.log("error in executeProposal");
 		console.log(err);

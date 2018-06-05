@@ -166,7 +166,7 @@ app.get('/member_proposals', async function(request, response) {
 });
 
 app.post('/create_proposal', function(request, response) {
-  console.log("POST /create_proposal " + "proposing_user_addr: " + request.body.user_addr + "more stuff");
+  console.log("POST /create_proposal " + "proposing_user_addr: " + request.body.proposing_user_addr + " more stuff");
   let proposing_user_addr = request.body.proposing_user_addr;
   let proposed_user_addr = request.body.proposed_user_addr;
   let is_add_proposal = request.body.is_add_proposal; 

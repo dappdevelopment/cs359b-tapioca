@@ -9,13 +9,12 @@
 
     xmlProposals.addEventListener('load', function() {
         if (xmlProposals.status == 200) {
-          var proposals = JSON.parse(xmlProposals.responseText)
-          console.log(proposals);
-          NewsfeedView.renderProposalsFeed($proposalsfeed, proposals); 
+          var response = JSON.parse(xmlProposals.responseText);
+          NewsfeedView.renderProposalsFeed($proposalsfeed, response); 
         }
     });
-    xmlProposals.open("GET", NewsfeedView.remoteHost + 'member_proposals', true)
-    xmlProposals.send(null)
+    xmlProposals.open("GET", NewsfeedView.remoteHost + 'member_proposals', true);
+    xmlProposals.send(null);
   };
 
   NewsfeedView.renderProposalPost = function($proposalsfeed, post) {
@@ -87,7 +86,7 @@ function submitProposal() {
     $("#submit_question_error").html("Log in with Metamask to use Tapioca.");
     return;
   }
-  let p_proposing_member = localStorage.getItem("userAccount")
+  let p_proposing_member = localStorage.getItem("userAccount");
 
   let createProposalRequest = new XMLHttpRequest();
   createProposalRequest.addEventListener('load', function() {
@@ -97,7 +96,7 @@ function submitProposal() {
   });
 
   createProposalRequest.open("POST", '/create_proposal');
-  upvoteRequest.setRequestHeader('Content-type', 'application/json')
+  createProposalRequest.setRequestHeader('Content-type', 'application/json')
   createProposalRequest.send(JSON.stringify({proposing_user_addr: p_proposing_member, proposed_user_addr: p_proposed_member, is_add_proposal: p_is_add}))
   
   $("#add_container").css("display", "none");
@@ -170,6 +169,38 @@ function submitQuestion() {
   setTimeout(function() {
       $("#myPopup").hide();
   }, 1000);
+}
+
+function upvoteProposalClicked(element) {
+  console.log("element printing")
+  console.log(element)
+  PostModel.upvoteProposal(element.className, localStorage.getItem("userAccount"));
+  var upvotes = $('.' + element.className + '.upvote_count').html(); 
+  console.log("upvotes query: " + upvotes)
+  var counts_str = upvotes.split(' ')[1]; 
+
+  var count = parseInt(counts_str); 
+  count += 1
+  console.log("upvote count: " + count)
+  $('.' + element.className + '.upvote_count').html("Upvotes: " + count)
+  $('input[name=upvote]').remove()
+  $('.' + element.className).append("<p>You have already voted on this proposal</p>");
+}
+
+function downvoteProposalClicked(element) {
+  console.log("element printing")
+  console.log(element)
+  PostModel.downvoteProposal(element.className, localStorage.getItem("userAccount"));
+  var upvotes = $('.' + element.className + '.upvote_count').html(); 
+  console.log("upvotes query: " + upvotes)
+  var counts_str = upvotes.split(' ')[1]; 
+
+  var count = parseInt(counts_str); 
+  count += 1
+  console.log("upvote count: " + count)
+  $('.' + element.className + '.upvote_count').html("Upvotes: " + count)
+  $('input[name=upvote]').remove()
+  $('.' + element.className).append("<p>You have already voted on this proposal</p>");
 }
 
 function openTab(evt, tabName) {
