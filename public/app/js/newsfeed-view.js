@@ -31,7 +31,8 @@
   }
 
   NewsfeedView.renderMemberList = function($memberlist, response) {
-    $memberlist.html(response.members);
+    console.log("response json: " + JSON.stringify(response));
+    $memberlist.html("members: " + JSON.stringify(response.members));
   }
 
   /* Renders the newsfeed into the given $newsfeed element. */
