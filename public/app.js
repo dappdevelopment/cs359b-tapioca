@@ -226,6 +226,7 @@ async function initDB() {
   let returnData = await model.createQuestion(50, 10, 1, 23, "how do i make friends", "i have no friends", askerAddr);
   let answerObject = await model.createAnswer(answererAddr, returnData.questionId, "plastic surgery");
   // await model.markQuestionClosed(returnData.questionId);
+  let memberList = await model.initializeMemberList(); // This must be called if the DB is cleared.
 }
 
 async function test() {
