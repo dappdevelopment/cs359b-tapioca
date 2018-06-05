@@ -16,6 +16,9 @@ var SETTLED_STATE = 3;
 var ADD_PROPOSAL = 4;
 var REMOVE_PROPOSAL = 5;
 
+// Member proposal list ID
+var MEMBER_PROPOSAL_LIST_ID = "member_proposal_list";
+
 mongoose.connect(uristring, function (err, res) {
     if (err) {
       	console.log ('ERROR connecting to: ' + uristring + '. ' + err);
@@ -49,7 +52,7 @@ async function markQuestionClosed(questionId) {
 	let winning_votes = -1; 
 	let winning_answer_text = "";
 	let winning_answer_id = "";
-	if (answers.length == 0) { // adding a placeholder "question closed" answer
+	if (answers.length === 0) { // adding a placeholder "question closed" answer
 		let placeholder_answer = await createAnswer(updated_question[0]._doc.askerAddr, questionId, "No answer was received for this question... refunding bounty.");
 		answers.push(placeholder_answer);
 	}
@@ -188,10 +191,28 @@ var executeProposal = async function(proposalId) {
 		let upvoteCount = proposal.upvotes.length;
 		let downvoteCount = proposal.downvotes.length;
 		if (upvoteCount > downvoteCount) { // execute proposal
-			if (proposal.type == ADD_PROPOSAL) {
-				await schema.MemberTracker.findOneAndUpdate({}) // TODO: start here.
+			if (proposal.type === ADD_PROPOSAL) {
+				console.log("executeProposal: executing add proposal");
+				await schema.MemberTracker.findOneAndUpdate({id: MEMBER_PROPOSAL_LIST_ID}, {$push: {members: proposal.proposedMemberAddr}}, {upsert: true});
+			} else {
+				console.log("executeProposal: executing remove proposal");
+				await schema.MemberTracker.update({id: MEMBER_PROPOSAL_LIST_ID}, {$pull: {members: proposal.proposedMemberAddr}});
 			}
 		}
+	} catch (err) {
+		console.log("error in executeProposal");
+		console.log(err);
+	}
+}
+
+var checkMembershipStatus = async function(memberId) {
+	try {
+		let membershipDoc = await schema.MemberTracker.find({id: MEMBER_PROPOSAL_LIST_ID});
+		let membershipList = membershipDoc[0]._doc;
+		return membershipList.includes(memberId);
+	} catch (err) {
+		console.log("error in checkMembershipStatus");
+		console.log(err);
 	}
 }
 
@@ -201,6 +222,7 @@ var resetDB = async function() {
 		await schema.Question.remove({});
 		await schema.User.remove({});
 		await schema.Proposal.remove({});
+		await schema.MemberTracker.remove({});
 		console.log("successful deletion");
 	} catch (err) {
 		console.log("error during removal");
@@ -212,10 +234,6 @@ var findQuestionFeedData = async function() {
 	try {
 		let questions = await schema.Question.find({});
 		let users = await schema.User.find({});
-		// let userMap = {};
-		// for (user of users){
-		// 	userMap[user._id] = user.address; // map from user to their eth address.
-		// }
 		let modified_question_list = [];
 		for (let i in questions) {
 			let modified_question = JSON.parse(JSON.stringify(questions[i])); // deep copy 
@@ -299,6 +317,20 @@ var findUser = async function(userId) {
 	}
 }
 
+var initializeMemberList = async function() {
+	try {
+		let memberProposalList = new schema.MemberTracker ({
+			id: MEMBER_PROPOSAL_LIST_ID,
+			members: []
+		});
+		memberProposalList.save();
+		return memberProposalList;
+	} catch (err) {
+		console.log("error in initializeMemberList");
+		console.log(err);
+	}
+}
+
 module.exports.createUser = createUser;
 module.exports.createQuestion = createQuestion;
 module.exports.createAnswer = createAnswer;
@@ -311,6 +343,11 @@ module.exports.findQuestionFeedData = findQuestionFeedData;
 module.exports.findQuestionData = findQuestionData;
 module.exports.markQuestionClosed = markQuestionClosed;
 module.exports.findQuestionsAnswered = findQuestionsAnswered;
-
+module.exports.initializeMemberList = initializeMemberList;
+module.exports.voteOnProposal = voteOnProposal;
+module.exports.createProposal = createProposal;
+module.exports.findOpenProposals = findOpenProposals;
+module.exports.executeProposal = executeProposal;
+module.exports.checkMembershipStatus = checkMembershipStatus;
 
 

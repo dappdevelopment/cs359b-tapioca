@@ -40,8 +40,9 @@ var ProposalSchema = new mongoose.Schema({
     state: {type: Number}
 });
 
-var MemberTrackerSchema = new mongoose.Schema({
-    members: [{}]
+var MemberTrackerSchema = new mongoose.Schema({ // There should only be one of these.
+    members: [{}],
+    id: {type: String}
 })
 
 // the schema is useless so far
