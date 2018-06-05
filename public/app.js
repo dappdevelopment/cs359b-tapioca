@@ -169,7 +169,7 @@ app.post('/create_proposal', function(request, response) {
   console.log("POST /create_proposal " + "proposing_user_addr: " + request.body.proposing_user_addr + " more stuff");
   let proposing_user_addr = request.body.proposing_user_addr;
   let proposed_user_addr = request.body.proposed_user_addr;
-  let is_add_proposal = request.body.is_add_proposal; 
+  let is_add_proposal = request.body.is_add_proposal;
   model.createProposal(proposing_user_addr, proposed_user_addr, is_add_proposal);
   response.set('Content-type', 'application/json');
   response.status(STATUS_OK);

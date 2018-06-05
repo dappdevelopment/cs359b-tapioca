@@ -37,7 +37,8 @@ var ProposalSchema = new mongoose.Schema({
     proposedMemberAddr: {type: String},
     proposingMemberAddr: {type: String},
     timeExp: {type: Date},
-    state: {type: Number}
+    state: {type: Number},
+    type: {type: Number}
 });
 
 var MemberTrackerSchema = new mongoose.Schema({ // There should only be one of these.

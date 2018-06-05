@@ -4,13 +4,14 @@
   NewsfeedView.remoteHost = "http://127.0.0.1:3000/"
   NewsfeedView.pendingQuestions = {}; 
 
-  NewsfeedView.renderProposals = function($proposalsfeed) {
+  NewsfeedView.renderProposals = function($proposalsfeed, $memberlist) {
     var xmlProposals = new XMLHttpRequest(); 
 
     xmlProposals.addEventListener('load', function() {
         if (xmlProposals.status == 200) {
           var response = JSON.parse(xmlProposals.responseText);
           NewsfeedView.renderProposalsFeed($proposalsfeed, response); 
+          NewsfeedView.renderMemberList($memberlist, response);
         }
     });
     xmlProposals.open("GET", NewsfeedView.remoteHost + 'member_proposals', true);
@@ -26,7 +27,11 @@
   NewsfeedView.renderProposalsFeed = function($proposalsfeed, response) {
     response.proposals.forEach(function(value) {
       NewsfeedView.renderProposalPost($proposalsfeed, value, false); 
-    })
+    });
+  }
+
+  NewsfeedView.renderMemberList = function($memberlist, response) {
+    $memberlist.html(response.members);
   }
 
   /* Renders the newsfeed into the given $newsfeed element. */
@@ -79,8 +84,13 @@
 
 function submitProposal() { 
   console.log("submitting proposal");
-  let p_proposed_member = $("#proposal_member").val()
-  let p_is_add = $("#is_add").val()
+  let p_proposed_member = $("#proposal_member").val();
+  let p_proposal_type = $("#proposal_type").val();
+  console.log("submitProposal: p_proposal_type: " + p_proposal_type);
+  let p_is_add = false;
+  if (p_proposal_type === "add") {
+    p_is_add = true;
+  }
 
   if (!localStorage.getItem("userAccount")) {
     $("#submit_question_error").html("Log in with Metamask to use Tapioca.");

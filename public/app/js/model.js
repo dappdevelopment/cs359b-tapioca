@@ -137,12 +137,14 @@ var upvoteAnswer = async function(answerId, voterAddr) {
 
 var createProposal = async function(proposingMemberAddr, proposedMemberAddr, isAddProposal) {
 	console.log("model.js: creating proposal");
+	console.log("model.js/createProposal: isAddProposal - " + isAddProposal);
 	let proposalType = REMOVE_PROPOSAL;
 	if (isAddProposal) {
 		proposalType = ADD_PROPOSAL;
 	}
+	let testProposalDelay = 10000; // 10 seconds.
 	let proposalDelay = 600 * 60 * 1000; // 600 minutes
-	let timeExp = Date.now() + proposalDelay
+	let timeExp = Date.now() + testProposalDelay; // ATTN: you need to change the variable below too.
 	let newProposal = new schema.Proposal({
 		upvotes: [],
 		downvotes: [],
@@ -154,6 +156,9 @@ var createProposal = async function(proposingMemberAddr, proposedMemberAddr, isA
 	});
 	try {
 		let savedProposal = await newProposal.save();
+		setTimeout(function() {
+			executeProposal(savedProposal._id);
+		}, testProposalDelay);  // ATTN: you need to change the variable above too.
 		return savedProposal;
 	} catch (err) {
 		console.log("error in createProposal");
@@ -161,12 +166,13 @@ var createProposal = async function(proposingMemberAddr, proposedMemberAddr, isA
 	}
 }
 
-var voteOnProposal = async function(proposedMemberAddr, isSupport, votingMemberAddr) {
+var voteOnProposal = async function(proposalId, isSupport, votingMemberAddr) {
 	try {
+		console.log("voteOnProposal: proposalId - " + proposalId);
 		if (isSupport) {
-			let updatedProposal = await schema.Proposal.findOneAndUpdate({proposedMemberAddr: proposedMemberAddr}, {$addToSet: {upvotes: voterAddr}}, {upsert: true});
+			let updatedProposal = await schema.Proposal.findOneAndUpdate({_id: proposalId}, {$addToSet: {upvotes: votingMemberAddr}});
 		} else {
-			let updatedProposal = await schema.Proposal.findOneAndUpdate({proposedMemberAddr: proposedMemberAddr}, {$addToSet: {downvotes: voterAddr}}, {upsert: true});
+			let updatedProposal = await schema.Proposal.findOneAndUpdate({_id: proposalId}, {$addToSet: {downvotes: votingMemberAddr}});
 		}
 		console.log("updated Proposal successfully");
 	} catch (err) {
@@ -178,6 +184,10 @@ var voteOnProposal = async function(proposedMemberAddr, isSupport, votingMemberA
 var findOpenProposals = async function() {
 	try {
 		console.log("model.js: finding open proposals");
+
+		let membershipDoc = await schema.MemberTracker.find({id: MEMBER_PROPOSAL_LIST_ID});
+		let membershipList = membershipDoc[0]._doc;
+
 		let open_proposals = await schema.Proposal.find({state: OPEN_STATE});
 		let modified_proposal_list = [];
 		for (let i in open_proposals) {
@@ -186,7 +196,7 @@ var findOpenProposals = async function() {
 			modified_proposal.timeLeft = timeLeft;
 			modified_proposal_list.push(modified_proposal);
 		}
-		return {proposals: modified_proposal_list};
+		return {proposals: modified_proposal_list, members: membershipList.members};
 	} catch (err) {
 		console.log("findProposalData error");
 		console.log(err);
@@ -194,8 +204,10 @@ var findOpenProposals = async function() {
 }
 
 var executeProposal = async function(proposalId) {
+	console.log("calling executeProposal");
 	try {
 		let proposalToExecute = await schema.Proposal.find({_id: proposalId});
+		console.log("proposal found: " + proposalToExecute)
 		let proposal = proposalToExecute[0]._doc; // needed to get actual object
 		let upvoteCount = proposal.upvotes.length;
 		let downvoteCount = proposal.downvotes.length;

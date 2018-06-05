@@ -44,9 +44,12 @@
       <div class="add_content">
         <span class="close" onclick="closeProposalModal()">&times;</span>
         <h1>New Proposal</h1> <br/>
-        <input type="text" id="proposal_member" placeholder="Proposal Member Address" style="width: 100%;">
-        
-        <br/> <br/>
+        <input type="text" id="proposal_member" placeholder="Proposal Member Address" style="width: 100%;"> <br/>
+        <select id="proposal_type">
+            <option value="add">Add new member</option>
+            <option value="remove">Remove existing member</option>
+        </select>
+        <br/>
         <button onclick="submitProposal()">Submit Proposal</button>
       </div>
     </div>
@@ -96,6 +99,7 @@
     </div>
 
     <div id="MemberProposals" class="tabcontent">
+      <div id="member-list"></div>
       <div id="member-proposals">
         <ul id="member_proposals_list">
         </ul>
