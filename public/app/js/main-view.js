@@ -20,3 +20,12 @@ function closeModal() {
 	$("#add_container").css("display", "none");
 }
 
+function openProposalModal() { 
+	console.log("opening proposal modal")
+	$("#create_proposal_container").css("display", "block");
+}
+
+function closeProposalModal() { 
+	$("#create_proposal_container").css("display", "none");
+}
+

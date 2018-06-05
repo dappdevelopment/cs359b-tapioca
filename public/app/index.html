@@ -18,7 +18,10 @@
         <div style="float: right;margin-top: 20px;"> 
           <p id="user_address" style="color:white;">Log in with Metamask ↗</p>
           <button type="submit"  onclick="openModal()" style="float: right;">
-                Submit Question
+            Submit Question
+          </button>
+          <button type="submit"  onclick="openProposalModal()" style="float: right;">
+            Create Proposal
           </button>
 
           <!--<button id="link-to-metamask">Link To Metamask</button>-->
@@ -37,7 +40,17 @@
       </div>
     </header>
 
-    
+    <div id="create_proposal_container" class="modal">
+      <div class="add_content">
+        <span class="close" onclick="closeProposalModal()">&times;</span>
+        <h1>New Proposal</h1> <br/>
+        <input type="text" id="proposal_member" placeholder="Proposal Member Address" style="width: 100%;">
+        
+        <br/> <br/>
+        <button onclick="submitProposal()">Submit Proposal</button>
+      </div>
+    </div>
+
     <!-- Question-Posting Modal -->
     <div id="add_container" class="modal">
       <div class="add_content">

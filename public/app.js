@@ -155,11 +155,42 @@ app.post('/submit_question', async function(request, response) {
   })*/
 });
 
-app.post('/upvote', function(request, response) {
-  console.log("POST /upvotes " + "user_addr: " + request.body.user_addr + "; answer_ID: " + request.body.answer_id);
-  let answer_id = ObjectId(request.body.answer_id);
+app.get('/member_proposals', async function(request, response) {
+  console.log("/GET member_propsals")
+
+  let proposals = await model.findOpenProposals(); 
+
+  response.set('Content-type', 'application/json');
+	response.status(STATUS_OK);
+	response.send(JSON.stringify(proposals));
+});
+
+app.post('/create_proposal', function(request, response) {
+  console.log("POST /create_proposal " + "proposing_user_addr: " + request.body.user_addr + "more stuff");
+  let proposing_user_addr = request.body.proposing_user_addr;
+  let proposed_user_addr = request.body.proposed_user_addr;
+  let is_add_proposal = request.body.is_add_proposal; 
+  model.createProposal(proposing_user_addr, proposed_user_addr, is_add_proposal);
+  response.set('Content-type', 'application/json');
+  response.status(STATUS_OK);
+  response.send();
+})
+
+app.post('/upvote_proposal', function(request, response) {
+  console.log("POST /upvote_proposal " + "user_addr: " + request.body.user_addr + "; post_ID: " + request.body.post_id);
+  let post_id = ObjectId(request.body.post_id);
   let user_addr = request.body.user_addr;
-  model.upvoteAnswer(answer_id, user_addr);
+  model.voteOnProposal(post_id, true, user_addr);
+  response.set('Content-type', 'application/json');
+  response.status(STATUS_OK);
+  response.send();
+})
+
+app.post('/downvote_proposal', function(request, response) {
+  console.log("POST /upvote_proposal " + "user_addr: " + request.body.user_addr + "; post_ID: " + request.body.post_id);
+  let post_id = ObjectId(request.body.post_id);
+  let user_addr = request.body.user_addr;
+  model.voteOnProposal(post_id, false, user_addr);
   response.set('Content-type', 'application/json');
   response.status(STATUS_OK);
   response.send();

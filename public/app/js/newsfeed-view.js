@@ -78,6 +78,35 @@
   window.NewsfeedView = NewsfeedView;
 })();
 
+function submitProposal() { 
+  console.log("submitting proposal");
+  let p_proposed_member = $("#proposal_member").val()
+  let p_is_add = $("#is_add").val()
+
+  if (!localStorage.getItem("userAccount")) {
+    $("#submit_question_error").html("Log in with Metamask to use Tapioca.");
+    return;
+  }
+  let p_proposing_member = localStorage.getItem("userAccount")
+
+  let createProposalRequest = new XMLHttpRequest();
+  createProposalRequest.addEventListener('load', function() {
+      if (createProposalRequest.status === 200) {
+        console.log("created proposal");
+      }
+  });
+
+  createProposalRequest.open("POST", '/create_proposal');
+  upvoteRequest.setRequestHeader('Content-type', 'application/json')
+  createProposalRequest.send(JSON.stringify({proposing_user_addr: p_proposing_member, proposed_user_addr: p_proposed_member, is_add_proposal: p_is_add}))
+  
+  $("#add_container").css("display", "none");
+  $("#myPopup").show(); 
+  setTimeout(function() {
+      $("#myPopup").hide();
+  }, 1000);
+}
+
 function submitQuestion() { 
   console.log("submitting question");
   let q_title = $("#question_title").val()
