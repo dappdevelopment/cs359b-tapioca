@@ -37,7 +37,10 @@
         let highest_answerer_id = getTopAnswer(question_detail);
         if (localStorage.getItem("userAccount") == highest_answerer_id) { 
           // make account more accessible
-          $("#master").css('display', 'block')
+          let timeLeft = Math.max(Date.parse(QuestionView.question_detail.question.timeExp) - Date.now(), 0);
+          if (timeLeft < 0) {
+            $("#master").css('display', 'block')
+          }
         }
       }
     });
