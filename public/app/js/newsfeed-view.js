@@ -4,9 +4,39 @@
   NewsfeedView.remoteHost = "http://127.0.0.1:3000/"
   NewsfeedView.pendingQuestions = {}; 
 
+  NewsfeedView.renderProposals = function($proposalsfeed, $memberlist) {
+    var xmlProposals = new XMLHttpRequest(); 
+
+    xmlProposals.addEventListener('load', function() {
+        if (xmlProposals.status == 200) {
+          var response = JSON.parse(xmlProposals.responseText);
+          NewsfeedView.renderProposalsFeed($proposalsfeed, response); 
+          NewsfeedView.renderMemberList($memberlist, response);
+        }
+    });
+    xmlProposals.open("GET", NewsfeedView.remoteHost + 'member_proposals', true);
+    xmlProposals.send(null);
+  };
+
+  NewsfeedView.renderProposalPost = function($proposalsfeed, post) {
+    console.log("rendering proposal");
+    var postHtml = Templates.renderProposalPost(post);
+    $proposalsfeed.append(postHtml);
+  }
+
+  NewsfeedView.renderProposalsFeed = function($proposalsfeed, response) {
+    response.proposals.forEach(function(value) {
+      NewsfeedView.renderProposalPost($proposalsfeed, value, false); 
+    });
+  }
+
+  NewsfeedView.renderMemberList = function($memberlist, response) {
+    console.log("response json: " + JSON.stringify(response));
+    $memberlist.html("members: " + JSON.stringify(response.members));
+  }
+
   /* Renders the newsfeed into the given $newsfeed element. */
   NewsfeedView.render = function($newsfeed, isMyAnswers) {
-    console.log("oiefiowe - " + isMyAnswers);
     // TODO: replace with database call.
     var xmlQuestions = new XMLHttpRequest(); 
 
@@ -52,6 +82,40 @@
 
   window.NewsfeedView = NewsfeedView;
 })();
+
+function submitProposal() { 
+  console.log("submitting proposal");
+  let p_proposed_member = $("#proposal_member").val();
+  let p_proposal_type = $("#proposal_type").val();
+  console.log("submitProposal: p_proposal_type: " + p_proposal_type);
+  let p_is_add = false;
+  if (p_proposal_type === "add") {
+    p_is_add = true;
+  }
+
+  if (!localStorage.getItem("userAccount")) {
+    $("#submit_question_error").html("Log in with Metamask to use Tapioca.");
+    return;
+  }
+  let p_proposing_member = localStorage.getItem("userAccount");
+
+  let createProposalRequest = new XMLHttpRequest();
+  createProposalRequest.addEventListener('load', function() {
+      if (createProposalRequest.status === 200) {
+        console.log("created proposal");
+      }
+  });
+
+  createProposalRequest.open("POST", '/create_proposal');
+  createProposalRequest.setRequestHeader('Content-type', 'application/json')
+  createProposalRequest.send(JSON.stringify({proposing_user_addr: p_proposing_member, proposed_user_addr: p_proposed_member, is_add_proposal: p_is_add}))
+  
+  $("#create_proposal_container").css("display", "none");
+  $("#proposalCreatedPopup").show(); 
+  setTimeout(function() {
+      $("#proposalCreatedPopup").hide();
+  }, 1000);
+}
 
 function submitQuestion() { 
   console.log("submitting question");
@@ -116,6 +180,40 @@ function submitQuestion() {
   setTimeout(function() {
       $("#myPopup").hide();
   }, 1000);
+}
+
+function upvoteProposalClicked(element) {
+  console.log("element printing")
+  console.log(element)
+  PostModel.upvoteProposal(element.className, localStorage.getItem("userAccount"));
+  var votes = $('.' + element.className + '.vote_count').html(); 
+  console.log("votes query: " + votes)
+  var counts_str = votes.split(' ')[3]; // hard coded for now
+
+  var count = parseInt(counts_str); 
+  count += 1
+  console.log("vote count: " + count)
+  $('.' + element.className + '.vote_count').html("Current Vote Count: " + count)
+  $('input[name=upvote' + element.className + ']').remove()
+  $('input[name=downvote' + element.className + ']').remove()
+  $('.' + element.className).append("<p>You have already voted on this proposal</p>");
+}
+
+function downvoteProposalClicked(element) {
+  console.log("element printing")
+  console.log(element)
+  PostModel.downvoteProposal(element.className, localStorage.getItem("userAccount"));
+  var votes = $('.' + element.className + '.vote_count').html(); 
+  console.log("votes query: " + votes)
+  var counts_str = votes.split(' ')[3]; 
+
+  var count = parseInt(counts_str); 
+  count -= 1
+  console.log("vote count: " + count)
+  $('.' + element.className + '.vote_count').html("Current Vote Count: " + count)
+  $('input[name=upvote' + element.className + ']').remove()
+  $('input[name=downvote' + element.className + ']').remove()
+  $('.' + element.className).append("<p>You have already voted on this proposal</p>");
 }
 
 function openTab(evt, tabName) {
