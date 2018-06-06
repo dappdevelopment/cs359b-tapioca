@@ -51,7 +51,9 @@ app.get('/question_feed', async function(request, response) {
 app.get('/my_answers_feed', async function(request, response) {
   console.log("/GET my_answers_feed")
 
-  let questions_answered = await model.findQuestionsAnswered(); 
+  let questions_answered = await model.findQuestionsAnswered(request.query.user_addr); 
+
+  console.log("questions_answered: " + JSON.stringify(questions_answered));
 
 	response.set('Content-type', 'application/json');
 	response.status(STATUS_OK);

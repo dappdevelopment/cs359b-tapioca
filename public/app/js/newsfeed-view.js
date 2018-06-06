@@ -49,11 +49,11 @@
     });
     if (isMyAnswers) {
       let user_addr = localStorage.getItem("userAccount");
-      xmlQuestions.open("GET", NewsfeedView.remoteHost + 'my_answers_feed' + "?user_addr=" + encodeURIComponent(user_addr), true)
-      xmlQuestions.send(null) 
+      xmlQuestions.open("GET", NewsfeedView.remoteHost + 'my_answers_feed' + "?user_addr=" + encodeURIComponent(user_addr), true);
+      xmlQuestions.send(null);
     } else {
-      xmlQuestions.open("GET", NewsfeedView.remoteHost + 'question_feed', true)
-      xmlQuestions.send(null)
+      xmlQuestions.open("GET", NewsfeedView.remoteHost + 'question_feed', true);
+      xmlQuestions.send(null);
     }
   };
 
