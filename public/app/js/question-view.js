@@ -20,7 +20,8 @@
   }
 
   function adaptElements($newsfeed, post, users) { 
-    $('.left_column h1').first().html(post.bounty + " WEI");
+    let bountyInETH = post.bounty / 1000000000000000000
+    $('.left_column h1').first().html(bountyInETH + " ETH");
     $('.left_column h5').first().html(post.askerAddr);
 
     $('.right_column h1').first().html(post.title);

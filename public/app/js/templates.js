@@ -48,12 +48,13 @@
     let days = Math.floor(post.timeLeft / (24 * 3600 * 1000))
     let hours = Math.floor((post.timeLeft % (24 * 3600 * 1000)) / (3600 * 1000))
     let minutes = Math.ceil((post.timeLeft % (3600 * 1000)) / (60 * 1000))
+    let bountyInETH = post.bounty / 1000000000000000000
     if (show_link) {
       return tag('li', {display: "inline-block", class: "post-block"}, [
         tag('div', {class: "post-state-" + post.state}, ''),
         tag('div', {class: 'meta'}, [
           tag('div', {class: 'left_title'}, [
-              tag('h1', {class: "q-title"}, post.bounty + " WEI"),
+              tag('h1', {class: "q-title"}, bountyInETH + " ETH"),
               tag('h2', {class: "q-description"}, "Time Left: " + days + " days, " + hours + " hrs, " + minutes + " mins"),
               tag('h5', {class: "q-details"}, post.askerAddr), 
               ]),
@@ -68,7 +69,7 @@
       return tag('li', {display: "inline-block", class: "question"}, [
         tag('div', {class: 'meta'}, [
           tag('div', {class: 'left_title'}, [
-              tag('h1', {}, post.bounty + " ETH"),
+              tag('h1', {}, bountyInETH + " ETH"),
               tag('h5', {}, post.askerAddr)
               ]),
           tag('div', {class: 'right_title'}, [
