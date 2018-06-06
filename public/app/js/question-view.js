@@ -28,7 +28,31 @@
     $('.right_column h3').first().html(post.body);
   }
 
+  QuestionView.prepareButton = function() { 
+    var xmlQuestionDetail = new XMLHttpRequest();
+
+    xmlQuestionDetail.addEventListener('load', function() {
+      if (xmlQuestionDetail.status === 200) {
+        let question_detail = JSON.parse(xmlQuestionDetail.responseText);
+        QuestionView.question_detail = question_detail
+        let highest_answerer_id = getTopAnswer(question_detail);
+        if (localStorage.getItem("userAccount") == highest_answerer_id) { 
+          // make account more accessible
+          let timeLeft = Date.parse(QuestionView.question_detail.question.timeExp) - Date.now();
+          if (timeLeft < 0) {
+            $("#master").css('display', 'block')
+          }
+        }
+      }
+    });
+
+    xmlQuestionDetail.open("GET", QuestionView.remoteHost + 'question_detail' + "?q_id=" + encodeURIComponent(QuestionView.post_data._id));
+    xmlQuestionDetail.send(null);
+  }
+
+
   QuestionView.render = function($newsfeed) { 
+    console.log("QuestionView Rednerring...")
     // TODO: replace with database call.
     var xmlQuestionDetail = new XMLHttpRequest(); 
 
@@ -46,9 +70,6 @@
     xmlQuestionDetail.open("GET", QuestionView.remoteHost + 'question_detail' + "?q_id=" + encodeURIComponent(question_id));
     xmlQuestionDetail.send(null);
 
-    if (localStorage.getItem("userAccount") === 0x067EAA4c5317318FC9BABE105C818E73629495fA) {
-      $("#master").css('display', 'block');
-    }
   }
 
 
@@ -56,6 +77,8 @@
   QuestionView.renderQuestion = function($newsfeed, post) {
     var post_data = post.question;
     QuestionView.post_data = post_data;
+    console.log("post data")
+    console.log(post_data)
 
     adaptElements($newsfeed, post_data, post.users); 
 
@@ -93,6 +116,7 @@
         $answers_view.append(Templates.renderAnswer(answers[answer], canUpvote, isOpen));
       }
     }
+    QuestionView.prepareButton(); 
   };
 
   window.QuestionView = QuestionView; 
@@ -102,8 +126,8 @@
 //upvotes: 
         // $('#display').text(balance + " CDT")
 function upvoteClicked(element) {
-  console.log("element printing")
-  console.log(element)
+  upvote(QuestionView.question_detail.question.questionHash, QuestionView.question_detail.question.questionHash) // should be an answer hash 
+
   PostModel.upvote(element.className, localStorage.getItem("userAccount"));
   var upvotes = $('.' + element.className + '.upvote_count').html(); 
   console.log("upvotes query: " + upvotes)
@@ -131,6 +155,11 @@ function submitAnswer() {
   console.log("answer_submission " + box_text)
   console.log(QuestionView.question_id)
   console.log(localStorage.getItem("userAccount"))
+
+  console.log("submit answer question view")
+  console.log(QuestionView.question_detail.question)
+  addAnswer(QuestionView.question_detail.question.questionHash, QuestionView.question_detail.question.questionHash)
+
   answer_data = {
     question_id: QuestionView.question_id,
     user_addr: localStorage.getItem("userAccount"), 
@@ -144,8 +173,9 @@ function submitAnswer() {
   document.getElementById("answer_input").value = "";
 }
 
+
 function getTopAnswer(question_detail) {
-  let answerMap = question_detail.answers;
+  let answerMap = QuestionView.question_detail.answers;
   let questionAnswerIds = question_detail.question.answers;
   let highest_vote_count = -1;
   let highest_answerer_id = "";
@@ -160,22 +190,7 @@ function getTopAnswer(question_detail) {
 }
 
 function closeQuestion() {
-  console.log("closing question");
-  var xmlQuestionDetail = new XMLHttpRequest();
-
-  xmlQuestionDetail.addEventListener('load', function() {
-    if (xmlQuestionDetail.status === 200) {
-      let question_detail = JSON.parse(xmlQuestionDetail.responseText);
-      let highest_answerer_id = getTopAnswer(question_detail);
-      console.log("winner is " + highest_answerer_id);
-      console.log(question_detail);
-      console.log("call metamask");
-      distributeBounty(highest_answerer_id, 1234, question_detail.question.questionHash);
-    }
-  });
-
-  xmlQuestionDetail.open("GET", QuestionView.remoteHost + 'question_detail' + "?q_id=" + encodeURIComponent(QuestionView.post_data._id));
-  xmlQuestionDetail.send(null);
+  distributeBounty(QuestionView.question_detail.question.questionHash);
 }
 
 

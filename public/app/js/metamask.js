@@ -80,18 +80,37 @@ function app() {
     window.collectBounty = function (qHash, bounty, time, callback) {
         console.log("type: " + typeof qHash);
         console.log("collected bounty with qHash: " + qHash + " and bounty: " + bounty);
-        contract.methods.collectBounty(web3.utils.toBN(qHash), time).send({from: userAccount, to: contractAddress, value: bounty})
+        console.log("collect bounty" + qHash)
+        /*contract.methods.collectBounty(web3.utils.toBN(qHash), time).send({from: userAccount, to: contractAddress, value: bounty})
+            .then(callback)
+            .catch(console.error);*/
+        contract.methods.collectBounty(qHash, time).send({from: userAccount, to: contractAddress, value: bounty})
             .then(callback)
             .catch(console.error);
         console.log("collected bounty")
     };
 
-    window.distributeBounty = function (answerer, aHash, qHash) {
-        console.log("distributing bounty with answerer: " + answerer + " aHash: " + aHash + " qHash: " + qHash);
-        contract.methods.distributeBounty(answerer, aHash, qHash).send({from: userAccount})
+    window.distributeBounty = function (qHash) {
+        contract.methods.distributeBounty(web3.utils.toBN(qHash)).send({from: userAccount})
             .then(refreshBalance)
             .catch(console.error);
     };
+
+
+    window.upvote = function(qHash, aHash) { 
+        contract.methods.addAnswerUpvote(web3.utils.toBN(qHash), web3.utils.toBN(aHash)).send({from: userAccount})
+            .catch(console.error)
+    }
+
+    window.addAnswer = function(qHash, aHash) { 
+        console.log("trying to add answer")
+        console.log("addAnswer" + qHash)
+        /*
+        contract.methods.addAnswer(web3.utils.toBN(qHash), web3.utils.toBN(aHash)).send({from: userAccount})
+            .catch(console.error)*/
+        contract.methods.addAnswer(qHash, aHash).send({from: userAccount})
+            .catch(console.error)
+    }
 
     $("#link-to-metamask").click(function() {
         console.log("userAccount in metamask.js click function:" + userAccount); 

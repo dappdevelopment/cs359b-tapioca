@@ -124,16 +124,16 @@ contract BountyDistribution {
     }
 
     // Q&A Functions
-    function addAnswer(uint256 _qHash, uint256 _aHash) onlyMembers public {
-        require(questions[_qHash].isValue && !questions[_qHash].settled);
-        questions[_qHash].answers[questions[_qHash].numAnswers] = Answer({
+    function addAnswer(uint256 qHash, uint256 aHash) onlyMembers public {
+        require(questions[qHash].isValue && !questions[qHash].settled);
+        questions[qHash].answers.push(Answer({
             answererAddr: msg.sender,
-            answerHash: _aHash,
+            answerHash: aHash,
             numUpvotes: 0,
             isValue: true
-        }); 
-        questions[_qHash].indexes[_aHash] = questions[_qHash].numAnswers; 
-        questions[_qHash].numAnswers++; 
+        }));
+        questions[qHash].indexes[aHash] = questions[qHash].numAnswers; 
+        questions[qHash].numAnswers++; 
     }
 
     function addAnswerUpvote(uint256 _qHash, uint256 _aHash) onlyMembers public { 
@@ -148,8 +148,11 @@ contract BountyDistribution {
 
     function distributeBounty(uint256 _qHash) onlyMembers public {
         require(questions[_qHash].isValue && !questions[_qHash].settled);
-        require(now > questions[_qHash].minExecutionDate); 
+        //require(now > questions[_qHash].minExecutionDate); 
 
+        msg.sender.transfer(questions[_qHash].bounty); 
+
+        /*
 
         if (questions[_qHash].numAnswers == 0) {
             refundBounty(_qHash); 
@@ -166,7 +169,7 @@ contract BountyDistribution {
             }  
             highestAddress.transfer(questions[_qHash].bounty);
             questions[_qHash].settled = true;
-        }
+        }*/
     }
 
     function refundBounty(uint256 _qHash) private {
