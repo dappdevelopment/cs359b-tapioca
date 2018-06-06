@@ -40,7 +40,7 @@
     addPostRequest.onreadystatechange = function() {
       if (addPostRequest.readyState === 4) {
         callback(addPostRequest.response);
-        //window.location.reload(true);
+        window.location.reload(true);
         console.log(addPostRequest.response);
       }
     }
