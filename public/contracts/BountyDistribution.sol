@@ -148,7 +148,7 @@ contract BountyDistribution {
 
     function distributeBounty(uint256 _qHash) onlyMembers public {
         require(questions[_qHash].isValue && !questions[_qHash].settled);
-        require(now > questions[_qHash].minExecutionDate); 
+        //require(now > questions[_qHash].minExecutionDate); 
 
         msg.sender.transfer(questions[_qHash].bounty); 
 

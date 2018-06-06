@@ -187,7 +187,7 @@ function getTopAnswer(question_detail) {
 }
 
 function closeQuestion() {
-  distributeBounty(question_detail.question.questionHash);
+  distributeBounty(QuestionView.question_detail.question.questionHash);
 }
 
 
