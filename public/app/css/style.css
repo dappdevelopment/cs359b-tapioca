@@ -1,6 +1,14 @@
+.tapioca-title {
+  font-family: 'Montserrat', sans-serif; 
+  font-weight: 700;
+  font-size: 50px;
+  letter-spacing: 1px;
+  padding-top: 10px;
+}
+
 body {
   color: #fff;
-  font: 16px/1.5 "Cabin", "Helvetica Neue", Helvetica, Arial, Sans-serif;
+  font-family: 'Open Sans', sans-serif;
   background: #ecf0f1;
 }
 
@@ -13,21 +21,37 @@ p {
   text-decoration: none;
 }
 
-.post-state-2 {
-  background-color: #f46842;
-}
-.post-state-1 {
-  background-color: #41f4ac;
+.post-block {
+  display: flex;
 }
 
+.post-state-2 {
+  background-color: #e03000;
+  width: 8px;
+}
+
+.post-state-1 {
+  background-color: #00bb0e;
+  width: 8px;
+}
+ 
 .is-winner-true {
-  background-color: #41f4ac;
+  background-color: #00bb0e;
 }
 
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
   font-weight: normal;
-  font-family: "Parisienne", Cambria, Georgia, Serif;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.q-title {
+  padding-bottom: 5px;
+}
+
+.q-description {
+  font-size: 20px;
+  padding-bottom: 8px;
 }
 
 header {
@@ -58,6 +82,12 @@ header h1 i.fa {
   background-color: #f1f1f1;
 }
 
+button {
+  font-size: 17px;
+  border-radius: 3px;
+  padding: 3px 8px;
+}
+
 /* Style the buttons inside the tab */
 .tab button {
   background-color: inherit;
@@ -68,6 +98,8 @@ header h1 i.fa {
   padding: 14px 16px;
   transition: 0.3s;
   font-size: 17px;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 1px;
 }
 
 /* Change background color of buttons on hover */

@@ -69,7 +69,7 @@ function app() {
         const contractForEvents = new web3ForEvents.eth.Contract(abi, contract._address); 
 
         console.log("Events: " + contractForEvents.events);
-        contractForEvents.events.QuestionCreated({filter: {_address: userAccount} })
+        contractForEvents.events.QuestionCreated()
         .on("data", function(event) { 
             let data = event.returnValues;
             NewsfeedView.uploadQuestion(data["qHash"]);
