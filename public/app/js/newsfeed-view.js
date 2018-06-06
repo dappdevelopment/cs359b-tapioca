@@ -4,6 +4,8 @@
   NewsfeedView.remoteHost = "http://127.0.0.1:3000/"
   NewsfeedView.pendingQuestions = {}; 
 
+  document.getElementById("defaultOpen").click();
+
   NewsfeedView.renderProposals = function($proposalsfeed, $memberlist) {
     var xmlProposals = new XMLHttpRequest(); 
 
@@ -124,7 +126,7 @@ function submitQuestion() {
   console.log("submitting question");
   let q_title = $("#question_title").val()
   let q_details = $("textarea").val()
-  let q_bounty = $("#bounty_amount").val()
+  let q_bounty = $("#bounty_amount").val() * 1000000000000000000
   let q_time_exp_days = $("#time_exp_days").val()
   let q_time_exp_hours = $("#time_exp_hours").val()
   let q_time_exp_minutes = $("#time_exp_minutes").val()
