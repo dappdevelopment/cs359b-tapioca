@@ -47,7 +47,10 @@
     var question_data = NewsfeedView.pendingQuestions[hex_value]; 
     console.log(NewsfeedView.pendingQuestions)
     question_data["q_hash"] = hex_value; 
-    PostModel.add(question_data);
+    PostModel.add(question_data, function(response) { 
+      console.log("received response back")
+      console.log(response)
+    });
   }
 
   window.NewsfeedView = NewsfeedView;
