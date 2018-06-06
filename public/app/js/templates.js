@@ -124,26 +124,27 @@
     </ul>
   */
 
-  Templates.renderAnswer = function(answer, canUpvote) {
+  Templates.renderAnswer = function(answer, canUpvote, isOpen) {
     console.log(answer.voters);
     console.log(answer.voters.length);
     console.log(answer);
 
     var upvote_tags = [tag('p', {class: "upvote_count " + answer._id}, "Upvotes: " + answer.voters.length)] 
-    if (canUpvote) { 
+    if (canUpvote && isOpen) { 
       upvote_tags.push(tag('input', {type:"submit", name: "upvote" + answer._id, value: "upvote", class: answer._id, onclick: "upvoteClicked(this)"}))
-    } else {
+    } else if (!canUpvote && isOpen) {
       upvote_tags.push(tag('p', {}, "Upvoting Disabled"))
-    }
-
-    return tag('li', {class: "is-winner-" + answer.isWinner}, 
+    } 
+    
+    return tag('li', {display: "inline-block", style:"display: flex;"}, [
+      tag('div', {class: "is-winner-" + answer.isWinner}, ''),
       tag('div', {class: "answer_box"}, [
         tag('div', {class: "left_column"}, upvote_tags), 
         tag('div', {class: "right_column"}, 
           tag('p', {}, answer.body)
         )
       ])
-    )
+    ]);
   }
 
   /* Creates an HTMLElement to display search results.

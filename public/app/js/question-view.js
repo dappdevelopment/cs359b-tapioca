@@ -65,13 +65,15 @@
     console.log(answers);
 
     let canUpvote = true;
-      if (QuestionView.post_data.state !== OPEN_STATE) { // If question is closed, disable upvoting on all answers. 
-        canUpvote = false;
-        $("#answer_input").prop('placeholder', "Question has been CLOSED. No more answers can be submitted.");
-        $("#answer_input").prop('disabled', true);
-        $("#answer_input_submit").hide();
-        console.log("question closed. answers are not upvotable.");
-      }
+    let isOpen = true; 
+    if (QuestionView.post_data.state !== OPEN_STATE) { // If question is closed, disable upvoting on all answers. 
+      canUpvote = false;
+      isOpen = false; 
+      $("#answer_input").prop('placeholder', "Question has been CLOSED. No more answers can be submitted.");
+      $("#answer_input").prop('disabled', true);
+      $("#answer_input_submit").hide();
+      console.log("question closed. answers are not upvotable.");
+    }
 
     if (Object.keys(answers).length == 0) {
       var no_answers = document.createElement('p');
@@ -87,7 +89,7 @@
           canUpvote = true;
         }
         console.log("can upvote: " + canUpvote)
-        $answers_view.append(Templates.renderAnswer(answers[answer], canUpvote));
+        $answers_view.append(Templates.renderAnswer(answers[answer], canUpvote, isOpen));
       }
     }
   };
