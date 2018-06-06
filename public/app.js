@@ -238,7 +238,7 @@ async function test() {
 
 
 async function connectToEthereum() { 
-  // web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/hzinmOiPQJ95bFyblv1K "));
+  //web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/hzinmOiPQJ95bFyblv1K "));
   web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:8545"));
   var networkId = await web3.eth.net.getId(); // resolves on the current network id
 
