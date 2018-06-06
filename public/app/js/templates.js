@@ -19,17 +19,18 @@
     let hours = Math.floor((post.timeLeft % (24 * 3600 * 1000)) / (3600 * 1000))
     let minutes = Math.ceil((post.timeLeft % (3600 * 1000)) / (60 * 1000))
     if (show_link) {
-      return tag('li', {display: "inline-block", class: "question post-state-" + post.state}, [
+      return tag('li', {display: "inline-block", class: "post-block"}, [
+        tag('div', {class: "post-state-" + post.state}, ''),
         tag('div', {class: 'meta'}, [
           tag('div', {class: 'left_title'}, [
-              tag('h1', {}, post.bounty + " WEI"),
-              tag('h2', {}, "time left: " + days + " days, " + hours + " hours, " + minutes + " minutes"),
-              tag('h5', {}, post.askerAddr), 
+              tag('h1', {class: "q-title"}, post.bounty + " WEI"),
+              tag('h2', {class: "q-description"}, "Time Left: " + days + " days, " + hours + " hrs, " + minutes + " mins"),
+              tag('h5', {class: "q-details"}, post.askerAddr), 
               ]),
           tag('div', {class: 'right_title'}, [
-              tag('h1', {}, post.title),
-              tag('h3', {}, post.body),
-              tag('a', {href: 'question_view.html?qid=' + post._id}, 'See answers >')
+              tag('h1', {class: "q-title"}, post.title),
+              tag('h3', {class: "q-description"}, post.body),
+              tag('a', {class: "q-details", href: 'question_view.html?qid=' + post._id}, 'See answers >')
             ]),
         ]),
       ]);
