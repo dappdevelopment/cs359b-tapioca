@@ -48,12 +48,13 @@
     let days = Math.floor(post.timeLeft / (24 * 3600 * 1000))
     let hours = Math.floor((post.timeLeft % (24 * 3600 * 1000)) / (3600 * 1000))
     let minutes = Math.ceil((post.timeLeft % (3600 * 1000)) / (60 * 1000))
+    let bountyInETH = post.bounty / 1000000000000000000
     if (show_link) {
       return tag('li', {display: "inline-block", class: "post-block"}, [
         tag('div', {class: "post-state-" + post.state}, ''),
         tag('div', {class: 'meta'}, [
           tag('div', {class: 'left_title'}, [
-              tag('h1', {class: "q-title"}, post.bounty + " WEI"),
+              tag('h1', {class: "q-title"}, bountyInETH + " ETH"),
               tag('h2', {class: "q-description"}, "Time Left: " + days + " days, " + hours + " hrs, " + minutes + " mins"),
               tag('h5', {class: "q-details"}, post.askerAddr), 
               ]),
@@ -68,7 +69,7 @@
       return tag('li', {display: "inline-block", class: "question"}, [
         tag('div', {class: 'meta'}, [
           tag('div', {class: 'left_title'}, [
-              tag('h1', {}, post.bounty + " ETH"),
+              tag('h1', {}, bountyInETH + " ETH"),
               tag('h5', {}, post.askerAddr)
               ]),
           tag('div', {class: 'right_title'}, [
@@ -124,26 +125,27 @@
     </ul>
   */
 
-  Templates.renderAnswer = function(answer, canUpvote) {
+  Templates.renderAnswer = function(answer, canUpvote, isOpen) {
     console.log(answer.voters);
     console.log(answer.voters.length);
     console.log(answer);
 
     var upvote_tags = [tag('p', {class: "upvote_count " + answer._id}, "Upvotes: " + answer.voters.length)] 
-    if (canUpvote) { 
+    if (canUpvote && isOpen) { 
       upvote_tags.push(tag('input', {type:"submit", name: "upvote" + answer._id, value: "upvote", class: answer._id, onclick: "upvoteClicked(this)"}))
-    } else {
+    } else if (!canUpvote && isOpen) {
       upvote_tags.push(tag('p', {}, "Upvoting Disabled"))
-    }
-
-    return tag('li', {class: "is-winner-" + answer.isWinner}, 
+    } 
+    
+    return tag('li', {display: "inline-block", style:"display: flex;"}, [
+      tag('div', {class: "is-winner-" + answer.isWinner}, ''),
       tag('div', {class: "answer_box"}, [
         tag('div', {class: "left_column"}, upvote_tags), 
         tag('div', {class: "right_column"}, 
           tag('p', {}, answer.body)
         )
       ])
-    )
+    ]);
   }
 
   /* Creates an HTMLElement to display search results.
