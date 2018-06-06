@@ -75,6 +75,11 @@ function app() {
             NewsfeedView.uploadQuestion(data["qHash"]);
             console.log("Question Successfully Created"); 
         })
+
+        contractForEvents.events.AnswerCreated()
+        .on("data", function(event) { 
+            window.location.reload(true);
+        })
     }
     
     window.collectBounty = function (qHash, bounty, time, callback) {

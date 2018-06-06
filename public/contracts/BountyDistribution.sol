@@ -8,6 +8,7 @@ contract BountyDistribution {
     }
 
     event QuestionCreated(address indexed _address, uint256 qHash); 
+    event AnswerCreated(address indexed _address); 
 
     // Congress Variables/Structs
     mapping (address => bool) membership; 
@@ -134,6 +135,8 @@ contract BountyDistribution {
         }));
         questions[qHash].indexes[aHash] = questions[qHash].numAnswers; 
         questions[qHash].numAnswers++; 
+
+        emit AnswerCreated(msg.sender); 
     }
 
     function addAnswerUpvote(uint256 _qHash, uint256 _aHash) onlyMembers public { 
