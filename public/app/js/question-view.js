@@ -20,7 +20,8 @@
   }
 
   function adaptElements($newsfeed, post, users) { 
-    $('.left_column h1').first().html(post.bounty + " WEI");
+    let bountyInETH = post.bounty / 1000000000000000000
+    $('.left_column h1').first().html(bountyInETH + " ETH");
     $('.left_column h5').first().html(post.askerAddr);
 
     $('.right_column h1').first().html(post.title);
@@ -65,13 +66,15 @@
     console.log(answers);
 
     let canUpvote = true;
-      if (QuestionView.post_data.state !== OPEN_STATE) { // If question is closed, disable upvoting on all answers. 
-        canUpvote = false;
-        $("#answer_input").prop('placeholder', "Question has been CLOSED. No more answers can be submitted.");
-        $("#answer_input").prop('disabled', true);
-        $("#answer_input_submit").hide();
-        console.log("question closed. answers are not upvotable.");
-      }
+    let isOpen = true; 
+    if (QuestionView.post_data.state !== OPEN_STATE) { // If question is closed, disable upvoting on all answers. 
+      canUpvote = false;
+      isOpen = false; 
+      $("#answer_input").prop('placeholder', "Question has been CLOSED. No more answers can be submitted.");
+      $("#answer_input").prop('disabled', true);
+      $("#answer_input_submit").hide();
+      console.log("question closed. answers are not upvotable.");
+    }
 
     if (Object.keys(answers).length == 0) {
       var no_answers = document.createElement('p');
@@ -87,7 +90,7 @@
           canUpvote = true;
         }
         console.log("can upvote: " + canUpvote)
-        $answers_view.append(Templates.renderAnswer(answers[answer], canUpvote));
+        $answers_view.append(Templates.renderAnswer(answers[answer], canUpvote, isOpen));
       }
     }
   };
