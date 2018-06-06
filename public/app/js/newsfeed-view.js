@@ -116,9 +116,11 @@ function submitProposal() {
   let createProposalRequest = new XMLHttpRequest();
   createProposalRequest.addEventListener('load', function() {
       if (createProposalRequest.status === 200) {
+        window.location.reload(true);
         console.log("created proposal");
       }
   });
+
 
   createProposalRequest.open("POST", '/create_proposal');
   createProposalRequest.setRequestHeader('Content-type', 'application/json')
