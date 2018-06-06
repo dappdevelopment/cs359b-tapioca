@@ -3,6 +3,10 @@
 
   var Templates = {};
 
+  Templates.renderMember = function(member_addr) {
+    return tag('div', {style:"margin-bottom: 5px;"}, member_addr)
+  }
+
   Templates.renderProposalPost = function(post) {
     console.log(post); 
     let days = Math.floor(post.timeLeft / (24 * 3600 * 1000))
@@ -15,15 +19,15 @@
     if (post.upvotes.includes(currentUserAddr) || post.downvotes.includes(currentUserAddr)) {
       upvote_tags.push(tag('p', {}, "You have already voted on this proposal"))
     } else {
-      upvote_tags.push(tag('input', {type:"submit", name: "upvote" + post._id, value: "upvote", class: post._id, onclick: "upvoteProposalClicked(this)"}))
-      upvote_tags.push(tag('input', {type:"submit", name: "downvote" + post._id, value: "downvote", class: post._id, onclick: "downvoteProposalClicked(this)"}))
+      upvote_tags.push(tag('input', {type:"submit", name: "upvote" + post._id, value: "Upvote", class: post._id, onclick: "upvoteProposalClicked(this)"}))
+      upvote_tags.push(tag('input', {style: "margin-left: 8px;", type:"submit", name: "downvote" + post._id, value: "Downvote", class: post._id, onclick: "downvoteProposalClicked(this)"}))
     }
 
     return tag('li', {display: "inline-block", class: "post"}, [
       tag('div', {class: 'meta'}, [
         tag('div', {class: 'left_title'}, [
-            tag('h2', {}, "time left: " + days + " days, " + hours + " hours, " + minutes + " minutes"),
-            tag('h5', {}, "Proposed by: " + post.proposingMemberAddr)
+            tag('h2', {class:"q-description"}, "Time Left: " + days + " days, " + hours + " hrs, " + minutes + " mins"),
+            tag('h5', {style:"line-height: 1.8em;"}, "Proposed by: " + post.proposingMemberAddr)
             ]),
         tag('div', {class: 'voting_title'}, [
             tag('h1', {}, post.proposedMemberAddr)
@@ -132,7 +136,7 @@
 
     var upvote_tags = [tag('p', {class: "upvote_count " + answer._id}, "Upvotes: " + answer.voters.length)] 
     if (canUpvote && isOpen) { 
-      upvote_tags.push(tag('input', {type:"submit", name: "upvote" + answer._id, value: "upvote", class: answer._id, onclick: "upvoteClicked(this)"}))
+      upvote_tags.push(tag('input', {type:"submit", name: "upvote" + answer._id, value: "Upvote", class: answer._id, onclick: "upvoteClicked(this)"}))
     } else if (!canUpvote && isOpen) {
       upvote_tags.push(tag('p', {}, "Upvoting Disabled"))
     } 
