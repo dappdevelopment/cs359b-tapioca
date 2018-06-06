@@ -27,7 +27,7 @@ function app() {
 
             var addPostRequest = new XMLHttpRequest();
 
-            user_details = { 
+            let user_details = { 
                 user_id: "pancakes", 
                 asker_address: userAccount
             }

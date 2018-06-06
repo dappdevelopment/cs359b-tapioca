@@ -37,6 +37,11 @@ var createUser = async function(username, address) {
 	});
 	try {
 		let savedUser = await schema.User.findOneAndUpdate({address: address}, {$setOnInsert: newUser}, {upsert: true, returnNewDocument: true});
+		let existingMembersDoc = await schema.MemberTracker.find({id: MEMBER_PROPOSAL_LIST_ID}); // inefficient way to maintain at least one member in DAO
+		let existingMemberList = existingMembersDoc[0]._doc.members;
+		if (existingMemberList.length === 0) { // adds current user to membership list if no one is in org.
+			await schema.MemberTracker.findOneAndUpdate({id: MEMBER_PROPOSAL_LIST_ID}, {$push: {members: address}}, {upsert: true});
+		}
 		console.log("saved user successfully");
 		console.log(savedUser); 
 		return address;
