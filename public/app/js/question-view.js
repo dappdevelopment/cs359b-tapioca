@@ -110,7 +110,7 @@ function upvoteClicked(element) {
   count += 1
   console.log("upvote count: " + count)
   $('.' + element.className + '.upvote_count').html("Upvotes: " + count)
-  $('input[name=upvote]').remove()
+  $('input[name=upvote' + element.className + ']').remove()
   $('.' + element.className).append("<p>Upvoting Disabled</p>");
 }
 

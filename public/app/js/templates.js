@@ -131,7 +131,7 @@
 
     var upvote_tags = [tag('p', {class: "upvote_count " + answer._id}, "Upvotes: " + answer.voters.length)] 
     if (canUpvote) { 
-      upvote_tags.push(tag('input', {type:"submit", name: "upvote", value: "upvote", class: answer._id, onclick: "upvoteClicked(this)"}))
+      upvote_tags.push(tag('input', {type:"submit", name: "upvote" + answer._id, value: "upvote", class: answer._id, onclick: "upvoteClicked(this)"}))
     } else {
       upvote_tags.push(tag('p', {}, "Upvoting Disabled"))
     }
