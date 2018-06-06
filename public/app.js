@@ -233,12 +233,12 @@ async function clearDB() {
 }
 
 async function initDB() {
+  let memberList = await model.initializeMemberList(); // This must be called if the DB is cleared.
   let askerAddr = await model.createUser("mchang4", "0x66FDDd026Dbf64D6F907154365113ae124eB2DD6");
   let answererAddr = await model.createUser("peterlu6", "0xd08923976D510F8f834E1B8BC4E1c03599F2644F");
   let returnData = await model.createQuestion(50, 10, 1, 23, "how do i make friends", "i have no friends", askerAddr);
   let answerObject = await model.createAnswer(answererAddr, returnData.questionId, "plastic surgery");
   // await model.markQuestionClosed(returnData.questionId);
-  let memberList = await model.initializeMemberList(); // This must be called if the DB is cleared.
 }
 
 async function test() {

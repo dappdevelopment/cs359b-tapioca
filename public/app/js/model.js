@@ -38,6 +38,7 @@ var createUser = async function(username, address) {
 	try {
 		let savedUser = await schema.User.findOneAndUpdate({address: address}, {$setOnInsert: newUser}, {upsert: true, returnNewDocument: true});
 		let existingMembersDoc = await schema.MemberTracker.find({id: MEMBER_PROPOSAL_LIST_ID}); // inefficient way to maintain at least one member in DAO
+		console.log("existingmemberdoc: " + existingMembersDoc);
 		let existingMemberList = existingMembersDoc[0]._doc.members;
 		if (existingMemberList.length === 0) { // adds current user to membership list if no one is in org.
 			await schema.MemberTracker.findOneAndUpdate({id: MEMBER_PROPOSAL_LIST_ID}, {$push: {members: address}}, {upsert: true});
@@ -111,11 +112,13 @@ var createQuestion = async function(bounty, timeExpDays, timeExpHours, timeExpMi
 }
 
 var createAnswer = async function(answererAddr, questionId, body) {
+	let answerHash = sha256(answererAddr + body + questionId);
 	let newAnswer = new schema.Answer ({
 		answererAddr: answererAddr,
 		voters: [],
 		questionId: questionId,
-		body: body
+		body: body,
+		answerHash: answerHash
 	});
 	try {
 		console.log(newAnswer); 
