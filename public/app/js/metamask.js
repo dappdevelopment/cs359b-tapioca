@@ -1,6 +1,6 @@
 function app() {
  	/* Displays health check to see if metamask is correctly read */
-	console.log("health check up")
+	console.log("health check up");
 	if (typeof web3 == 'undefined') throw 'No web3 detected. Is Metamask/Mist being used?';
 	web3 = new Web3(web3.currentProvider); // MetaMask injected Ethereum provider
     console.log("Using web3 version: " + Web3.version); // why doesn't this work
@@ -27,13 +27,13 @@ function app() {
 
             var addPostRequest = new XMLHttpRequest();
 
-            user_details = { 
+            let user_details = { 
                 user_id: "pancakes", 
                 asker_address: userAccount
             }
 
-            addPostRequest.open('POST', '/create_user')
-            addPostRequest.setRequestHeader('Content-type', 'application/json')
+            addPostRequest.open('POST', '/create_user');
+            addPostRequest.setRequestHeader('Content-type', 'application/json');
             addPostRequest.send(JSON.stringify(user_details));
             
             // Make sure the contract is deployed on the connected network

@@ -40,7 +40,7 @@
     addPostRequest.onreadystatechange = function() {
       if (addPostRequest.readyState === 4) {
         callback(addPostRequest.response);
-        window.location.reload(false);
+        window.location.reload(true);
         console.log(addPostRequest.response);
       }
     }
@@ -83,6 +83,12 @@
   PostModel.addAnswer = function(answer_data) {
     var answerRequest = new XMLHttpRequest()
     
+    answerRequest.onreadystatechange = function() {
+      if (answerRequest.readyState === 4) {
+        window.location.reload(true);
+      }
+    }
+
     answerRequest.open('POST', '/add_answer')
     answerRequest.setRequestHeader('Content-type', 'application/json')
     answerRequest.send(JSON.stringify(answer_data))

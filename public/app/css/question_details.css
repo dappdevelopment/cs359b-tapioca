@@ -20,8 +20,20 @@
 	flex: 0 0 80%; 
 }
 
+.is-winner-true {
+	background-color: #00bb0e;
+	width: 8px;
+	margin-right: 15px;
+}
+
+.is-winner-false {
+	width: 8px;
+	margin-right: 15px;
+}
+
 .answer_box {
 	display: flex;
+	width: 100%; 
 }
 
 .tapioca-title {

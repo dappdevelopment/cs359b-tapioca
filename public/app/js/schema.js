@@ -28,7 +28,8 @@ var AnswerSchema = new mongoose.Schema({
     voters: [{type: String}],
     questionId: {type: String},
     body: {type: String},
-    isWinner: {type: Boolean, default: false}
+    isWinner: {type: Boolean, default: false},
+    answerHash: {type: String}
 });
 
 var ProposalSchema = new mongoose.Schema({

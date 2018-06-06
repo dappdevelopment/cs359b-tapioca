@@ -4,6 +4,8 @@
   NewsfeedView.remoteHost = "http://127.0.0.1:3000/"
   NewsfeedView.pendingQuestions = {}; 
 
+  document.getElementById("defaultOpen").click();
+
   NewsfeedView.renderProposals = function($proposalsfeed, $memberlist) {
     var xmlProposals = new XMLHttpRequest(); 
 
@@ -30,9 +32,18 @@
     });
   }
 
+
+  NewsfeedView.renderMember = function($memberlist, member_addr) {
+    var postHtml = Templates.renderMember(member_addr);
+    $memberlist.append(postHtml);
+  }
+
   NewsfeedView.renderMemberList = function($memberlist, response) {
-    console.log("response json: " + JSON.stringify(response));
-    $memberlist.html("members: " + JSON.stringify(response.members));
+    console.log("response json");
+    console.log(response);
+    response.members.forEach(function(value) {
+      NewsfeedView.renderMember($memberlist, value, false); 
+    });
   }
 
   /* Renders the newsfeed into the given $newsfeed element. */
@@ -105,9 +116,11 @@ function submitProposal() {
   let createProposalRequest = new XMLHttpRequest();
   createProposalRequest.addEventListener('load', function() {
       if (createProposalRequest.status === 200) {
+        window.location.reload(true);
         console.log("created proposal");
       }
   });
+
 
   createProposalRequest.open("POST", '/create_proposal');
   createProposalRequest.setRequestHeader('Content-type', 'application/json')
@@ -124,7 +137,7 @@ function submitQuestion() {
   console.log("submitting question");
   let q_title = $("#question_title").val()
   let q_details = $("textarea").val()
-  let q_bounty = $("#bounty_amount").val()
+  let q_bounty = $("#bounty_amount").val() * 1000000000000000000
   let q_time_exp_days = $("#time_exp_days").val()
   let q_time_exp_hours = $("#time_exp_hours").val()
   let q_time_exp_minutes = $("#time_exp_minutes").val()

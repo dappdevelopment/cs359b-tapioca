@@ -21,7 +21,7 @@
           <button type="submit"  onclick="openModal()" style="float: right;">
             Submit Question
           </button>
-          <button type="submit"  onclick="openProposalModal()" style="float: right;">
+          <button type="submit"  onclick="openProposalModal()" style="float: right; margin-right: 10px;">
             Create Proposal
           </button>
           <!--<button id="link-to-metamask">Link To Metamask</button>-->
@@ -43,14 +43,14 @@
     <div id="create_proposal_container" class="modal">
       <div class="add_content">
         <span class="close" onclick="closeProposalModal()">&times;</span>
-        <h1>New Proposal</h1> <br/>
-        <input type="text" id="proposal_member" placeholder="Proposal Member Address" style="width: 100%;"> <br/>
-        <select id="proposal_type">
+        <h1 class="modal-title">New Proposal</h1> <br/>
+        Proposal Member Address:<input type="text" id="proposal_member" style="width: 100%; margin: 10px 0px;"> <br/>
+        <select id="proposal_type" style="margin-top: 20px;">
             <option value="add">Add new member</option>
             <option value="remove">Remove existing member</option>
         </select>
         <br/>
-        <button onclick="submitProposal()">Submit Proposal</button>
+        <button style="margin-top: 100px;" onclick="submitProposal()">Submit Proposal</button>
       </div>
     </div>
 
@@ -60,16 +60,22 @@
     <div id="add_container" class="modal">
       <div class="add_content">
         <span class="close" onclick="closeModal()">&times;</span>
-        <h1>New Question</h1> <br/>
-        <input type="text" id="question_title" placeholder="Title" style="width: 100%;">
-
+        <h1 class="modal-title">New Question</h1> <br/>
+        Question Title: <input class="question-input" type="text" id="question_title" placeholder="Your question goes here" style="width: 100%; padding-left: 10px;">
         <br /> <br /> 
-        <input id="bounty_amount" type="number" placeholder="Bounty"> <br/>  <br />
-        <input id="time_exp_days" type="number" min="0" max="20" placeholder="Days"> <br/> <br/>
-        <input id="time_exp_hours" type="number" min="0" max="23" placeholder="Hours"> <br/> <br/>
-        <input id="time_exp_minutes" type="number" min="0" max="59" placeholder="Minutes"> <br/> <br/>
+        Bounty:
+        <br />
+        <input class="question-input" id="bounty_amount" type="number"> ETH <br/>  <br />
+        Question Details: <textarea class="question-input" placeholder="Add Details Here" rows="4" cols="50" style="width: 100%"></textarea> 
+        <br /> <br />
+        Voting Period Length: 
+        <br />
+        <div id="time-input">
+          <input class="question-input" id="time_exp_days" type="number" min="0" max="20"> <div class="time-descrip">Day(s)</div> <br/> <br/>
+          <input class="question-input" id="time_exp_hours" type="number" min="0" max="23"> <div class="time-descrip">Hour(s)</div> <br/> <br/>
+          <input class="question-input" id="time_exp_minutes" type="number" min="0" max="59"> <div class="time-descrip">Minute(s)</div> <br/> <br/>
+        </div>
         <p id="submit_question_error"></p>
-        <textarea placeholder="Add Details Here" rows="4" cols="50" style="width: 100%"></textarea> 
         <br/> <br/>
         <button onclick="submitQuestion()">Submit Question</button>
       </div>
@@ -80,9 +86,10 @@
 
     <!-- Tab links -->
     <div class="tab">
-      <button class="tablinks" onclick="openTab(event, 'Feed')">FEED</button>
+      <button class="tablinks" onclick="openTab(event, 'Feed')" id="defaultOpen">FEED</button>
       <button class="tablinks" onclick="openTab(event, 'MyAnswers')">MY ANSWERS</button>
-      <button class="tablinks" onclick="openTab(event, 'MemberProposals')">MEMBER PROPOSALS</button>
+      <button class="tablinks" onclick="openTab(event, 'MemberProposals')" id="memberProposal">MEMBER PROPOSALS</button>
+      <button class="tablinks" onclick="openTab(event, 'MemberList')">MEMBERS</button>
     </div>
 
     <!-- Tab content -->
@@ -101,9 +108,15 @@
     </div>
 
     <div id="MemberProposals" class="tabcontent">
-      <div id="member_list"></div>
       <div id="member-proposals">
         <ul id="member_proposals_list">
+        </ul>
+      </div>
+    </div>
+
+    <div id="MemberList" class="tabcontent">
+      <div id="members">
+        <ul id="member_list">
         </ul>
       </div>
     </div>

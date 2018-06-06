@@ -6,10 +6,30 @@
   padding-top: 10px;
 }
 
+.modal-title {
+  font-family: 'Montserrat', sans-serif; 
+  font-weight: normal;
+  font-size: 30px;
+  letter-spacing: 1px;
+}
+
 body {
   color: #fff;
   font-family: 'Open Sans', sans-serif;
   background: #ecf0f1;
+}
+
+#time-input {
+  display: flex;
+}
+
+.time-descrip {
+  padding: 20px 20px 0px 5px;
+  letter-spacing: 0.5px;
+}
+
+.question-input {
+  margin-top: 8px;
 }
 
 p {
@@ -33,10 +53,6 @@ p {
 .post-state-1 {
   background-color: #00bb0e;
   width: 8px;
-}
- 
-.is-winner-true {
-  background-color: #00bb0e;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -228,7 +244,6 @@ button {
   padding: 5px;
   margin: 10px 20px;
   flex: 0 0 50%; 
-  text-align
 }
 
 .left_answer {

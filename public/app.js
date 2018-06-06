@@ -198,6 +198,16 @@ app.post('/downvote_proposal', function(request, response) {
   response.send();
 })
 
+app.post('/upvote', function(request, response) {
+  console.log("POST /upvotes " + "user_addr: " + request.body.user_addr + "; answer_ID: " + request.body.answer_id);
+  let answer_id = ObjectId(request.body.answer_id);
+  let user_addr = request.body.user_addr;
+  model.upvoteAnswer(answer_id, user_addr);
+  response.set('Content-type', 'application/json');
+  response.status(STATUS_OK);
+  response.send();
+})
+
 app.post('/add_answer', function(request, response) {
   console.log("POST /add_answer "  + "question_ID: " + request.body.question_id + "; answer: " + request.body.text)
   let question_id = ObjectId(request.body.question_id);
@@ -223,12 +233,12 @@ async function clearDB() {
 }
 
 async function initDB() {
+  let memberList = await model.initializeMemberList(); // This must be called if the DB is cleared.
   let askerAddr = await model.createUser("mchang4", "0x66FDDd026Dbf64D6F907154365113ae124eB2DD6");
   let answererAddr = await model.createUser("peterlu6", "0xd08923976D510F8f834E1B8BC4E1c03599F2644F");
   let returnData = await model.createQuestion(50, 10, 1, 23, "how do i make friends", "i have no friends", askerAddr);
   let answerObject = await model.createAnswer(answererAddr, returnData.questionId, "plastic surgery");
   // await model.markQuestionClosed(returnData.questionId);
-  let memberList = await model.initializeMemberList(); // This must be called if the DB is cleared.
 }
 
 async function test() {
