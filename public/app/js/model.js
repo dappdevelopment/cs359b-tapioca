@@ -11,6 +11,14 @@ var OPEN_STATE = 1;
 var CLOSED_STATE = 2;
 var SETTLED_STATE = 3;
 
+
+// Proposal types
+var ADD_PROPOSAL = 4;
+var REMOVE_PROPOSAL = 5;
+
+// Member proposal list ID
+var MEMBER_PROPOSAL_LIST_ID = "member_proposal_list";
+
 mongoose.connect(uristring, function (err, res) {
     if (err) {
       	console.log ('ERROR connecting to: ' + uristring + '. ' + err);
@@ -44,7 +52,7 @@ async function markQuestionClosed(questionId) {
 	let winning_votes = -1; 
 	let winning_answer_text = "";
 	let winning_answer_id = "";
-	if (answers.length == 0) { // adding a placeholder "question closed" answer
+	if (answers.length === 0) { // adding a placeholder "question closed" answer
 		let placeholder_answer = await createAnswer(updated_question[0]._doc.askerAddr, questionId, "No answer was received for this question... refunding bounty.");
 		answers.push(placeholder_answer);
 	}
@@ -127,11 +135,116 @@ var upvoteAnswer = async function(answerId, voterAddr) {
 	}
 }
 
+var createProposal = async function(proposingMemberAddr, proposedMemberAddr, isAddProposal) {
+	console.log("model.js: creating proposal");
+	console.log("model.js/createProposal: isAddProposal - " + isAddProposal);
+	let proposalType = REMOVE_PROPOSAL;
+	if (isAddProposal) {
+		proposalType = ADD_PROPOSAL;
+	}
+	let testProposalDelay = 10000; // 10 seconds.
+	let proposalDelay = 600 * 60 * 1000; // 600 minutes
+	let timeExp = Date.now() + testProposalDelay; // ATTN: you need to change the variable below too.
+	let newProposal = new schema.Proposal({
+		upvotes: [],
+		downvotes: [],
+		proposedMemberAddr: proposedMemberAddr,
+		proposingMemberAddr: proposingMemberAddr,
+		timeExp: timeExp,
+		type: proposalType,
+		state: OPEN_STATE
+	});
+	try {
+		let savedProposal = await newProposal.save();
+		setTimeout(function() {
+			executeProposal(savedProposal._id);
+		}, testProposalDelay);  // ATTN: you need to change the variable above too.
+		return savedProposal;
+	} catch (err) {
+		console.log("error in createProposal");
+		console.log(err);
+	}
+}
+
+var voteOnProposal = async function(proposalId, isSupport, votingMemberAddr) {
+	try {
+		console.log("voteOnProposal: proposalId - " + proposalId);
+		if (isSupport) {
+			let updatedProposal = await schema.Proposal.findOneAndUpdate({_id: proposalId}, {$addToSet: {upvotes: votingMemberAddr}});
+		} else {
+			let updatedProposal = await schema.Proposal.findOneAndUpdate({_id: proposalId}, {$addToSet: {downvotes: votingMemberAddr}});
+		}
+		console.log("updated Proposal successfully");
+	} catch (err) {
+		console.log("error in voteOnProposal");
+		console.log(err);
+	}
+}
+
+var findOpenProposals = async function() {
+	try {
+		console.log("model.js: finding open proposals");
+
+		let membershipDoc = await schema.MemberTracker.find({id: MEMBER_PROPOSAL_LIST_ID});
+		let membershipList = membershipDoc[0]._doc;
+
+		let open_proposals = await schema.Proposal.find({state: OPEN_STATE});
+		let modified_proposal_list = [];
+		for (let i in open_proposals) {
+			let modified_proposal = JSON.parse(JSON.stringify(open_proposals[i])); // deep copy
+			let timeLeft = Math.max(Date.parse(modified_proposal.timeExp) - Date.now(), 0);
+			modified_proposal.timeLeft = timeLeft;
+			modified_proposal_list.push(modified_proposal);
+		}
+		return {proposals: modified_proposal_list, members: membershipList.members};
+	} catch (err) {
+		console.log("findProposalData error");
+		console.log(err);
+	}
+}
+
+var executeProposal = async function(proposalId) {
+	console.log("calling executeProposal");
+	try {
+		let proposalToExecute = await schema.Proposal.find({_id: proposalId});
+		console.log("proposal found: " + proposalToExecute)
+		let proposal = proposalToExecute[0]._doc; // needed to get actual object
+		let upvoteCount = proposal.upvotes.length;
+		let downvoteCount = proposal.downvotes.length;
+		if (upvoteCount > downvoteCount) { // execute proposal
+			if (proposal.type === ADD_PROPOSAL) {
+				console.log("executeProposal: executing add proposal");
+				await schema.MemberTracker.findOneAndUpdate({id: MEMBER_PROPOSAL_LIST_ID}, {$push: {members: proposal.proposedMemberAddr}}, {upsert: true});
+			} else {
+				console.log("executeProposal: executing remove proposal");
+				await schema.MemberTracker.update({id: MEMBER_PROPOSAL_LIST_ID}, {$pull: {members: proposal.proposedMemberAddr}});
+			}
+		}
+		await schema.Proposal.findOneAndUpdate({_id: proposalId}, {state: CLOSED_STATE});
+	} catch (err) {
+		console.log("error in executeProposal");
+		console.log(err);
+	}
+}
+
+var checkMembershipStatus = async function(memberId) {
+	try {
+		let membershipDoc = await schema.MemberTracker.find({id: MEMBER_PROPOSAL_LIST_ID});
+		let membershipList = membershipDoc[0]._doc;
+		return membershipList.includes(memberId);
+	} catch (err) {
+		console.log("error in checkMembershipStatus");
+		console.log(err);
+	}
+}
+
 var resetDB = async function() {
 	try {
 		await schema.Answer.remove({});
 		await schema.Question.remove({});
 		await schema.User.remove({});
+		await schema.Proposal.remove({});
+		await schema.MemberTracker.remove({});
 		console.log("successful deletion");
 	} catch (err) {
 		console.log("error during removal");
@@ -143,10 +256,6 @@ var findQuestionFeedData = async function() {
 	try {
 		let questions = await schema.Question.find({});
 		let users = await schema.User.find({});
-		// let userMap = {};
-		// for (user of users){
-		// 	userMap[user._id] = user.address; // map from user to their eth address.
-		// }
 		let modified_question_list = [];
 		for (let i in questions) {
 			let modified_question = JSON.parse(JSON.stringify(questions[i])); // deep copy 
@@ -232,6 +341,20 @@ var findUser = async function(userId) {
 	}
 }
 
+var initializeMemberList = async function() {
+	try {
+		let memberProposalList = new schema.MemberTracker ({
+			id: MEMBER_PROPOSAL_LIST_ID,
+			members: []
+		});
+		memberProposalList.save();
+		return memberProposalList;
+	} catch (err) {
+		console.log("error in initializeMemberList");
+		console.log(err);
+	}
+}
+
 module.exports.createUser = createUser;
 module.exports.createQuestion = createQuestion;
 module.exports.createAnswer = createAnswer;
@@ -244,6 +367,11 @@ module.exports.findQuestionFeedData = findQuestionFeedData;
 module.exports.findQuestionData = findQuestionData;
 module.exports.markQuestionClosed = markQuestionClosed;
 module.exports.findQuestionsAnswered = findQuestionsAnswered;
-
+module.exports.initializeMemberList = initializeMemberList;
+module.exports.voteOnProposal = voteOnProposal;
+module.exports.createProposal = createProposal;
+module.exports.findOpenProposals = findOpenProposals;
+module.exports.executeProposal = executeProposal;
+module.exports.checkMembershipStatus = checkMembershipStatus;
 
 

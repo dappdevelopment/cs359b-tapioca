@@ -95,7 +95,6 @@
   window.QuestionView = QuestionView; 
 })();
 
-
 //onClick Handler's 
 //upvotes: 
         // $('#display').text(balance + " CDT")

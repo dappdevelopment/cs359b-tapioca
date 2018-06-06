@@ -31,14 +31,32 @@ var AnswerSchema = new mongoose.Schema({
     isWinner: {type: Boolean, default: false}
 });
 
+var ProposalSchema = new mongoose.Schema({
+    upvotes: [{type: String}], // addresses
+    downvotes: [{type: String}], // addresses
+    proposedMemberAddr: {type: String},
+    proposingMemberAddr: {type: String},
+    timeExp: {type: Date},
+    state: {type: Number},
+    type: {type: Number}
+});
+
+var MemberTrackerSchema = new mongoose.Schema({ // There should only be one of these.
+    members: [{}],
+    id: {type: String}
+})
 
 // the schema is useless so far
 // we need to create a model using it
 var User = mongoose.model('User', UserSchema);
 var Question = mongoose.model('Question', QuestionSchema);
 var Answer = mongoose.model('Answer', AnswerSchema);
+var Proposal = mongoose.model('Proposal', ProposalSchema);
+var MemberTracker = mongoose.model('MemberTracker', MemberTrackerSchema);
 
 // make this available to our photos in our Node applications
 module.exports.User = User;
 module.exports.Question = Question;
 module.exports.Answer = Answer;
+module.exports.Proposal = Proposal;
+module.exports.MemberTracker = MemberTracker;
