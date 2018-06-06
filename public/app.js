@@ -51,7 +51,9 @@ app.get('/question_feed', async function(request, response) {
 app.get('/my_answers_feed', async function(request, response) {
   console.log("/GET my_answers_feed")
 
-  let questions_answered = await model.findQuestionsAnswered(); 
+  let questions_answered = await model.findQuestionsAnswered(request.query.user_addr); 
+
+  console.log("questions_answered: " + JSON.stringify(questions_answered));
 
 	response.set('Content-type', 'application/json');
 	response.status(STATUS_OK);
@@ -204,8 +206,8 @@ async function test() {
 
 
 async function connectToEthereum() { 
-  web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/hzinmOiPQJ95bFyblv1K "));
-  //web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:8545"));
+  // web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/hzinmOiPQJ95bFyblv1K "));
+  web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:8545"));
   var networkId = await web3.eth.net.getId(); // resolves on the current network id
 
   var contractData = contract;       

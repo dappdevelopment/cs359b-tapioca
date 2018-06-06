@@ -161,11 +161,13 @@ var findQuestionFeedData = async function() {
 	}
 }
 
-var findQuestionsAnswered = async function(userId) {
+var findQuestionsAnswered = async function(userAddress) {
 	try {
-		let user = await schema.User.find({_id: userId});
-		let questions_id_list = user.questions_answered;
-		let questions_answered = await schema.Answer.find({_id: {$in: questions_id_list}});
+		let user = await schema.User.find({address: userAddress});
+		let questions_id_list = user[0]._doc.questions_answered;
+		console.log("questions_id_list: " + questions_id_list);
+		let questions_answered = await schema.Question.find({_id: {$in: questions_id_list}});
+		console.log("questions_answered: " + questions_answered);
 		let modified_question_list = [];
 		for (let i in questions_answered) {
 			let modified_question = JSON.parse(JSON.stringify(questions_answered[i])); // deep copy
