@@ -64,6 +64,22 @@
     upvoteRequest.send(JSON.stringify({answer_id: answer_id, user_addr: user_addr}))
   };
 
+  PostModel.upvoteProposal = function(post_id, user_addr) {
+    console.log("postmodel.upvoteProposal reached")
+    var upvoteProposalRequest = new XMLHttpRequest()
+    upvoteProposalRequest.open('POST', '/upvote_proposal')
+    upvoteProposalRequest.setRequestHeader('Content-type', 'application/json')
+    upvoteProposalRequest.send(JSON.stringify({post_id: post_id, user_addr: user_addr}))
+  };
+
+  PostModel.downvoteProposal = function(post_id, user_addr) {
+    console.log("postmodel.downvoteProposal reached")
+    var upvoteDownvoteRequest = new XMLHttpRequest()
+    upvoteDownvoteRequest.open('POST', '/downvote_proposal')
+    upvoteDownvoteRequest.setRequestHeader('Content-type', 'application/json')
+    upvoteDownvoteRequest.send(JSON.stringify({post_id: post_id, user_addr: user_addr}))
+  };
+
   PostModel.addAnswer = function(answer_data) {
     var answerRequest = new XMLHttpRequest()
     

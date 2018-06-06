@@ -19,7 +19,10 @@
         <div style="float: right;margin-top: 20px;"> 
           <p id="user_address" style="color:white;">Log in with Metamask ↗</p>
           <button type="submit"  onclick="openModal()" style="float: right;">
-                Submit Question
+            Submit Question
+          </button>
+          <button type="submit"  onclick="openProposalModal()" style="float: right;">
+            Create Proposal
           </button>
 
           <!--<button id="link-to-metamask">Link To Metamask</button>-->
@@ -38,7 +41,22 @@
       </div>
     </header>
 
-    
+    <div id="create_proposal_container" class="modal">
+      <div class="add_content">
+        <span class="close" onclick="closeProposalModal()">&times;</span>
+        <h1>New Proposal</h1> <br/>
+        <input type="text" id="proposal_member" placeholder="Proposal Member Address" style="width: 100%;"> <br/>
+        <select id="proposal_type">
+            <option value="add">Add new member</option>
+            <option value="remove">Remove existing member</option>
+        </select>
+        <br/>
+        <button onclick="submitProposal()">Submit Proposal</button>
+      </div>
+    </div>
+
+    <span class="popuptext" id="proposalCreatedPopup">Proposal Created!</span>
+
     <!-- Question-Posting Modal -->
     <div id="add_container" class="modal">
       <div class="add_content">
@@ -65,6 +83,7 @@
     <div class="tab">
       <button class="tablinks" onclick="openTab(event, 'Feed')">FEED</button>
       <button class="tablinks" onclick="openTab(event, 'MyAnswers')">MY ANSWERS</button>
+      <button class="tablinks" onclick="openTab(event, 'MemberProposals')">MEMBER PROPOSALS</button>
     </div>
 
     <!-- Tab content -->
@@ -79,7 +98,15 @@
       <div id="my-answers">
         <ul id="my_answers_list">
         </ul>
-      </div>>
+      </div>
+    </div>
+
+    <div id="MemberProposals" class="tabcontent">
+      <div id="member_list"></div>
+      <div id="member-proposals">
+        <ul id="member_proposals_list">
+        </ul>
+      </div>
     </div>
 
     <!-- Libraries -->
