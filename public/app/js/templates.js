@@ -8,15 +8,15 @@
     let days = Math.floor(post.timeLeft / (24 * 3600 * 1000))
     let hours = Math.floor((post.timeLeft % (24 * 3600 * 1000)) / (3600 * 1000))
     let minutes = Math.ceil((post.timeLeft % (3600 * 1000)) / (60 * 1000))
-    let totalVotes = post.upvotes.length - post.downvotes.length; 
+    let totalVotes = post.upvotes.length - post.downvotes.length;
     let currentUserAddr = localStorage.getItem("userAccount");
 
-    let upvote_tags = [tag('p', {class: "upvote_count " + post._id}, "Vote differential: " + totalVotes)]; 
+    let upvote_tags = [tag('p', {class: "vote_count " + post._id}, "Current Vote Count: " + totalVotes)];
     if (post.upvotes.includes(currentUserAddr) || post.downvotes.includes(currentUserAddr)) {
       upvote_tags.push(tag('p', {}, "You have already voted on this proposal"))
     } else {
-      upvote_tags.push(tag('input', {type:"submit", name: "upvote", value: "upvote", class: post._id, onclick: "upvoteProposalClicked(this)"}))
-      upvote_tags.push(tag('input', {type:"submit", name: "downvote", value: "downvote", class: post._id, onclick: "downvoteProposalClicked(this)"}))
+      upvote_tags.push(tag('input', {type:"submit", name: "upvote" + post._id, value: "upvote", class: post._id, onclick: "upvoteProposalClicked(this)"}))
+      upvote_tags.push(tag('input', {type:"submit", name: "downvote" + post._id, value: "downvote", class: post._id, onclick: "downvoteProposalClicked(this)"}))
     }
 
     return tag('li', {display: "inline-block", class: "post"}, [
@@ -25,10 +25,10 @@
             tag('h2', {}, "time left: " + days + " days, " + hours + " hours, " + minutes + " minutes"),
             tag('h5', {}, "Proposed by: " + post.proposingMemberAddr)
             ]),
-        tag('div', {class: 'right_title'}, [
+        tag('div', {class: 'voting_title'}, [
             tag('h1', {}, post.proposedMemberAddr)
           ]),
-        tag('div', {class: "left_column"}, upvote_tags),  // TODO: visual issues
+        tag('div', {class: "voting_tally"}, upvote_tags),  // TODO: visual issues
       ]),
     ]);
   };
@@ -127,6 +127,7 @@
     console.log(answer.voters);
     console.log(answer.voters.length);
     console.log(answer);
+
     var upvote_tags = [tag('p', {class: "upvote_count " + answer._id}, "Upvotes: " + answer.voters.length)] 
     if (canUpvote) { 
       upvote_tags.push(tag('input', {type:"submit", name: "upvote", value: "upvote", class: answer._id, onclick: "upvoteClicked(this)"}))

@@ -184,6 +184,21 @@ header h1 i.fa {
   flex: 0 0 80%; 
 }
 
+.voting_title {
+  display: inline-block;
+  padding: 5px;
+  margin: 10px 20px;
+  flex: 0 0 30%; 
+}
+
+.voting_tally {
+  display: inline-block;
+  padding: 5px;
+  margin: 10px 20px;
+  flex: 0 0 50%; 
+  text-align
+}
+
 .left_answer {
   display: inline-block;
   padding: 5px;
@@ -253,4 +268,8 @@ span.textfield {
   height:40px;   /* adjust as per your needs */
   margin-left:-200px;   /* negative half of width above */
   margin-top:-20px;   /* negative half of height above */
+}
+
+#member_list {
+  color: black; 
 }

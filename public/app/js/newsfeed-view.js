@@ -110,10 +110,10 @@ function submitProposal() {
   createProposalRequest.setRequestHeader('Content-type', 'application/json')
   createProposalRequest.send(JSON.stringify({proposing_user_addr: p_proposing_member, proposed_user_addr: p_proposed_member, is_add_proposal: p_is_add}))
   
-  $("#add_container").css("display", "none");
-  $("#myPopup").show(); 
+  $("#create_proposal_container").css("display", "none");
+  $("#proposalCreatedPopup").show(); 
   setTimeout(function() {
-      $("#myPopup").hide();
+      $("#proposalCreatedPopup").hide();
   }, 1000);
 }
 
@@ -186,15 +186,16 @@ function upvoteProposalClicked(element) {
   console.log("element printing")
   console.log(element)
   PostModel.upvoteProposal(element.className, localStorage.getItem("userAccount"));
-  var upvotes = $('.' + element.className + '.upvote_count').html(); 
-  console.log("upvotes query: " + upvotes)
-  var counts_str = upvotes.split(' ')[1]; 
+  var votes = $('.' + element.className + '.vote_count').html(); 
+  console.log("votes query: " + votes)
+  var counts_str = votes.split(' ')[3]; // hard coded for now
 
   var count = parseInt(counts_str); 
   count += 1
-  console.log("upvote count: " + count)
-  $('.' + element.className + '.upvote_count').html("Upvotes: " + count)
-  $('input[name=upvote]').remove()
+  console.log("vote count: " + count)
+  $('.' + element.className + '.vote_count').html("Current Vote Count: " + count)
+  $('input[name=upvote' + element.className + ']').remove()
+  $('input[name=downvote' + element.className + ']').remove()
   $('.' + element.className).append("<p>You have already voted on this proposal</p>");
 }
 
@@ -202,15 +203,16 @@ function downvoteProposalClicked(element) {
   console.log("element printing")
   console.log(element)
   PostModel.downvoteProposal(element.className, localStorage.getItem("userAccount"));
-  var upvotes = $('.' + element.className + '.upvote_count').html(); 
-  console.log("upvotes query: " + upvotes)
-  var counts_str = upvotes.split(' ')[1]; 
+  var votes = $('.' + element.className + '.vote_count').html(); 
+  console.log("votes query: " + votes)
+  var counts_str = votes.split(' ')[3]; 
 
   var count = parseInt(counts_str); 
-  count += 1
-  console.log("upvote count: " + count)
-  $('.' + element.className + '.upvote_count').html("Upvotes: " + count)
-  $('input[name=upvote]').remove()
+  count -= 1
+  console.log("vote count: " + count)
+  $('.' + element.className + '.vote_count').html("Current Vote Count: " + count)
+  $('input[name=upvote' + element.className + ']').remove()
+  $('input[name=downvote' + element.className + ']').remove()
   $('.' + element.className).append("<p>You have already voted on this proposal</p>");
 }
 
