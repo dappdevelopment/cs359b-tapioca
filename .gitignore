@@ -8,6 +8,10 @@ yarn-error.log*
 # DS_Store
 *.DS_Store
 
+# bounty dist
+public/build/contracts
+public/app/build/contracts
+
 # Runtime data
 pids
 *.pid
