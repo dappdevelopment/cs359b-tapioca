@@ -20,6 +20,11 @@
 	flex: 0 0 80%; 
 }
 
+.answer_box .is-winner-true {
+	background-color: #00bb0e;
+	width: 8px;
+}
+
 .answer_box {
 	display: flex;
 }
