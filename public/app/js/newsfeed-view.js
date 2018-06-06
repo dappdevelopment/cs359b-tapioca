@@ -32,9 +32,18 @@
     });
   }
 
+
+  NewsfeedView.renderMember = function($memberlist, member_addr) {
+    var postHtml = Templates.renderMember(member_addr);
+    $memberlist.append(postHtml);
+  }
+
   NewsfeedView.renderMemberList = function($memberlist, response) {
-    console.log("response json: " + JSON.stringify(response));
-    $memberlist.html("members: " + JSON.stringify(response.members));
+    console.log("response json");
+    console.log(response);
+    response.members.forEach(function(value) {
+      NewsfeedView.renderMember($memberlist, value, false); 
+    });
   }
 
   /* Renders the newsfeed into the given $newsfeed element. */
