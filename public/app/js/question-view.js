@@ -87,7 +87,7 @@
           canUpvote = true;
         }
         console.log("can upvote: " + canUpvote)
-        $answers_view.append(Templates.renderAnswer(answers[answer], post.users, canUpvote));
+        $answers_view.append(Templates.renderAnswer(answers[answer], canUpvote));
       }
     }
   };
