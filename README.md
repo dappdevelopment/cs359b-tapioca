@@ -1,4 +1,4 @@
-# Tapioca: Employee feedback: democratized.
+# Tapioca: Employee feedback, democratized.
 
 Tapioca is an internal QA platform enabling honest and transparent discussion among employees of a company.
 
