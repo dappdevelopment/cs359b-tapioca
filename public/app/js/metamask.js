@@ -83,6 +83,7 @@ function app() {
     }
     
     window.collectBounty = function (qHash, bounty, time, callback) {
+        NewsfeedView.activeQuestions += 1
         console.log("type: " + typeof qHash);
         console.log("collected bounty with qHash: " + qHash + " and bounty: " + bounty);
         console.log("collect bounty" + qHash)
@@ -107,7 +108,20 @@ function app() {
             .catch(console.error)
     }
 
+    window.addProposal = function(address, add, callback) { 
+        contract.methods.newProposal(address, add).send({from: userAccount})
+            .catch(console.error) 
+            .then(callback)
+    }
+
+    window.voteProposal = function(address, add, support) {
+        contract.methods.voteOnMembership(address, add, support).send({from: userAccount})
+            .catch(console.error)
+    }
+
     window.addAnswer = function(qHash, aHash) { 
+        QuestionView.activeAnswers += 1
+
         console.log("trying to add answer")
         console.log("addAnswer" + qHash)
         /*

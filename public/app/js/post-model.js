@@ -40,7 +40,10 @@
     addPostRequest.onreadystatechange = function() {
       if (addPostRequest.readyState === 4) {
         callback(addPostRequest.response);
-        //window.location.reload(true);
+        NewsfeedView.activeQuestions -= 1
+        if (NewsfeedView.activeQuestions == 0) {
+          window.location.reload(true);
+        }
         console.log(addPostRequest.response);
       }
     }
@@ -85,7 +88,11 @@
     
     answerRequest.onreadystatechange = function() {
       if (answerRequest.readyState === 4) {
-        //window.location.reload(true);
+        QuestionView.activeAnswers -= 1
+        console.log("adding answer")
+        if (QuestionView.activeAnswers == 0) {
+          //window.location.reload(true);
+        }
       }
     }
 

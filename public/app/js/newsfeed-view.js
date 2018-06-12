@@ -4,6 +4,8 @@
   NewsfeedView.remoteHost = "http://127.0.0.1:3000/"
   NewsfeedView.pendingQuestions = {}; 
 
+  NewsfeedView.activeQuestions = 0
+
   document.getElementById("defaultOpen").click();
 
   NewsfeedView.renderProposals = function($proposalsfeed, $memberlist) {
@@ -12,6 +14,7 @@
     xmlProposals.addEventListener('load', function() {
         if (xmlProposals.status == 200) {
           var response = JSON.parse(xmlProposals.responseText);
+          console.log(response)
           NewsfeedView.renderProposalsFeed($proposalsfeed, response); 
           NewsfeedView.renderMemberList($memberlist, response);
         }
@@ -107,30 +110,44 @@ function submitProposal() {
     p_is_add = true;
   }
 
-  if (!localStorage.getItem("userAccount")) {
-    $("#submit_question_error").html("Log in with Metamask to use Tapioca.");
-    return;
-  }
-  let p_proposing_member = localStorage.getItem("userAccount");
+  console.log("proposal type")
+  console.log(p_proposal_type)
 
-  let createProposalRequest = new XMLHttpRequest();
-  createProposalRequest.addEventListener('load', function() {
-      if (createProposalRequest.status === 200) {
-        window.location.reload(true);
-        console.log("created proposal");
+  if (p_proposal_type == "add") { 
+    add = true
+    console.log("adding")
+
+  } else {
+    console.log("removing")
+    add = false
+  }
+  addProposal(p_proposed_member, add, function() {
+      if (!localStorage.getItem("userAccount")) {
+        $("#submit_question_error").html("Log in with Metamask to use Tapioca.");
+        return;
       }
+      let p_proposing_member = localStorage.getItem("userAccount");
+
+      let createProposalRequest = new XMLHttpRequest();
+      createProposalRequest.addEventListener('load', function() {
+          if (createProposalRequest.status === 200) {
+            window.location.reload(true);
+            console.log("created proposal");
+          }
+      });
+
+
+      createProposalRequest.open("POST", '/create_proposal');
+      createProposalRequest.setRequestHeader('Content-type', 'application/json')
+      createProposalRequest.send(JSON.stringify({proposing_user_addr: p_proposing_member, proposed_user_addr: p_proposed_member, is_add_proposal: p_is_add}))
+      
+      $("#create_proposal_container").css("display", "none");
+      $("#proposalCreatedPopup").show(); 
+      setTimeout(function() {
+          $("#proposalCreatedPopup").hide();
+      }, 1000);
   });
 
-
-  createProposalRequest.open("POST", '/create_proposal');
-  createProposalRequest.setRequestHeader('Content-type', 'application/json')
-  createProposalRequest.send(JSON.stringify({proposing_user_addr: p_proposing_member, proposed_user_addr: p_proposed_member, is_add_proposal: p_is_add}))
-  
-  $("#create_proposal_container").css("display", "none");
-  $("#proposalCreatedPopup").show(); 
-  setTimeout(function() {
-      $("#proposalCreatedPopup").hide();
-  }, 1000);
 }
 
 function submitQuestion() { 
@@ -180,8 +197,12 @@ function submitQuestion() {
         let timeExp = Date.now() + timeToClose;
 
         collectBounty(hashData.q_hash, question_data.bounty, timeExp, function() { 
+          if (NewsfeedView.activeQuestions == 0) {
+            $('#tapioca_header').append('<div id=' + hashData.q_hash + '> Question Pending...To ensure your question is added to the server, please do not exit until this message is gone. </div>')
+          }
           console.log("Bounty Request Submitted");
         });
+
         console.log("Question Hash: " + hashData.q_hash) 
         NewsfeedView.pendingQuestions[hashData.q_hash] = question_data; 
       }
