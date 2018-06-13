@@ -161,6 +161,7 @@ app.get('/member_proposals', async function(request, response) {
   console.log("/GET member_propsals")
 
   let proposals = await model.findOpenProposals(); 
+  console.log(proposals)
 
   response.set('Content-type', 'application/json');
 	response.status(STATUS_OK);

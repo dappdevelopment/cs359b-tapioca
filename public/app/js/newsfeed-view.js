@@ -14,6 +14,7 @@
     xmlProposals.addEventListener('load', function() {
         if (xmlProposals.status == 200) {
           var response = JSON.parse(xmlProposals.responseText);
+          console.log("proposals")
           console.log(response)
           NewsfeedView.renderProposalsFeed($proposalsfeed, response); 
           NewsfeedView.renderMemberList($memberlist, response);
@@ -23,16 +24,16 @@
     xmlProposals.send(null);
   };
 
-  NewsfeedView.renderProposalPost = function($proposalsfeed, post) {
+  NewsfeedView.renderProposalPost = function($proposalsfeed, post, type) {
     console.log("rendering proposal");
-    var postHtml = Templates.renderProposalPost(post);
+    var postHtml = Templates.renderProposalPost(post, type);
     $proposalsfeed.append(postHtml);
   }
 
   NewsfeedView.renderProposalsFeed = function($proposalsfeed, response) {
-    response.proposals.forEach(function(value) {
-      NewsfeedView.renderProposalPost($proposalsfeed, value, false); 
-    });
+    for (i = 0; i < response.proposals.length; i++) {
+      NewsfeedView.renderProposalPost($proposalsfeed, response.proposals[i], response.types[i], false); 
+    }
   }
 
 
@@ -222,35 +223,56 @@ function submitQuestion() {
 function upvoteProposalClicked(element) {
   console.log("element printing")
   console.log(element)
-  PostModel.upvoteProposal(element.className, localStorage.getItem("userAccount"));
-  var votes = $('.' + element.className + '.vote_count').html(); 
+  proposalMember = element.className.split(":")[1]
+  proposalType = element.className.split(":")[0]
+
+  if (proposalType == "Add") {
+    add = true
+  } else {
+    add = false
+  }
+  voteProposal(element.id, add, true) 
+
+  PostModel.upvoteProposal(proposalMember, localStorage.getItem("userAccount"));
+  var votes = $('.' + proposalMember + '.vote_count').html(); 
   console.log("votes query: " + votes)
   var counts_str = votes.split(' ')[3]; // hard coded for now
 
   var count = parseInt(counts_str); 
   count += 1
   console.log("vote count: " + count)
-  $('.' + element.className + '.vote_count').html("Current Vote Count: " + count)
-  $('input[name=upvote' + element.className + ']').remove()
-  $('input[name=downvote' + element.className + ']').remove()
-  $('.' + element.className).append("<p>You have already voted on this proposal</p>");
+  $('.' + proposalMember + '.vote_count').html("Current Vote Count: " + count)
+  $('input[name=upvote' + proposalMember + ']').remove()
+  $('input[name=downvote' + proposalMember + ']').remove()
+  $('.' + proposalMember).append("<p>You have already voted on this proposal</p>");
 }
 
 function downvoteProposalClicked(element) {
   console.log("element printing")
   console.log(element)
-  PostModel.downvoteProposal(element.className, localStorage.getItem("userAccount"));
-  var votes = $('.' + element.className + '.vote_count').html(); 
+  proposalType = element.className.split(":")[0]
+  proposalMember = element.className.split(":")[1]
+
+  if (proposalType == "Add") {
+    add = true
+  } else {
+    add = false
+  }
+
+  voteProposal(element.id, add, false) 
+
+  PostModel.downvoteProposal(proposalMember, localStorage.getItem("userAccount"));
+  var votes = $('.' + proposalMember + '.vote_count').html(); 
   console.log("votes query: " + votes)
   var counts_str = votes.split(' ')[3]; 
 
   var count = parseInt(counts_str); 
   count -= 1
   console.log("vote count: " + count)
-  $('.' + element.className + '.vote_count').html("Current Vote Count: " + count)
-  $('input[name=upvote' + element.className + ']').remove()
-  $('input[name=downvote' + element.className + ']').remove()
-  $('.' + element.className).append("<p>You have already voted on this proposal</p>");
+  $('.' + proposalMember + '.vote_count').html("Current Vote Count: " + count)
+  $('input[name=upvote' + proposalMember + ']').remove()
+  $('input[name=downvote' + proposalMember + ']').remove()
+  $('.' + proposalMember).append("<p>You have already voted on this proposal</p>");
 }
 
 function openTab(evt, tabName) {
