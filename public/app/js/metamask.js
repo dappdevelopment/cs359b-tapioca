@@ -61,7 +61,7 @@ function app() {
                 networkURI = 'wss://mainnet.infura.io/ws'; 
                 break;
             case 4: 
-                networkURI = 'wss://rinkeby.infura.io/ws'; 
+                networkURI = 'wss://rinkeby.infura.io/_ws'; 
                 break;
             default:
                 networkURI = 'ws://localhost:8545';
@@ -87,6 +87,8 @@ function app() {
     }
     
     window.collectBounty = function (qHash, bounty, time, callback) {
+
+        NewsfeedView.activeQuestions += 1
         console.log("type: " + typeof qHash);
         console.log("collected bounty with qHash: " + qHash + " and bounty: " + bounty);
         console.log("collect bounty" + qHash)
@@ -96,6 +98,9 @@ function app() {
         contract.methods.collectBounty(qHash, time).send({from: userAccount, to: contractAddress, value: bounty})
             .then(callback)
             .catch(console.error);
+        if (NewsfeedView.activeQuestions == 1) {
+            $('#tapioca_header').append('<div id=' + qHash + '> Question Pending...To ensure your question is added to the server, please do not exit until this message is gone. </div>')
+        }
         console.log("collected bounty")
     };
 
@@ -111,14 +116,31 @@ function app() {
             .catch(console.error)
     }
 
+    window.addProposal = function(address, add, callback) { 
+        contract.methods.newProposal(address, add).send({from: userAccount})
+            .catch(console.error) 
+            .then(callback)
+    }
+
+    window.voteProposal = function(address, add, support) {
+        contract.methods.voteOnMembership(address, add, support).send({from: userAccount})
+            .catch(console.error)
+    }
+
     window.addAnswer = function(qHash, aHash) { 
+        QuestionView.activeAnswers += 1
+
         console.log("trying to add answer")
         console.log("addAnswer" + qHash)
         /*
         contract.methods.addAnswer(web3.utils.toBN(qHash), web3.utils.toBN(aHash)).send({from: userAccount})
             .catch(console.error)*/
+
         contract.methods.addAnswer(qHash, aHash).send({from: userAccount})
             .catch(console.error)
+        if (QuestionView.activeAnswers == 1) {
+            $('#tapioca_header').append('<div id=' + qHash + '> Answer Pending...To ensure your answer is added to the server, please do not exit until this message is gone. </div>')
+        }
     }
 
     $("#link-to-metamask").click(function() {

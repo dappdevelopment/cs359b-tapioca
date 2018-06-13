@@ -4,6 +4,8 @@
   NewsfeedView.remoteHost = "http://127.0.0.1:3000/"
   NewsfeedView.pendingQuestions = {}; 
 
+  NewsfeedView.activeQuestions = 0
+
   document.getElementById("defaultOpen").click();
 
   NewsfeedView.renderProposals = function($proposalsfeed, $memberlist) {
@@ -12,6 +14,8 @@
     xmlProposals.addEventListener('load', function() {
         if (xmlProposals.status == 200) {
           var response = JSON.parse(xmlProposals.responseText);
+          console.log("proposals")
+          console.log(response)
           NewsfeedView.renderProposalsFeed($proposalsfeed, response); 
           NewsfeedView.renderMemberList($memberlist, response);
         }
@@ -20,16 +24,16 @@
     xmlProposals.send(null);
   };
 
-  NewsfeedView.renderProposalPost = function($proposalsfeed, post) {
+  NewsfeedView.renderProposalPost = function($proposalsfeed, post, type) {
     console.log("rendering proposal");
-    var postHtml = Templates.renderProposalPost(post);
+    var postHtml = Templates.renderProposalPost(post, type);
     $proposalsfeed.append(postHtml);
   }
 
   NewsfeedView.renderProposalsFeed = function($proposalsfeed, response) {
-    response.proposals.forEach(function(value) {
-      NewsfeedView.renderProposalPost($proposalsfeed, value, false); 
-    });
+    for (i = 0; i < response.proposals.length; i++) {
+      NewsfeedView.renderProposalPost($proposalsfeed, response.proposals[i], response.types[i], false); 
+    }
   }
 
 
@@ -107,10 +111,23 @@ function submitProposal() {
     p_is_add = true;
   }
 
-  if (!localStorage.getItem("userAccount")) {
-    $("#submit_question_error").html("Log in with Metamask to use Tapioca.");
-    return;
+  console.log("proposal type")
+  console.log(p_proposal_type)
+
+  if (p_proposal_type == "add") { 
+    add = true
+    console.log("adding")
+
+  } else {
+    console.log("removing")
+    add = false
   }
+  addProposal(p_proposed_member, add, function() {
+      if (!localStorage.getItem("userAccount")) {
+        $("#submit_question_error").html("Log in with Metamask to use Tapioca.");
+        return;
+      }
+  });
   let p_proposing_member = localStorage.getItem("userAccount");
 
   let createProposalRequest = new XMLHttpRequest();
@@ -120,8 +137,6 @@ function submitProposal() {
         console.log("created proposal");
       }
   });
-
-
   createProposalRequest.open("POST", '/create_proposal');
   createProposalRequest.setRequestHeader('Content-type', 'application/json')
   createProposalRequest.send(JSON.stringify({proposing_user_addr: p_proposing_member, proposed_user_addr: p_proposed_member, is_add_proposal: p_is_add}))
@@ -131,6 +146,7 @@ function submitProposal() {
   setTimeout(function() {
       $("#proposalCreatedPopup").hide();
   }, 1000);
+
 }
 
 function submitQuestion() { 
@@ -182,6 +198,7 @@ function submitQuestion() {
         collectBounty(hashData.q_hash, question_data.bounty, timeExp, function() { 
           console.log("Bounty Request Submitted");
         });
+
         console.log("Question Hash: " + hashData.q_hash) 
         NewsfeedView.pendingQuestions[hashData.q_hash] = question_data; 
       }
@@ -201,35 +218,56 @@ function submitQuestion() {
 function upvoteProposalClicked(element) {
   console.log("element printing")
   console.log(element)
-  PostModel.upvoteProposal(element.className, localStorage.getItem("userAccount"));
-  var votes = $('.' + element.className + '.vote_count').html(); 
+  proposalMember = element.className.split(":")[1]
+  proposalType = element.className.split(":")[0]
+
+  if (proposalType == "Add") {
+    add = true
+  } else {
+    add = false
+  }
+  voteProposal(element.id, add, true) 
+
+  PostModel.upvoteProposal(proposalMember, localStorage.getItem("userAccount"));
+  var votes = $('.' + proposalMember + '.vote_count').html(); 
   console.log("votes query: " + votes)
   var counts_str = votes.split(' ')[3]; // hard coded for now
 
   var count = parseInt(counts_str); 
   count += 1
   console.log("vote count: " + count)
-  $('.' + element.className + '.vote_count').html("Current Vote Count: " + count)
-  $('input[name=upvote' + element.className + ']').remove()
-  $('input[name=downvote' + element.className + ']').remove()
-  $('.' + element.className).append("<p>You have already voted on this proposal</p>");
+  $('.' + proposalMember + '.vote_count').html("Current Vote Count: " + count)
+  $('input[name=upvote' + proposalMember + ']').remove()
+  $('input[name=downvote' + proposalMember + ']').remove()
+  $('.' + proposalMember).append("<p>You have already voted on this proposal</p>");
 }
 
 function downvoteProposalClicked(element) {
   console.log("element printing")
   console.log(element)
-  PostModel.downvoteProposal(element.className, localStorage.getItem("userAccount"));
-  var votes = $('.' + element.className + '.vote_count').html(); 
+  proposalType = element.className.split(":")[0]
+  proposalMember = element.className.split(":")[1]
+
+  if (proposalType == "Add") {
+    add = true
+  } else {
+    add = false
+  }
+
+  voteProposal(element.id, add, false) 
+
+  PostModel.downvoteProposal(proposalMember, localStorage.getItem("userAccount"));
+  var votes = $('.' + proposalMember + '.vote_count').html(); 
   console.log("votes query: " + votes)
   var counts_str = votes.split(' ')[3]; 
 
   var count = parseInt(counts_str); 
   count -= 1
   console.log("vote count: " + count)
-  $('.' + element.className + '.vote_count').html("Current Vote Count: " + count)
-  $('input[name=upvote' + element.className + ']').remove()
-  $('input[name=downvote' + element.className + ']').remove()
-  $('.' + element.className).append("<p>You have already voted on this proposal</p>");
+  $('.' + proposalMember + '.vote_count').html("Current Vote Count: " + count)
+  $('input[name=upvote' + proposalMember + ']').remove()
+  $('input[name=downvote' + proposalMember + ']').remove()
+  $('.' + proposalMember).append("<p>You have already voted on this proposal</p>");
 }
 
 function openTab(evt, tabName) {

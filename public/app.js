@@ -161,6 +161,7 @@ app.get('/member_proposals', async function(request, response) {
   console.log("/GET member_propsals")
 
   let proposals = await model.findOpenProposals(); 
+  console.log(proposals)
 
   response.set('Content-type', 'application/json');
 	response.status(STATUS_OK);
@@ -244,13 +245,13 @@ async function initDB() {
 
 async function test() {
   await clearDB();
-  // await initDB();
+  await initDB();
 }
 
 
 async function connectToEthereum() { 
-  //web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/hzinmOiPQJ95bFyblv1K "));
-  web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:8545"));
+  web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/hzinmOiPQJ95bFyblv1K "));
+  //web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:8545"));
   var networkId = await web3.eth.net.getId(); // resolves on the current network id
 
   var contractData = contract;       

@@ -7,20 +7,21 @@
     return tag('div', {style:"margin-bottom: 5px;"}, member_addr)
   }
 
-  Templates.renderProposalPost = function(post) {
+  Templates.renderProposalPost = function(post, type) {
     console.log(post); 
     let days = Math.floor(post.timeLeft / (24 * 3600 * 1000))
     let hours = Math.floor((post.timeLeft % (24 * 3600 * 1000)) / (3600 * 1000))
     let minutes = Math.ceil((post.timeLeft % (3600 * 1000)) / (60 * 1000))
     let totalVotes = post.upvotes.length - post.downvotes.length;
     let currentUserAddr = localStorage.getItem("userAccount");
+    let status = (type == 4) ? "Add" : "Remove"
 
     let upvote_tags = [tag('p', {class: "vote_count " + post._id}, "Current Vote Count: " + totalVotes)];
     if (post.upvotes.includes(currentUserAddr) || post.downvotes.includes(currentUserAddr)) {
       upvote_tags.push(tag('p', {}, "You have already voted on this proposal"))
     } else {
-      upvote_tags.push(tag('input', {type:"submit", name: "upvote" + post._id, value: "Upvote", class: post._id, onclick: "upvoteProposalClicked(this)"}))
-      upvote_tags.push(tag('input', {style: "margin-left: 8px;", type:"submit", name: "downvote" + post._id, value: "Downvote", class: post._id, onclick: "downvoteProposalClicked(this)"}))
+      upvote_tags.push(tag('input', {type:"submit", name: "upvote" + post._id, value: "Upvote", class: status+":"+post._id, "id": post.proposedMemberAddr, onclick: "upvoteProposalClicked(this)"}))
+      upvote_tags.push(tag('input', {style: "margin-left: 8px;", type:"submit", name: "downvote" + post._id, value: "Downvote", class: status+":"+post._id, "id": post.proposedMemberAddr, onclick: "downvoteProposalClicked(this)"}))
     }
 
     return tag('li', {display: "inline-block", class: "post"}, [
@@ -30,7 +31,7 @@
             tag('h5', {style:"line-height: 1.8em;"}, "Proposed by: " + post.proposingMemberAddr)
             ]),
         tag('div', {class: 'voting_title'}, [
-            tag('h1', {}, post.proposedMemberAddr)
+            tag('h1', {}, status + ":" + post.proposedMemberAddr)
           ]),
         tag('div', {class: "voting_tally"}, upvote_tags),  // TODO: visual issues
       ]),

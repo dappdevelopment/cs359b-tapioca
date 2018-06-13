@@ -198,13 +198,16 @@ var findOpenProposals = async function() {
 
 		let open_proposals = await schema.Proposal.find({state: OPEN_STATE});
 		let modified_proposal_list = [];
+		let mapping = []
+
 		for (let i in open_proposals) {
 			let modified_proposal = JSON.parse(JSON.stringify(open_proposals[i])); // deep copy
 			let timeLeft = Math.max(Date.parse(modified_proposal.timeExp) - Date.now(), 0);
 			modified_proposal.timeLeft = timeLeft;
 			modified_proposal_list.push(modified_proposal);
+			mapping.push(modified_proposal.type)
 		}
-		return {proposals: modified_proposal_list, members: membershipList.members};
+		return {proposals: modified_proposal_list, members: membershipList.members, types: mapping};
 	} catch (err) {
 		console.log("findProposalData error");
 		console.log(err);
