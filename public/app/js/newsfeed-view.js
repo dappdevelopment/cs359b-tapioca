@@ -198,9 +198,6 @@ function submitQuestion() {
         let timeExp = Date.now() + timeToClose;
 
         collectBounty(hashData.q_hash, question_data.bounty, timeExp, function() { 
-          if (NewsfeedView.activeQuestions == 0) {
-            $('#tapioca_header').append('<div id=' + hashData.q_hash + '> Question Pending...To ensure your question is added to the server, please do not exit until this message is gone. </div>')
-          }
           console.log("Bounty Request Submitted");
         });
 

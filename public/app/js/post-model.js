@@ -40,11 +40,13 @@
     addPostRequest.onreadystatechange = function() {
       if (addPostRequest.readyState === 4) {
         callback(addPostRequest.response);
-        NewsfeedView.activeQuestions -= 1
-        if (NewsfeedView.activeQuestions == 0) {
-          window.location.reload(true);
-        }
         console.log(addPostRequest.response);
+      }
+      NewsfeedView.activeQuestions -= 1
+      console.log("active questions")
+      console.log(NewsfeedView.activeQuestions)
+      if (NewsfeedView.activeQuestions == 0) {
+        window.location.reload(true);
       }
     }
 
@@ -87,12 +89,11 @@
     var answerRequest = new XMLHttpRequest()
     
     answerRequest.onreadystatechange = function() {
-      if (answerRequest.readyState === 4) {
-        QuestionView.activeAnswers -= 1
-        console.log("adding answer")
-        if (QuestionView.activeAnswers == 0) {
-          //window.location.reload(true);
-        }
+      QuestionView.activeAnswers -= 1
+      console.log("active answers")
+      console.log(QuestionView.activeAnswer)
+      if (QuestionView.activeAnswers == 0) {
+        //window.location.reload(true);
       }
     }
 

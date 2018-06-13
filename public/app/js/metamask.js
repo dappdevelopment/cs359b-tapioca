@@ -21,29 +21,33 @@ function app() {
             var accounts = results[2];      // resolved value of accountsPromise
             userAccount = accounts[0];
 
-            $("#user_address").html(userAccount);
+            if (networkId !== 4) {
+                $("#user_address").html("Please connect to Rinkeby in Metamask ↗"); 
+            } else {
+                $("#user_address").html(userAccount);
 
-            localStorage.setItem('userAccount', userAccount);
+                localStorage.setItem('userAccount', userAccount);
 
-            var addPostRequest = new XMLHttpRequest();
+                var addPostRequest = new XMLHttpRequest();
 
-            let user_details = { 
-                user_id: "pancakes", 
-                asker_address: userAccount
+                let user_details = { 
+                    user_id: "pancakes", 
+                    asker_address: userAccount
+                }
+
+                addPostRequest.open('POST', '/create_user');
+                addPostRequest.setRequestHeader('Content-type', 'application/json');
+                addPostRequest.send(JSON.stringify(user_details));
+                
+                // Make sure the contract is deployed on the connected network
+                if (!(networkId in contractData.networks)) {
+                    throw new Error("Contract not found in selected Ethereum network on MetaMask.");
+                }
+
+                contractAddress = contractData.networks[networkId].address;
+                contract = new web3.eth.Contract(contractData.abi, contractAddress);
+                contractEvents(contractData.abi, networkId, userAccount);    
             }
-
-            addPostRequest.open('POST', '/create_user');
-            addPostRequest.setRequestHeader('Content-type', 'application/json');
-            addPostRequest.send(JSON.stringify(user_details));
-            
-            // Make sure the contract is deployed on the connected network
-            if (!(networkId in contractData.networks)) {
-                throw new Error("Contract not found in selected Ethereum network on MetaMask.");
-            }
-
-            contractAddress = contractData.networks[networkId].address;
-            contract = new web3.eth.Contract(contractData.abi, contractAddress);
-            contractEvents(contractData.abi, networkId, userAccount); 
         }).catch(console.error);
 
     function refreshBalance() { 
@@ -57,7 +61,7 @@ function app() {
                 networkURI = 'wss://mainnet.infura.io/ws'; 
                 break;
             case 4: 
-                networkURI = 'wss://rinkeby.infura.io/ws'; 
+                networkURI = 'wss://rinkeby.infura.io/_ws'; 
                 break;
             default:
                 networkURI = 'ws://localhost:8545';
@@ -83,6 +87,7 @@ function app() {
     }
     
     window.collectBounty = function (qHash, bounty, time, callback) {
+
         NewsfeedView.activeQuestions += 1
         console.log("type: " + typeof qHash);
         console.log("collected bounty with qHash: " + qHash + " and bounty: " + bounty);
@@ -93,6 +98,9 @@ function app() {
         contract.methods.collectBounty(qHash, time).send({from: userAccount, to: contractAddress, value: bounty})
             .then(callback)
             .catch(console.error);
+        if (NewsfeedView.activeQuestions == 1) {
+            $('#tapioca_header').append('<div id=' + qHash + '> Question Pending...To ensure your question is added to the server, please do not exit until this message is gone. </div>')
+        }
         console.log("collected bounty")
     };
 
@@ -127,8 +135,12 @@ function app() {
         /*
         contract.methods.addAnswer(web3.utils.toBN(qHash), web3.utils.toBN(aHash)).send({from: userAccount})
             .catch(console.error)*/
+
         contract.methods.addAnswer(qHash, aHash).send({from: userAccount})
             .catch(console.error)
+        if (QuestionView.activeAnswers == 1) {
+            $('#tapioca_header').append('<div id=' + qHash + '> Answer Pending...To ensure your answer is added to the server, please do not exit until this message is gone. </div>')
+        }
     }
 
     $("#link-to-metamask").click(function() {

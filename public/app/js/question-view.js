@@ -160,9 +160,6 @@ function submitAnswer() {
   console.log("submit answer question view")
   console.log(QuestionView.question_detail.question)
   addAnswer(QuestionView.question_detail.question.questionHash, QuestionView.question_detail.question.questionHash)
-  if (QuestionView.activeAnswers == 0) {
-    $('#tapioca_header').append('<div id=' + hashData.q_hash + '> Question/Answer Pending...To ensure your question/answer is added to the server, please do not exit until this message is gone. </div>')
-  }
   answer_data = {
     question_id: QuestionView.question_id,
     user_addr: localStorage.getItem("userAccount"), 

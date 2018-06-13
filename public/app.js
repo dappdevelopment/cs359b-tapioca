@@ -236,10 +236,11 @@ async function clearDB() {
 async function initDB() {
   let memberList = await model.initializeMemberList(); // This must be called if the DB is cleared.
   let askerAddr = await model.createUser("mchang4", "0x66FDDd026Dbf64D6F907154365113ae124eB2DD6");
-  let answererAddr = await model.createUser("peterlu6", "0xd08923976D510F8f834E1B8BC4E1c03599F2644F");
-  let returnData = await model.createQuestion(50, 10, 1, 23, "how do i make friends", "i have no friends", askerAddr);
-  let answerObject = await model.createAnswer(answererAddr, returnData.questionId, "plastic surgery");
-  // await model.markQuestionClosed(returnData.questionId);
+  let answerer1Addr = await model.createUser("peterlu6", "0xd08023976D510F8f834E1B8BC4E1c03599F2644F");
+  let answerer2Addr = await model.createUser("sclaire", "0x5db6aa95d943e2d546e51e5597c90b3d16eb5df1");
+  let returnData = await model.createQuestion(50000000000000000, 10, 2, 5, "What changes would you like to see with company culture?", "Feel free to discuss anything from offsites to meeting norms.", askerAddr);
+  let answerObject = await model.createAnswer(answerer1Addr, returnData.questionId, "More 1 on 1s with company leads to provide feedback.");
+  let answer1Object = await model.createAnswer(answerer1Addr, returnData.questionId, "Weekly coffee chat pairings cross teams to get to know others."); 
 }
 
 async function test() {
@@ -249,8 +250,8 @@ async function test() {
 
 
 async function connectToEthereum() { 
-  //web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/hzinmOiPQJ95bFyblv1K "));
-  web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:8545"));
+  web3 = new Web3(new Web3.providers.HttpProvider("https://rinkeby.infura.io/hzinmOiPQJ95bFyblv1K "));
+  //web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:8545"));
   var networkId = await web3.eth.net.getId(); // resolves on the current network id
 
   var contractData = contract;       
