@@ -11,7 +11,6 @@ var OPEN_STATE = 1;
 var CLOSED_STATE = 2;
 var SETTLED_STATE = 3;
 
-
 // Proposal types
 var ADD_PROPOSAL = 4;
 var REMOVE_PROPOSAL = 5;
@@ -238,8 +237,9 @@ var executeProposal = async function(proposalId) {
 var checkMembershipStatus = async function(memberId) {
 	try {
 		let membershipDoc = await schema.MemberTracker.find({id: MEMBER_PROPOSAL_LIST_ID});
-		let membershipList = membershipDoc[0]._doc;
-		return membershipList.includes(memberId);
+		let membershipList = membershipDoc[0]._doc.members;
+		console.log(typeof(membershipList));
+		return (membershipList.indexOf(memberId) >= 0);
 	} catch (err) {
 		console.log("error in checkMembershipStatus");
 		console.log(err);

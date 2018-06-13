@@ -158,13 +158,22 @@ app.post('/submit_question', async function(request, response) {
 });
 
 app.get('/member_proposals', async function(request, response) {
-  console.log("/GET member_propsals")
+  console.log("/GET member_propsals");
 
   let proposals = await model.findOpenProposals(); 
 
   response.set('Content-type', 'application/json');
 	response.status(STATUS_OK);
 	response.send(JSON.stringify(proposals));
+});
+
+app.get('/check_membership', async function(request, response) {
+  console.log("/GET check_membership " + "user_addr " + request.body.user_addr);
+  let status = await model.checkMembershipStatus(request.body.user_addr);
+  console.log("membership status returned " + status);
+  response.set('Content-type', 'application/json');
+  response.status(STATUS_OK);
+  response.send(status);
 });
 
 app.post('/create_proposal', function(request, response) {
@@ -244,7 +253,7 @@ async function initDB() {
 
 async function test() {
   await clearDB();
-  // await initDB();
+  await initDB();
 }
 
 

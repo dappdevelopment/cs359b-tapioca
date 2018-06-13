@@ -121,7 +121,6 @@ function submitProposal() {
       }
   });
 
-
   createProposalRequest.open("POST", '/create_proposal');
   createProposalRequest.setRequestHeader('Content-type', 'application/json')
   createProposalRequest.send(JSON.stringify({proposing_user_addr: p_proposing_member, proposed_user_addr: p_proposed_member, is_add_proposal: p_is_add}))
@@ -135,12 +134,65 @@ function submitProposal() {
 
 function submitQuestion() { 
   console.log("submitting question");
-  let q_title = $("#question_title").val()
-  let q_details = $("textarea").val()
-  let q_bounty = $("#bounty_amount").val() * 1000000000000000000
-  let q_time_exp_days = $("#time_exp_days").val()
-  let q_time_exp_hours = $("#time_exp_hours").val()
-  let q_time_exp_minutes = $("#time_exp_minutes").val()
+  let q_title = $("#question_title").val();
+  let q_details = $("textarea").val();
+  let q_bounty = $("#bounty_amount").val() * 1000000000000000000;
+  let q_time_exp_days = $("#time_exp_days").val();
+  let q_time_exp_hours = $("#time_exp_hours").val();
+  let q_time_exp_minutes = $("#time_exp_minutes").val();
+
+  let checkMembershipRequest = new XMLHttpRequest();
+  checkMembershipRequest.addEventListener('load', function() {
+    if (checkMembershipRequest.status === 200) {
+      var membershipStatus = JSON.parse(checkMembershipRequest.responseText);
+      if (membershipStatus === "true") {
+          let question_data = { 
+            title: q_title, 
+            details: q_details,
+            asker_addr: localStorage.getItem("userAccount"), 
+            bounty: q_bounty,
+            time_exp_days: q_time_exp_days,
+            time_exp_hours: q_time_exp_hours,
+            time_exp_minutes: q_time_exp_minutes
+          }
+
+          let q_summary_string = q_bounty + q_title + q_details + localStorage.getItem("userAccount");
+
+          let xmlHashRequest = new XMLHttpRequest();
+
+          xmlHashRequest.addEventListener('load', function() {
+              if (xmlHashRequest.status === 200) {
+                var hashData = JSON.parse(xmlHashRequest.responseText);
+
+                let timeToClose = question_data.time_exp_days * 24 * 3600 * 1000 + question_data.time_exp_hours * 3600 * 1000 + question_data.time_exp_minutes * 60 * 1000;
+                let timeExp = Date.now() + timeToClose;
+
+                collectBounty(hashData.q_hash, question_data.bounty, timeExp, function() { 
+                  console.log("Bounty Request Submitted");
+                });
+                console.log("Question Hash: " + hashData.q_hash) 
+                NewsfeedView.pendingQuestions[hashData.q_hash] = question_data; 
+              }
+          });
+
+          xmlHashRequest.open("GET", NewsfeedView.remoteHost + 'question_hash' + "?summary=" + encodeURIComponent(q_summary_string));
+          xmlHashRequest.send(null);
+          
+
+          $("#add_container").css("display", "none");
+          $("#myPopup").show(); 
+          setTimeout(function() {
+              $("#myPopup").hide();
+          }, 1000);
+        } else {
+          $("#submit_question_error").html("You must be a member to submit questions.");
+        }
+    }
+  });
+
+  checkMembershipRequest.open("GET", '/check_membership');
+  checkMembershipRequest.setRequestHeader('Content-type', 'application/json')
+  checkMembershipRequest.send(JSON.stringify({user_addr: localStorage.getItem("userAccount")}));
 
   if (q_time_exp_days > 20 || q_time_exp_hours > 23 || q_time_exp_minutes > 59) {
     $("#submit_question_error").html("Must submit a valid time less than 20 days.");
@@ -155,47 +207,6 @@ function submitQuestion() {
   $("textarea").val("");
   $("#bounty_amount").val(null)
 
-  let question_data = { 
-    title: q_title, 
-    details: q_details,
-    asker_addr: localStorage.getItem("userAccount"), 
-    bounty: q_bounty,
-    time_exp_days: q_time_exp_days,
-    time_exp_hours: q_time_exp_hours,
-    time_exp_minutes: q_time_exp_minutes
-  }
-
-  console.log("Outside Title: " + question_data.title); 
-
-  let q_summary_string = q_bounty + q_title + q_details + localStorage.getItem("userAccount");
-
-  let xmlHashRequest = new XMLHttpRequest();
-
-  xmlHashRequest.addEventListener('load', function() {
-      if (xmlHashRequest.status === 200) {
-        var hashData = JSON.parse(xmlHashRequest.responseText)
-
-
-        let timeToClose = question_data.time_exp_days * 24 * 3600 * 1000 + question_data.time_exp_hours * 3600 * 1000 + question_data.time_exp_minutes * 60 * 1000;
-        let timeExp = Date.now() + timeToClose;
-
-        collectBounty(hashData.q_hash, question_data.bounty, timeExp, function() { 
-          console.log("Bounty Request Submitted");
-        });
-        console.log("Question Hash: " + hashData.q_hash) 
-        NewsfeedView.pendingQuestions[hashData.q_hash] = question_data; 
-      }
-  });
-
-  xmlHashRequest.open("GET", NewsfeedView.remoteHost + 'question_hash' + "?summary=" + encodeURIComponent(q_summary_string));
-  xmlHashRequest.send(null);
-  
-
-  $("#add_container").css("display", "none");
-  $("#myPopup").show(); 
-  setTimeout(function() {
-      $("#myPopup").hide();
-  }, 1000);
 }
 
 function upvoteProposalClicked(element) {

@@ -58,10 +58,10 @@ function app() {
         console.log("Preparing for registration of contract events. ")
         switch(networkId) { 
             case 1: 
-                networkURI = 'wss://mainnet.infura.io/ws'; 
+                networkURI = 'wss://mainnet.infura.io/_ws'; 
                 break;
             case 4: 
-                networkURI = 'wss://rinkeby.infura.io/ws'; 
+                networkURI = 'wss://rinkeby.infura.io/_ws'; 
                 break;
             default:
                 networkURI = 'ws://localhost:8545';
