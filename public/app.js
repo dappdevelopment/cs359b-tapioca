@@ -169,8 +169,8 @@ app.get('/member_proposals', async function(request, response) {
 });
 
 app.get('/check_membership', async function(request, response) {
-  console.log("/GET check_membership " + "user_addr " + request.body.user_addr);
-  let status = await model.checkMembershipStatus(request.body.user_addr);
+  console.log("/GET check_membership " + "user_addr " + request.query.user_addr);
+  let status = await model.checkMembershipStatus(request.query.user_addr);
   console.log("membership status returned " + status);
   response.set('Content-type', 'application/json');
   response.status(STATUS_OK);

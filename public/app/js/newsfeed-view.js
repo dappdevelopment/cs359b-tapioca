@@ -163,7 +163,9 @@ function submitQuestion() {
   checkMembershipRequest.addEventListener('load', function() {
     if (checkMembershipRequest.status === 200) {
       var membershipStatus = JSON.parse(checkMembershipRequest.responseText);
-      if (membershipStatus === "true") {
+      console.log("status: " + membershipStatus);
+      console.log("status type: " + typeof(membershipStatus));
+      if (membershipStatus === true) {
           let question_data = { 
             title: q_title, 
             details: q_details,
@@ -208,9 +210,8 @@ function submitQuestion() {
     }
   });
 
-  checkMembershipRequest.open("GET", '/check_membership');
-  checkMembershipRequest.setRequestHeader('Content-type', 'application/json')
-  checkMembershipRequest.send(JSON.stringify({user_addr: localStorage.getItem("userAccount")}));
+  checkMembershipRequest.open("GET", '/check_membership' + "?user_addr=" + encodeURIComponent(localStorage.getItem("userAccount")));
+  checkMembershipRequest.send(null);
 
   if (q_time_exp_days > 20 || q_time_exp_hours > 23 || q_time_exp_minutes > 59) {
     $("#submit_question_error").html("Must submit a valid time less than 20 days.");
