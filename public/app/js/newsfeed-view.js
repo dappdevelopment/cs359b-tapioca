@@ -127,27 +127,25 @@ function submitProposal() {
         $("#submit_question_error").html("Log in with Metamask to use Tapioca.");
         return;
       }
-      let p_proposing_member = localStorage.getItem("userAccount");
-
-      let createProposalRequest = new XMLHttpRequest();
-      createProposalRequest.addEventListener('load', function() {
-          if (createProposalRequest.status === 200) {
-            window.location.reload(true);
-            console.log("created proposal");
-          }
-      });
-
-
-      createProposalRequest.open("POST", '/create_proposal');
-      createProposalRequest.setRequestHeader('Content-type', 'application/json')
-      createProposalRequest.send(JSON.stringify({proposing_user_addr: p_proposing_member, proposed_user_addr: p_proposed_member, is_add_proposal: p_is_add}))
-      
-      $("#create_proposal_container").css("display", "none");
-      $("#proposalCreatedPopup").show(); 
-      setTimeout(function() {
-          $("#proposalCreatedPopup").hide();
-      }, 1000);
   });
+  let p_proposing_member = localStorage.getItem("userAccount");
+
+  let createProposalRequest = new XMLHttpRequest();
+  createProposalRequest.addEventListener('load', function() {
+      if (createProposalRequest.status === 200) {
+        window.location.reload(true);
+        console.log("created proposal");
+      }
+  });
+  createProposalRequest.open("POST", '/create_proposal');
+  createProposalRequest.setRequestHeader('Content-type', 'application/json')
+  createProposalRequest.send(JSON.stringify({proposing_user_addr: p_proposing_member, proposed_user_addr: p_proposed_member, is_add_proposal: p_is_add}))
+  
+  $("#create_proposal_container").css("display", "none");
+  $("#proposalCreatedPopup").show(); 
+  setTimeout(function() {
+      $("#proposalCreatedPopup").hide();
+  }, 1000);
 
 }
 
